@@ -2,6 +2,7 @@ package token
 
 import (
 	"fmt"
+
 	"time"
 
 	"github.com/dgrijalva/jwt-go"

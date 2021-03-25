@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/Festivals-App/festivals-identity-server/authentication"
+	"github.com/Festivals-App/festivals-identity-server/jwt"
 	"log"
 	"net/http"
-
-	jwtprocessing "github.com/Festivals-App/festivals-identity-server/jwt"
 )
 
 func homePrint(w http.ResponseWriter, r *http.Request) {
@@ -15,17 +15,17 @@ func homePrint(w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	fmt.Println("My server")
-	tokenString, error := jwtprocessing.GenerateJWT()
+	tokenString, error := token.GenerateJWT()
 
 	if error != nil {
 		fmt.Println("Error generating token string")
 	}
 
-	// authmenow "github.com/Festivals-App/festivals-identity-server/authentication"
+	// authmenow "github.com/Festivals-App/festivals-identity-server/asfojboafsIHB"
 
 	fmt.Println(tokenString)
 
-	http.Handle("/", fuckYYOuFuckingGoSchitLanguage([]string{"a", "b"}, homePrint))
+	http.Handle("/", authentication.IsAuthenticated([]string{"a", "b"}, homePrint))
 
 	log.Fatal(http.ListenAndServe(":9000", nil))
 
