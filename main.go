@@ -21,11 +21,11 @@ func main() {
 		fmt.Println("Error generating token string")
 	}
 
-	// jwtprocessing "github.com/Festivals-App/festivals-identity-server/jwt"
+	// authmenow "github.com/Festivals-App/festivals-identity-server/authentication"
 
 	fmt.Println(tokenString)
 
-	http.Handle("/", isAuthenticated([]string{"a", "b"}, homePrint))
+	http.Handle("/", authmenow.isAuthenticated([]string{"a", "b"}, homePrint))
 
 	log.Fatal(http.ListenAndServe(":9000", nil))
 
