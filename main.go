@@ -2,43 +2,33 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"log"
+	"net/http"
 
-	"github.com/dgrijalva/jwt-go"
+	jwtprocessing "github.com/Festivals-App/festivals-identity-server/jwt"
 )
 
-var mySigningKey = []byte("mysupersecret")
-
-func GenerateJWT() (string, error) {
-
-	token := jwt.New(jwt.SigningMethodHS256)
-	claims := token.Claims.(jwt.MapClaims)
-
-	claims["authorized"] = true
-	claims["user"] = "Simon Gaus"
-	claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
-
-	tokenString, err := token.SignedString(mySigningKey)
-
-	if err != nil {
-		fmt.Errorf("Something went wrong: %s", err.Error())
-		return "", err
-	}
-
-	return tokenString, nil
+func homePrint(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Super Nice Info")
 }
 
 func main() {
 
 	fmt.Println("My server")
-
-	tokenString, error := GenerateJWT()
+	tokenString, error := jwtprocessing.GenerateJWT()
 
 	if error != nil {
 		fmt.Println("Error generating token string")
 	}
 
+	// jwtprocessing "github.com/Festivals-App/festivals-identity-server/jwt"
+
 	fmt.Println(tokenString)
+
+	http.Handle("/", isAuthenticated([]string{"a", "b"}, homePrint))
+
+	log.Fatal(http.ListenAndServe(":9000", nil))
+
 	/*
 		conf := config.DefaultConfig()
 		if len(os.Args) > 1 {
