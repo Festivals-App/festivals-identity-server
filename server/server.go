@@ -2,11 +2,13 @@ package server
 
 import (
 	"database/sql"
-	"github.com/Festivals-App/festivals-identity-server/config"
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/Festivals-App/festivals-identity-server/server/config"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 // Server has router and db instances
