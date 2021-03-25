@@ -1,5 +1,11 @@
 package identity
 
+import "github.com/Festivals-App/festivals-identity-server/authentication"
+
+func functiontousetheshit() {
+	authentication.IsAuthenticated([]string{"a", "b"}, nil)
+}
+
 /*
 func homePrint(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Super Nice Info")
