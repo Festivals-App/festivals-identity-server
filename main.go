@@ -25,7 +25,7 @@ func main() {
 
 	fmt.Println(tokenString)
 
-	http.Handle("/", authmenow.isAuthenticated([]string{"a", "b"}, homePrint))
+	http.Handle("/", fuckYYOuFuckingGoSchitLanguage([]string{"a", "b"}, homePrint))
 
 	log.Fatal(http.ListenAndServe(":9000", nil))
 
