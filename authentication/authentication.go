@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func IsAuthenticated(keys []string, endpoint func(http.ResponseWriter, *http.Request)) http.Handler {
+func IsAuthenticated(keys []string, endpoint func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
