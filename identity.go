@@ -1,13 +1,6 @@
-package main
+package identity
 
-import (
-	"fmt"
-	"github.com/Festivals-App/festivals-identity-server/authentication"
-	"github.com/Festivals-App/festivals-identity-server/jwt"
-	"log"
-	"net/http"
-)
-
+/*
 func homePrint(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Super Nice Info")
 }
@@ -29,7 +22,7 @@ func main() {
 
 	log.Fatal(http.ListenAndServe(":9000", nil))
 
-	/*
+
 		conf := config.DefaultConfig()
 		if len(os.Args) > 1 {
 			conf = config.ParseConfig(os.Args[1])
@@ -38,5 +31,6 @@ func main() {
 		serverInstance := &server.Server{}
 		serverInstance.Initialize(conf)
 		serverInstance.Run(":" + strconv.Itoa(conf.ServicePort))
-	*/
+
 }
+*/
