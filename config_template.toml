@@ -14,3 +14,4 @@
 
   [authentication]
   api-keys = ["TEST_API_KEY_001", "TEST_API_KEY_002", "TEST_API_KEY_003"]
+  admin-keys = ["TEST_ADMIN_KEY_001"]
