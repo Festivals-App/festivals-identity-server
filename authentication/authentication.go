@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func IsAuthenticated(keys []string, endpoint func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
+func IsEntitled(keys []string, endpoint func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -32,7 +32,6 @@ func contains(slice []string, item string) bool {
 	for _, s := range slice {
 		set[s] = struct{}{}
 	}
-
 	_, ok := set[item]
 	return ok
 }

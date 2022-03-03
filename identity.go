@@ -3,7 +3,7 @@ package identity
 import "github.com/Festivals-App/festivals-identity-server/authentication"
 
 func functiontousetheshit() {
-	authentication.IsAuthenticated([]string{"a", "b"}, nil)
+	authentication.IsEntitled([]string{"a", "b"}, nil)
 }
 
 /*

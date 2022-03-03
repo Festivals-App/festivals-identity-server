@@ -20,7 +20,7 @@ func TestIsAuthenticated(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := IsAuthenticated(tt.args.keys, tt.args.endpoint); !reflect.DeepEqual(got, tt.want) {
+			if got := IsEntitled(tt.args.keys, tt.args.endpoint); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("IsAuthenticated() = %v, want %v", got, tt.want)
 			}
 		})
