@@ -5,7 +5,7 @@ import (
 
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 var mySigningKey = []byte("mysupersecret")
