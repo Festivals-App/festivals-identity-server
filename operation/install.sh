@@ -22,7 +22,7 @@ fi
 mkdir -p /usr/local/festivals-identity-server/install || { echo "Failed to create working directory. Exiting." ; exit 1; }
 cd /usr/local/festivals-identity-server/install || { echo "Failed to access working directory. Exiting." ; exit 1; }
 
-echo "Installing festivals-server using port 10439."
+echo "Installing festivals-identity-server using port 22580."
 sleep 1
 
 # Get system os
@@ -49,36 +49,36 @@ fi
 
 # Build url to latest binary for the given system
 #
-file_url="https://github.com/Festivals-App/festivals-server/releases/latest/download/festivals-server-$os-$arch.tar.gz"
+file_url="https://github.com/Festivals-App/festivals-identity-server/releases/latest/download/festivals-identity-server-$os-$arch.tar.gz"
 echo "The system is $os on $arch."
 sleep 1
 
-# Install festivals-server to /usr/local/bin/festivals-server. TODO: Maybe just link to /usr/local/bin?
+# Install festivals-identity-server to /usr/local/bin/festivals-identity-server. TODO: Maybe just link to /usr/local/bin?
 #
-echo "Downloading newest festivals-server binary release..."
-curl -L "$file_url" -o festivals-server.tar.gz
-tar -xf festivals-server.tar.gz
-mv festivals-server /usr/local/bin/festivals-server || { echo "Failed to install festivals-server binary. Exiting." ; exit 1; }
-echo "Installed the festivals-server binary to '/usr/local/bin/festivals-server'."
+echo "Downloading newest festivals-identity-server binary release..."
+curl -L "$file_url" -o festivals-identity-server.tar.gz
+tar -xf festivals-identity-server.tar.gz
+mv festivals-identity-server /usr/local/bin/festivals-identity-server || { echo "Failed to install festivals-identity-server binary. Exiting." ; exit 1; }
+echo "Installed the festivals-identity-server binary to '/usr/local/bin/festivals-identity-server'."
 sleep 1
 
 ## Install server config file
 #
-mv config_template.toml /etc/festivals-server.conf
-echo "Moved default festivals-server config to '/etc/festivals-server.conf'."
+mv config_template.toml /etc/festivals-identity-server.conf
+echo "Moved default festivals-identity-server config to '/etc/festivals-identity-server.conf'."
 sleep 1
 
 ## Prepare log directory
 #
-mkdir /var/log/festivals-server || { echo "Failed to create log directory. Exiting." ; exit 1; }
-chown "$WEB_USER":"$WEB_USER" /var/log/festivals-server
-echo "Create log directory at '/var/log/festivals-server'."
+mkdir /var/log/festivals-identity-server || { echo "Failed to create log directory. Exiting." ; exit 1; }
+chown "$WEB_USER":"$WEB_USER" /var/log/festivals-identity-server
+echo "Create log directory at '/var/log/festivals-identity-server'."
 
 ## Prepare update workflow
 #
-mv update.sh /usr/local/festivals-server/update.sh
+mv update.sh /usr/local/festivals-identity-server/update.sh
 cp /etc/sudoers /tmp/sudoers.bak
-echo "$WEB_USER ALL = (ALL) NOPASSWD: /usr/local/festivals-server/update.sh" >> /tmp/sudoers.bak
+echo "$WEB_USER ALL = (ALL) NOPASSWD: /usr/local/festivals-identity-server/update.sh" >> /tmp/sudoers.bak
 # Check syntax of the backup file to make sure it is correct.
 visudo -cf /tmp/sudoers.bak
 if [ $? -eq 0 ]; then
@@ -92,8 +92,8 @@ fi
 #
 if command -v ufw > /dev/null; then
 
-  ufw allow 10439/tcp >/dev/null
-  echo "Added festivals-server to ufw using port 10439."
+  ufw allow 22580/tcp >/dev/null
+  echo "Added festivals-identity-server to ufw using port 22580."
   sleep 1
 
 elif ! [ "$(uname -s)" = "Darwin" ]; then
@@ -105,13 +105,13 @@ fi
 #
 if command -v service > /dev/null; then
 
-  if ! [ -f "/etc/systemd/system/festivals-server.service" ]; then
-    mv service_template.service /etc/systemd/system/festivals-server.service
+  if ! [ -f "/etc/systemd/system/festivals-identity-server.service" ]; then
+    mv service_template.service /etc/systemd/system/festivals-identity-server.service
     echo "Created systemd service."
     sleep 1
   fi
 
-  systemctl enable festivals-server > /dev/null
+  systemctl enable festivals-identity-server > /dev/null
   echo "Enabled systemd service."
   sleep 1
 
@@ -123,12 +123,12 @@ fi
 # Remving unused files
 #
 echo "Cleanup..."
-cd /usr/local/festivals-server || exit
-rm -R /usr/local/festivals-server/install
+cd /usr/local/festivals-identity-server || exit
+rm -R /usr/local/festivals-identity-server/install
 sleep 1
 
 echo "Done!"
 sleep 1
 
-echo "You can start the server manually by running 'systemctl start festivals-server' after you updated the configuration file at '/etc/festivals-server.conf'"
+echo "You can start the server manually by running 'systemctl start festivals-identity-server' after you updated the configuration file at '/etc/festivals-identity-server.conf'"
 sleep 1

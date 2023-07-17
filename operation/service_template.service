@@ -1,0 +1,16 @@
+[Unit]
+Description=Festivals identity server, a live and lightweight go server app.
+ConditionPathExists=/usr/local/bin/festivals-identity-server
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+Restart=always
+RestartSec=5s
+ExecStartPre=/bin/mkdir -p /var/log/festivals-identity-server
+ExecStart=/usr/local/bin/festivals-identity-server
+
+[Install]
+WantedBy=multi-user.target
