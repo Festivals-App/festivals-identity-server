@@ -43,7 +43,6 @@ func (s *Server) Initialize(config *config.Config) {
 	s.Config = config
 
 	s.setMiddleware()
-	s.setWalker()
 	s.setRoutes(config)
 }
 
@@ -51,23 +50,11 @@ func (s *Server) setMiddleware() {
 
 	// tell the router which middleware to use
 	s.Router.Use(
-		// used to log the request to the console | development
-		//LoggerMiddleware(s.Config.Logger),
-		logger.Middleware(&log.Logger),
+		// used to log the request to the console
+		logger.Middleware(logger.TraceLogger("/var/log/festivals-identity-server/trace.log")),
 		// tries to recover after panics (?)
 		middleware.Recoverer,
 	)
-}
-
-func (s *Server) setWalker() {
-
-	walkFunc := func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
-		log.Info().Msg(method + " " + route + " \n")
-		return nil
-	}
-	if err := chi.Walk(s.Router, walkFunc); err != nil {
-		log.Panic().Msg(err.Error())
-	}
 }
 
 // setRouters sets the all required routers
@@ -79,8 +66,8 @@ func (s *Server) setRoutes(config *config.Config) {
 
 	s.Router.Get("/log", s.handleAdminRequest(handler.GetLog))
 
-	s.Router.Get("/festivals", s.handleRequest(handler.GetFestivals))
-	s.Router.Get("/festivals/{objectID}", s.handleRequest(handler.GetFestival))
+	//s.Router.Get("/festivals", s.handleRequest(handler.GetFestivals))
+	//s.Router.Get("/festivals/{objectID}", s.handleRequest(handler.GetFestival))
 }
 
 // Run the server on it's router
