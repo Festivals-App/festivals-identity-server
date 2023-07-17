@@ -1,9 +1,9 @@
-# festivals-server configuration file v1.0
+# festivals-identity-server configuration file v1.0
 # TOML 1.0.0-rc.2+
 
   [service]
   read-only = false
-  port = 10439
+  port = 22580
 
   [database]
   host = "localhost"
