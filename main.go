@@ -14,7 +14,7 @@ import (
 
 func main() {
 
-	logger.Initialize("/var/log/festivals-identity-server/info.log", true)
+	logger.InitializeGlobalLogger("/var/log/festivals-identity-server/info.log", true)
 
 	log.Info().Msg("Server startup.")
 
