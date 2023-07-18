@@ -9,6 +9,7 @@
 *.dll
 *.so
 *.dylib
+festivals-identity-server
 
 # Test binary, built with `go test -c`
 *.test
