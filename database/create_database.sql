@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS `users` (
     `user_role` 	  	    tinyint 		    NOT NULL DEFAULT 0											            COMMENT 'The role of the user.',
 
 PRIMARY 	KEY (`user_id`),
-UNIQUE 	  	KEY `name` (`user_name`),
-            KEY `email` (`user_email`)
+UNIQUE 	  	KEY (`user_name`),
+            KEY (`user_email`)
 
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='The user table represents a user that interacts with the FestivalsApp backend.';
 
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `node_keys` (
 	`node_key` 	  	        varchar(225) 		NOT NULL 												                COMMENT 'The node key.'
 
 PRIMARY 	KEY (`key_id`),
-UNIQUE 	  	KEY `key` (`node_key`)
+UNIQUE 	  	KEY (`node_key`)
 
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='This table contains all node keys.';
 
