@@ -92,14 +92,14 @@ chmod -R 761 /usr/local/festivals-identity-server/mysql.conf
 # Download and run mysql secure script
 #
 echo "Downloading database security script"
-curl --progress-bar -L -o secure-mysql.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/main/operation/secure-mysql.sh
+curl --progress-bar -L -o secure-mysql.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/master/operation/secure-mysql.sh
 chmod +x secure-mysql.sh
 ./secure-mysql.sh "$root_password"
 
 # Download database creation script
 #
 echo "Downloading database creation script..."
-curl --progress-bar -L -o create_database.sql https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/main/database/create_database.sql
+curl --progress-bar -L -o create_database.sql https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/master/database/create_database.sql
 
 # Run database creation script and configure users
 #
