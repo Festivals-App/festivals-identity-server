@@ -74,21 +74,17 @@ Additionally the scripts will somewhat work under macOS but won't configure the 
 
 Installing
 ```bash
-curl -o install.sh https://raw.githubusercontent.com/Festivals-App/festivals-fileserver/master/operation/install.sh
+curl -o install.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/master/operation/install.sh
 chmod +x install.sh
-sudo ./install.sh
+sudo ./install.sh <mysql_root_pw> <mysql_backup_pw> <read_write_pw>
+sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf          // edit bind-address=<private-ip>
 ```
+
 Updating
 ```bash
-curl -o update.sh https://raw.githubusercontent.com/Festivals-App/festivals-fileserver/master/operation/update.sh
+curl -o update.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/master/operation/update.sh
 chmod +x update.sh
 sudo ./update.sh
-```
-Uninstalling
-```bash
-curl -o uninstall.sh https://raw.githubusercontent.com/Festivals-App/festivals-fileserver/master/operation/uninstall.sh
-chmod +x uninstall.sh
-sudo ./uninstall.sh
 ```
 
 ### Docker
