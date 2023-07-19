@@ -36,7 +36,7 @@ UNIQUE 	  	KEY (`user_name`),
 CREATE TABLE IF NOT EXISTS `node_keys` (
 
 	`key_id` 			    int unsigned 	 	NOT NULL AUTO_INCREMENT 											    COMMENT 'The id of the key.',
-	`node_key` 	  	        varchar(225) 		NOT NULL 												                COMMENT 'The node key.'
+	`node_key` 	  	        varchar(225) 		NOT NULL 												                COMMENT 'The node key.',
 
 PRIMARY 	KEY (`key_id`),
 UNIQUE 	  	KEY (`node_key`)
