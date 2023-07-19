@@ -14,7 +14,7 @@ Create the basic entities
 
 */
 
--- Create the festival table
+-- Create the users table
 CREATE TABLE IF NOT EXISTS `users` (
 
 	`user_id` 			    int unsigned 	 	NOT NULL AUTO_INCREMENT 											    COMMENT 'The id of the user.',
@@ -31,6 +31,17 @@ UNIQUE 	  	KEY `name` (`user_name`),
             KEY `email` (`user_email`)
 
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='The user table represents a user that interacts with the FestivalsApp backend.';
+
+-- Create the node key table
+CREATE TABLE IF NOT EXISTS `node_keys` (
+
+	`key_id` 			    int unsigned 	 	NOT NULL AUTO_INCREMENT 											    COMMENT 'The id of the key.',
+	`node_key` 	  	        varchar(225) 		NOT NULL 												                COMMENT 'The node key.'
+
+PRIMARY 	KEY (`key_id`),
+UNIQUE 	  	KEY `key` (`node_key`)
+
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='This table contains all node keys.';
 
 /**
 
@@ -73,3 +84,12 @@ PRIMARY 	KEY (`map_id`),
 FOREIGN 	KEY (`associated_user`)                 REFERENCES users (user_id)
 
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='This table maps locations to users.';
+
+/**
+
+Insert default admin user
+
+*/
+
+INSERT INTO  `users`(`user_id`, `user_name`, `user_email`, `user_password`, `user_tokenhash`, `user_role`)
+        VALUES (0, 'Administrator', 'admin@email.com', 'password', 'passwordhash', 42);

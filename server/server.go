@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/Festivals-App/festivals-gateway/server/logger"
-	"github.com/Festivals-App/festivals-identity-server/authentication"
 	"github.com/Festivals-App/festivals-identity-server/server/config"
 	"github.com/Festivals-App/festivals-identity-server/server/handler"
 	"github.com/go-chi/chi/v5"
@@ -64,7 +63,7 @@ func (s *Server) setRoutes(config *config.Config) {
 	s.Router.Get("/info", s.handleRequestWithoutValidation(handler.GetInfo))
 	s.Router.Get("/health", s.handleRequestWithoutValidation(handler.GetHealth))
 
-	s.Router.Get("/log", s.handleAdminRequest(handler.GetLog))
+	//s.Router.Get("/log", s.handleAdminRequest(handler.GetLog))
 
 	//s.Router.Get("/festivals", s.handleRequest(handler.GetFestivals))
 	//s.Router.Get("/festivals/{objectID}", s.handleRequest(handler.GetFestival))
@@ -78,25 +77,27 @@ func (s *Server) Run(host string) {
 }
 
 // function prototype to inject DB instance in handleRequest()
-type RequestHandlerFunction func(db *sql.DB, w http.ResponseWriter, r *http.Request)
+type RequestHandlerFunction func(config *config.Config, w http.ResponseWriter, r *http.Request)
 
+/*
 func (s *Server) handleRequest(requestHandler RequestHandlerFunction) http.HandlerFunc {
 
 	return authentication.IsEntitled(s.Config.APIKeys, func(w http.ResponseWriter, r *http.Request) {
-		requestHandler(s.DB, w, r)
+		requestHandler(s.Config, w, r)
 	})
 }
 
 func (s *Server) handleAdminRequest(requestHandler RequestHandlerFunction) http.HandlerFunc {
 
 	return authentication.IsEntitled(s.Config.AdminKeys, func(w http.ResponseWriter, r *http.Request) {
-		requestHandler(s.DB, w, r)
+		requestHandler(s.Config, w, r)
 	})
 }
+*/
 
 func (s *Server) handleRequestWithoutValidation(requestHandler RequestHandlerFunction) http.HandlerFunc {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		requestHandler(s.DB, w, r)
+		requestHandler(s.Config, w, r)
 	})
 }

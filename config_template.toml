@@ -1,17 +1,17 @@
 # festivals-identity-server configuration file v1.0
 # TOML 1.0.0-rc.2+
 
-  [service]
-  read-only = false
-  port = 22580
+[service]
+bind-address = "localhost"
+port = 22580
+key = "TEST_API_KEY_001"
 
-  [database]
-  host = "localhost"
-  port = 3306
-  username = "festivals.identity.guard"
-  password = "we4711"
-  database-name = "festivals_api_database"
+[database]
+host = "localhost"
+port = 3306
+username = "festivals.identity.writer"
+password = "we4711"
+database-name = "festivals_identity_database"
 
-  [authentication]
-  api-keys = ["TEST_API_KEY_001", "TEST_API_KEY_002", "TEST_API_KEY_003"]
-  admin-keys = ["TEST_ADMIN_KEY_001"]
+[heartbeat]
+endpoint = "localhost"

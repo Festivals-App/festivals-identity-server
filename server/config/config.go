@@ -12,13 +12,10 @@ import (
 
 type Config struct {
 	DB                 *DBConfig
-	ReadOnly           bool
 	ServiceBindAddress string
 	ServicePort        int
 	ServiceKey         string
 	LoversEar          string
-	APIKeys            []string
-	AdminKeys          []string
 }
 
 type DBConfig struct {
@@ -66,29 +63,17 @@ func ParseConfig(cfgFile string) *Config {
 		log.Fatal().Msg("server initialize: could not read config file at '" + cfgFile + "' with error: " + err.Error())
 	}
 
-	readonly := content.Get("service.read-only").(bool)
 	serviceBindAdress := content.Get("service.bind-address").(string)
 	servicePort := content.Get("service.port").(int64)
 	serviceKey := content.Get("service.key").(string)
-
-	loversear := content.Get("heartbeat.endpoint").(string)
-
-	keyValues := content.Get("authentication.api-keys").([]interface{})
-	keys := make([]string, len(keyValues))
-	for i, v := range keyValues {
-		keys[i] = v.(string)
-	}
-	adminKeyValues := content.Get("authentication.admin-keys").([]interface{})
-	adminKeys := make([]string, len(adminKeyValues))
-	for i, v := range adminKeyValues {
-		adminKeys[i] = v.(string)
-	}
 
 	dbHost := content.Get("database.host").(string)
 	dbPort := content.Get("database.port").(int64)
 	dbUsername := content.Get("database.username").(string)
 	dbPassword := content.Get("database.password").(string)
 	databaseName := content.Get("database.database-name").(string)
+
+	loversear := content.Get("heartbeat.endpoint").(string)
 
 	return &Config{
 		DB: &DBConfig{
@@ -100,13 +85,10 @@ func ParseConfig(cfgFile string) *Config {
 			Name:     databaseName,
 			Charset:  "utf8",
 		},
-		ReadOnly:           readonly,
 		ServiceBindAddress: serviceBindAdress,
 		ServicePort:        int(servicePort),
 		ServiceKey:         serviceKey,
 		LoversEar:          loversear,
-		APIKeys:            keys,
-		AdminKeys:          adminKeys,
 	}
 }
 

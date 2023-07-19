@@ -1,9 +1,28 @@
 #!/bin/bash
 #
-# Enables the firewall, installs the newest festivals-identity-server and starts it as a service.
+# install.sh 1.0.0
+#
+# Enables the firewall, installs the newest mysql, starts it as a service,
+# configures it to be used as the database server for the FestivalsIdentityServer and setup
+# the backup routines.
 #
 # (c)2020-2023 Simon Gaus
 #
+
+# Check if all passwords are supplied
+#
+if [ $# -ne 3 ]; then
+    echo "$0: usage: sudo ./install.sh <mysql_root_pw> <mysql_backup_pw> <read_write_pw>"
+    exit 1
+fi
+
+# Store passwords in variables
+#
+root_password=$1
+backup_password=$2
+read_write_password=$3
+echo "All necessary passwords are provided and valid."
+sleep 1
 
 # Test for web server user
 #
@@ -17,11 +36,111 @@ if [ $? -ne 0 ]; then
   fi
 fi
 
-# Move to working dir
+# Store username in variable
 #
-mkdir -p /usr/local/festivals-identity-server/install || { echo "Failed to create working directory. Exiting." ; exit 1; }
-cd /usr/local/festivals-identity-server/install || { echo "Failed to access working directory. Exiting." ; exit 1; }
+# Usign this because whoami would return root if the script is called with sudo!
+#
+current_user=$(who mom likes | awk '{print $1}')
 
+# Create and move to project directory
+#
+echo "Creating project directory"
+sleep 1
+mkdir -p /usr/local/festivals-identity-server || { echo "Failed to create project directory. Exiting." ; exit 1; }
+cd /usr/local/festivals-identity-server || { echo "Failed to access project directory. Exiting." ; exit 1; }
+chown -R "$current_user":"$current_user" .
+chmod -R 761 .
+
+# Install mysql if needed.
+#
+echo "Installing mysql-server..."
+apt-get install mysql-server -y > /dev/null;
+
+# Enables and configures the firewall.
+# Supported firewalls: ufw and firewalld
+# This step is skipped under macOS.
+#
+ufw allow mysql
+echo "Added mysql service to ufw rules"
+sleep 1
+
+# Launch mysql on startup
+#
+systemctl enable mysql > /dev/null
+systemctl start mysql > /dev/null
+echo "Enabled and started mysql systemd service."
+sleep 1
+
+# Install mysql credential file
+#
+echo "Installing mysql credential file"
+sleep 1
+credentialsFile=/usr/local/festivals-identity-server/mysql.conf
+cat << EOF > $credentialsFile
+# festivals-identity-server configuration file v1.0
+# TOML 1.0.0-rc.2+
+
+[client]
+user = 'festivals.identity.backup'
+password = '$backup_password'
+host = 'localhost'
+EOF
+
+chown -R "$current_user":"$current_user" /usr/local/festivals-identity-server/mysql.conf
+chmod -R 761 /usr/local/festivals-identity-server/mysql.conf
+
+# Download and run mysql secure script
+#
+echo "Downloading database security script"
+curl --progress-bar -L -o secure-mysql.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/main/operation/secure-mysql.sh
+chmod +x secure-mysql.sh
+./secure-mysql.sh "$root_password"
+
+# Download database creation script
+#
+echo "Downloading database creation script..."
+curl --progress-bar -L -o create_database.sql https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/main/database/create_database.sql
+
+# Run database creation script and configure users
+#
+echo "Configuring mysql"
+sleep 1
+mysql -e "source /usr/local/festivals-identity-server/create_database.sql"
+echo "Creating local backup user..."
+mysql -e "CREATE USER 'festivals.identity.backup'@'localhost' IDENTIFIED BY '$backup_password';"
+mysql -e "GRANT ALL PRIVILEGES ON festivals_identity_database.* TO 'festivals.identity.backup'@'localhost';"
+sleep 1
+echo "Creating local read/write user..."
+mysql -e "CREATE USER 'festivals.identity.writer'@'localhost' IDENTIFIED BY '$read_write_password';"
+mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE ON festivals_identity_database.* TO 'festivals.identity.writer'@'localhost';"
+sleep 1
+mysql -e "FLUSH PRIVILEGES;"
+
+# Create the backup directory
+#
+echo "Create backup directory"
+sleep 1
+mkdir -p /srv/festivals-identity-server/backups || { echo "Failed to create backup directory. Exiting." ; exit 1; }
+cd /srv/festivals-identity-server/backups || { echo "Failed to access backup directory. Exiting." ; exit 1; }
+chown -R "$current_user":"$current_user" /srv/festivals-identity-server
+chmod -R 761 /srv/festivals-identity-server
+
+# Download the backup script
+#
+echo "Downloading database backup script"
+curl --progress-bar -L -o backup.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/main/operation/backup.sh
+chown -R "$current_user":"$current_user" /srv/festivals-identity-server/backups/backup.sh
+chmod -R 761 /srv/festivals-identity-server/backups/backup.sh
+chmod +x /srv/festivals-identity-server/backups/backup.sh
+
+# Installing a cronjob to run the backup every day at 3 pm.
+#
+echo "Installing a cronjob to periodically run a backup"
+sleep 1
+echo "0 3 * * * $current_user /srv/festivals-identity-server/backups/backup.sh" | sudo tee -a /etc/cron.d/festivals_identity_server_backup
+
+# Installing festivals-identity-server binary
+#
 echo "Installing festivals-identity-server using port 22580."
 sleep 1
 
@@ -70,7 +189,7 @@ sleep 1
 
 ## Prepare log directory
 #
-mkdir /var/log/festivals-identity-server || { echo "Failed to create log directory. Exiting." ; exit 1; }
+mkdir -p /var/log/festivals-identity-server || { echo "Failed to create log directory. Exiting." ; exit 1; }
 chown "$WEB_USER":"$WEB_USER" /var/log/festivals-identity-server
 echo "Create log directory at '/var/log/festivals-identity-server'."
 
@@ -120,15 +239,20 @@ elif ! [ "$(uname -s)" = "Darwin" ]; then
   exit 1
 fi
 
-# Remving unused files
-#
-echo "Cleanup..."
-cd /usr/local/festivals-identity-server || exit
-rm -R /usr/local/festivals-identity-server/install
-sleep 1
-
 echo "Done!"
 sleep 1
 
 echo "You can start the server manually by running 'systemctl start festivals-identity-server' after you updated the configuration file at '/etc/festivals-identity-server.conf'"
+sleep 1
+
+
+# Cleanup
+#
+echo "Cleanup"
+cd /usr/local/festivals-identity-server || exit
+rm secure-mysql.sh
+rm create_database.sql
+sleep 1
+
+echo "Done."
 sleep 1
