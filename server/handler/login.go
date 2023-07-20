@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/Festivals-App/festivals-identity-server/server/database"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -70,19 +71,15 @@ func UserWithEmail(db *sql.DB, email string) (*User, error) {
 	query := "SELECT * FROM users WHERE `user_email`=?;"
 	vars := []interface{}{email}
 
-	rows, err := db.Query(query, vars...)
+	rows, err := database.ExecuteRowQuery(db, query, vars)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
 		return nil, err
 	}
-
+	rows.Next()
 	user, err := UserScan(rows)
 	if err != nil {
 		return nil, err
 	}
-
 	return &user, nil
 }
 
