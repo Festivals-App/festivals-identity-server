@@ -1,15 +1,15 @@
 package handler
 
 import (
+	"database/sql"
 	"net/http"
 
-	"github.com/Festivals-App/festivals-gateway/server/config"
-	"github.com/Festivals-App/festivals-gateway/server/status"
 	"github.com/Festivals-App/festivals-gateway/server/update"
+	"github.com/Festivals-App/festivals-identity-server/server/status"
 	"github.com/rs/zerolog/log"
 )
 
-func MakeUpdate(conf *config.Config, w http.ResponseWriter, r *http.Request) {
+func MakeUpdate(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	newVersion, err := update.RunUpdate(status.ServerVersion, "Festivals-App", "festivals-identity-server", "/usr/local/festivals-identity-server/update.sh")
 	if err != nil {

@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS `users` (
 	`user_name` 	  	    varchar(225) 		NOT NULL 												                COMMENT 'The name of the user. The name needs to be unique.',
 	`user_email` 		    varchar(255)		NOT NULL													            COMMENT 'The email of the user. The email needs to be unique.',
 	`user_password` 	    varchar(225) 	  	NOT NULL 												                COMMENT '',
-	`user_tokenhash` 		varchar(15) 	  	NOT NULL 											                    COMMENT '',
 	`user_createdat` 		timestamp 			NOT NULL DEFAULT current_timestamp()					      		    COMMENT '',
 	`user_updatedat` 		timestamp 			NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()	    COMMENT '',
     `user_role` 	  	    tinyint 		    NOT NULL DEFAULT 0											            COMMENT 'The role of the user.',
@@ -87,9 +86,9 @@ FOREIGN 	KEY (`associated_user`)                 REFERENCES users (user_id)
 
 /**
 
-Insert default admin user
+Insert default admin user (default password: we4711)
 
 */
 
-INSERT INTO  `users`(`user_id`, `user_name`, `user_email`, `user_password`, `user_tokenhash`, `user_role`)
-        VALUES (0, 'Administrator', 'admin@email.com', 'password', 'passwordhash', 42);
+INSERT INTO  `users`(`user_id`, `user_name`, `user_email`, `user_password`, `user_role`)
+        VALUES (0, 'Administrator', 'admin@email.com', '$2a$12$YbAhewILx82tGkLtEZWiKOfYzBt85RSQtGXhxlQX2hV7qiP51xPES', 42);

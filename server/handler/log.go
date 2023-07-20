@@ -1,15 +1,15 @@
 package handler
 
 import (
+	"database/sql"
 	"errors"
 	"net/http"
 	"os"
 
-	"github.com/Festivals-App/festivals-identity-server/server/config"
 	"github.com/rs/zerolog/log"
 )
 
-func GetLog(conf *config.Config, w http.ResponseWriter, r *http.Request) {
+func GetLog(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	l, err := Log("/var/log/festivals-identity-server/info.log")
 	if err != nil {
@@ -20,7 +20,7 @@ func GetLog(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 	respondString(w, http.StatusOK, l)
 }
 
-func GetTraceLog(conf *config.Config, w http.ResponseWriter, r *http.Request) {
+func GetTraceLog(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	l, err := Log("/var/log/festivals-identity-server/trace.log")
 	if err != nil {

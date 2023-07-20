@@ -50,3 +50,9 @@ func respondCode(w http.ResponseWriter, code int) {
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(code)
 }
+
+func unauthorizedResponse(w http.ResponseWriter) {
+
+	w.Header().Set("WWW-Authenticate", `Basic realm="restricted", charset="UTF-8"`)
+	http.Error(w, "Not Authorized", http.StatusUnauthorized)
+}
