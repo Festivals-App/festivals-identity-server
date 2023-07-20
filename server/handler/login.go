@@ -85,5 +85,5 @@ func UserWithEmail(db *sql.DB, email string) (*User, error) {
 
 func UserScan(rs *sql.Rows) (User, error) {
 	var u User
-	return u, rs.Scan(&u.ID, &u.Name, &u.Email, &u.Password, &u.CreateDate, &u.UpdateDate, &u.Role, &u.Include)
+	return u, rs.Scan(&u.ID, &u.Name, &u.Email, &u.Password, &u.CreateDate, &u.UpdateDate, &u.Role)
 }
