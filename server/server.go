@@ -70,6 +70,7 @@ func (s *Server) setRoutes() {
 	s.Router.Post("/signup", s.handleRequestWithoutValidation(handler.Signup))
 	s.Router.Post("/login", s.handleRequestWithoutValidation(handler.Login))
 
+	s.Router.Post("/refresh", s.handleRequest(handler.Signup))
 	s.Router.Post("/change-password", s.handleRequest(handler.Signup))
 
 	//s.Router.Get("/user", s.handleRequest(handler.GetLog))

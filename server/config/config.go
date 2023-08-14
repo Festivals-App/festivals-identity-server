@@ -11,11 +11,16 @@ import (
 )
 
 type Config struct {
-	DB                 *DBConfig
-	ServiceBindAddress string
-	ServicePort        int
-	ServiceKey         string
-	LoversEar          string
+	DB                         *DBConfig
+	ServiceBindAddress         string
+	ServicePort                int
+	ServiceKey                 string
+	LoversEar                  string
+	JwtExpiration              int
+	AccessTokenPrivateKeyPath  string
+	AccessTokenPublicKeyPath   string
+	RefreshTokenPrivateKeyPath string
+	RefreshTokenPublicKeyPath  string
 }
 
 type DBConfig struct {
@@ -75,6 +80,12 @@ func ParseConfig(cfgFile string) *Config {
 
 	loversear := content.Get("heartbeat.endpoint").(string)
 
+	jwtExpiration := content.Get("jwt.expiration").(int)
+	accessTokenPrivateKeyPath := content.Get("jwt.accessprivatekeypath").(string)
+	accessTokenPublicKeyPath := content.Get("jwt.accesspublickeypath").(string)
+	refreshTokenPrivateKeyPath := content.Get("jwt.refreshprivatekeypath").(string)
+	refreshTokenPublicKeyPath := content.Get("jwt.refreshpublickeypath").(string)
+
 	return &Config{
 		DB: &DBConfig{
 			Dialect:  "mysql",
@@ -85,10 +96,15 @@ func ParseConfig(cfgFile string) *Config {
 			Name:     databaseName,
 			Charset:  "utf8",
 		},
-		ServiceBindAddress: serviceBindAdress,
-		ServicePort:        int(servicePort),
-		ServiceKey:         serviceKey,
-		LoversEar:          loversear,
+		ServiceBindAddress:         serviceBindAdress,
+		ServicePort:                int(servicePort),
+		ServiceKey:                 serviceKey,
+		LoversEar:                  loversear,
+		JwtExpiration:              jwtExpiration,
+		AccessTokenPublicKeyPath:   accessTokenPrivateKeyPath,
+		AccessTokenPrivateKeyPath:  accessTokenPublicKeyPath,
+		RefreshTokenPrivateKeyPath: refreshTokenPrivateKeyPath,
+		RefreshTokenPublicKeyPath:  refreshTokenPublicKeyPath,
 	}
 }
 

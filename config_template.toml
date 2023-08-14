@@ -15,3 +15,10 @@ database-name = "festivals_identity_database"
 
 [heartbeat]
 endpoint = "localhost"
+
+[jwt]
+expiration = 1000
+accessprivatekeypath = "./access-private.pem"
+accesspublickeypath = "./access-public.pem"
+refreshprivatekeypath = "./refresh-private.pem"
+refreshpublickeypath = "./refresh-public.pem"
