@@ -30,16 +30,16 @@ UNIQUE 	  	KEY (`user_name`),
 
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='The user table represents a user that interacts with the FestivalsApp backend.';
 
--- Create the node key table
+-- Create the service node key table
 CREATE TABLE IF NOT EXISTS `node_keys` (
 
 	`key_id` 			    int unsigned 	 	NOT NULL AUTO_INCREMENT 											    COMMENT 'The id of the key.',
-	`node_key` 	  	        varchar(225) 		NOT NULL 												                COMMENT 'The node key.',
+	`node_key` 	  	        varchar(225) 		NOT NULL 												                COMMENT 'The service node key.',
 
 PRIMARY 	KEY (`key_id`),
 UNIQUE 	  	KEY (`node_key`)
 
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='This table contains all node keys.';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='This table contains all service node keys.';
 
 /**
 Create the mapping tables to associate entities
