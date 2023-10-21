@@ -3,13 +3,18 @@ module github.com/Festivals-App/festivals-identity-server
 go 1.20
 
 require (
-	github.com/Festivals-App/festivals-gateway v1.4.3
+	github.com/Festivals-App/festivals-gateway v1.4.7
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/rs/zerolog v1.31.0
 	golang.org/x/crypto v0.14.0
+)
+
+require (
+	golang.org/x/net v0.17.0 // indirect
+	golang.org/x/text v0.13.0 // indirect
 )
 
 require (
