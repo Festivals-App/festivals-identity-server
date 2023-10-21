@@ -11,7 +11,6 @@ import (
 )
 
 type Config struct {
-	DB                         *DBConfig
 	ServiceBindAddress         string
 	ServiceBindHost            string
 	ServicePort                int
@@ -25,6 +24,7 @@ type Config struct {
 	AccessTokenPublicKeyPath   string
 	RefreshTokenPrivateKeyPath string
 	RefreshTokenPublicKeyPath  string
+	DB                         *DBConfig
 }
 
 type DBConfig struct {
@@ -61,7 +61,7 @@ func ParseConfig(cfgFile string) *Config {
 
 	content, err := toml.LoadFile(cfgFile)
 	if err != nil {
-		log.Fatal().Msg("server initialize: could not read config file at '" + cfgFile + "' with error: " + err.Error())
+		log.Fatal().Err(err).Msg("server initialize: could not read config file at '" + cfgFile + "'")
 	}
 
 	serviceBindAdress := content.Get("service.bind-address").(string)
@@ -73,12 +73,6 @@ func ParseConfig(cfgFile string) *Config {
 	tlscert := content.Get("tls.cert").(string)
 	tlskey := content.Get("tls.key").(string)
 
-	dbHost := content.Get("database.host").(string)
-	dbPort := content.Get("database.port").(int64)
-	dbUsername := content.Get("database.username").(string)
-	dbPassword := content.Get("database.password").(string)
-	databaseName := content.Get("database.database-name").(string)
-
 	loversear := content.Get("heartbeat.endpoint").(string)
 
 	jwtExpiration := content.Get("jwt.expiration").(int64)
@@ -87,16 +81,13 @@ func ParseConfig(cfgFile string) *Config {
 	refreshTokenPrivateKeyPath := content.Get("jwt.refreshprivatekeypath").(string)
 	refreshTokenPublicKeyPath := content.Get("jwt.refreshpublickeypath").(string)
 
+	dbHost := content.Get("database.host").(string)
+	dbPort := content.Get("database.port").(int64)
+	dbUsername := content.Get("database.username").(string)
+	dbPassword := content.Get("database.password").(string)
+	databaseName := content.Get("database.database-name").(string)
+
 	return &Config{
-		DB: &DBConfig{
-			Dialect:  "mysql",
-			Host:     dbHost,
-			Port:     int(dbPort),
-			Username: dbUsername,
-			Password: dbPassword,
-			Name:     databaseName,
-			Charset:  "utf8",
-		},
 		ServiceBindAddress:         serviceBindAdress,
 		ServiceBindHost:            serviceBindHost,
 		ServicePort:                int(servicePort),
@@ -110,6 +101,15 @@ func ParseConfig(cfgFile string) *Config {
 		AccessTokenPrivateKeyPath:  accessTokenPublicKeyPath,
 		RefreshTokenPrivateKeyPath: refreshTokenPrivateKeyPath,
 		RefreshTokenPublicKeyPath:  refreshTokenPublicKeyPath,
+		DB: &DBConfig{
+			Dialect:  "mysql",
+			Host:     dbHost,
+			Port:     int(dbPort),
+			Username: dbUsername,
+			Password: dbPassword,
+			Name:     databaseName,
+			Charset:  "utf8",
+		},
 	}
 }
 
