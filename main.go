@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/http"
 	"os"
 	"strconv"
 	"time"
@@ -27,6 +28,10 @@ func main() {
 
 	serverInstance := &server.Server{}
 	serverInstance.Initialize(conf)
+
+	// Redirect traffic from port 80 to used port
+	go http.ListenAndServe(":80", serverInstance.CertManager.HTTPHandler(nil))
+	log.Info().Msg("Start redirecting http traffic from port 80 to port " + strconv.Itoa(serverInstance.Config.ServicePort) + " and https")
 
 	go serverInstance.Run(conf.ServiceBindAddress + ":" + strconv.Itoa(conf.ServicePort))
 	log.Info().Msg("Server did start.")

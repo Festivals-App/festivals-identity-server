@@ -13,8 +13,12 @@ import (
 type Config struct {
 	DB                         *DBConfig
 	ServiceBindAddress         string
+	ServiceBindHost            string
 	ServicePort                int
 	ServiceKey                 string
+	TLSRootCert                string
+	TLSCert                    string
+	TLSKey                     string
 	LoversEar                  string
 	JwtExpiration              int
 	AccessTokenPrivateKeyPath  string
@@ -34,14 +38,6 @@ type DBConfig struct {
 }
 
 func DefaultConfig() *Config {
-
-	/// TODO Add support for config from environment variable
-	/*
-		httpPort := os.Getenv("HTTP_PORT")
-		if httpPort == "" {
-			httpPort = "8080"
-		}
-	*/
 
 	// first we try to parse the config at the global configuration path
 	if fileExists("/etc/festivals-identity-server.conf") {
@@ -69,8 +65,13 @@ func ParseConfig(cfgFile string) *Config {
 	}
 
 	serviceBindAdress := content.Get("service.bind-address").(string)
+	serviceBindHost := content.Get("service.bind-host").(string)
 	servicePort := content.Get("service.port").(int64)
 	serviceKey := content.Get("service.key").(string)
+
+	tlsrootcert := content.Get("tls.festivaslapp-root-ca").(string)
+	tlscert := content.Get("tls.cert").(string)
+	tlskey := content.Get("tls.key").(string)
 
 	dbHost := content.Get("database.host").(string)
 	dbPort := content.Get("database.port").(int64)
@@ -80,7 +81,7 @@ func ParseConfig(cfgFile string) *Config {
 
 	loversear := content.Get("heartbeat.endpoint").(string)
 
-	jwtExpiration := content.Get("jwt.expiration").(int)
+	jwtExpiration := content.Get("jwt.expiration").(int64)
 	accessTokenPrivateKeyPath := content.Get("jwt.accessprivatekeypath").(string)
 	accessTokenPublicKeyPath := content.Get("jwt.accesspublickeypath").(string)
 	refreshTokenPrivateKeyPath := content.Get("jwt.refreshprivatekeypath").(string)
@@ -97,10 +98,14 @@ func ParseConfig(cfgFile string) *Config {
 			Charset:  "utf8",
 		},
 		ServiceBindAddress:         serviceBindAdress,
+		ServiceBindHost:            serviceBindHost,
 		ServicePort:                int(servicePort),
 		ServiceKey:                 serviceKey,
+		TLSRootCert:                tlsrootcert,
+		TLSCert:                    tlscert,
+		TLSKey:                     tlskey,
 		LoversEar:                  loversear,
-		JwtExpiration:              jwtExpiration,
+		JwtExpiration:              int(jwtExpiration),
 		AccessTokenPublicKeyPath:   accessTokenPrivateKeyPath,
 		AccessTokenPrivateKeyPath:  accessTokenPublicKeyPath,
 		RefreshTokenPrivateKeyPath: refreshTokenPrivateKeyPath,

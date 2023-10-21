@@ -1,24 +1,29 @@
 package server
 
 import (
+	"crypto/tls"
 	"database/sql"
 	"fmt"
 	"net/http"
 
 	"github.com/Festivals-App/festivals-gateway/server/logger"
+	"github.com/Festivals-App/festivals-identity-server/festivalspki"
 	"github.com/Festivals-App/festivals-identity-server/server/config"
 	"github.com/Festivals-App/festivals-identity-server/server/handler"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/rs/zerolog/log"
+	"golang.org/x/crypto/acme/autocert"
 )
 
 // Server has router and db instances
 type Server struct {
-	Router *chi.Mux
-	DB     *sql.DB
-	Config *config.Config
+	Router      *chi.Mux
+	DB          *sql.DB
+	Config      *config.Config
+	CertManager *autocert.Manager
+	TLSConfig   *tls.Config
 }
 
 // Initialize the server with predefined configuration
@@ -34,15 +39,33 @@ func (s *Server) Initialize(config *config.Config) {
 	db, err := sql.Open(config.DB.Dialect, dbURI)
 
 	if err != nil {
-		log.Fatal().Err((err)).Msg("server initialize: could not connect to database")
+		//log.Fatal().Err((err)).Msg("Server initialize: could not connect to database")
 	}
 
 	s.DB = db
 	s.Router = chi.NewRouter()
 	s.Config = config
 
+	s.setTLSHandling()
 	s.setMiddleware()
 	s.setRoutes()
+}
+
+func (s *Server) setTLSHandling() {
+
+	base := s.Config.ServiceBindAddress
+	hosts := []string{base}
+
+	certManager := autocert.Manager{
+		Prompt:     autocert.AcceptTOS,
+		HostPolicy: autocert.HostWhitelist(hosts...),
+		Cache:      autocert.DirCache("/etc/letsencrypt/live/" + base),
+	}
+
+	tlsConfig := certManager.TLSConfig()
+	tlsConfig.GetCertificate = festivalspki.LoadServerCertificates(s.Config.TLSCert, s.Config.TLSKey, s.Config.TLSRootCert, &certManager)
+	s.CertManager = &certManager
+	s.TLSConfig = tlsConfig
 }
 
 func (s *Server) setMiddleware() {
@@ -81,8 +104,16 @@ func (s *Server) setRoutes() {
 
 // Run the server on it's router
 func (s *Server) Run(host string) {
-	if err := http.ListenAndServe(host, s.Router); err != nil {
-		log.Fatal().Err(err).Msg("Startup failed")
+
+	server := http.Server{
+		Addr:      host,
+		Handler:   s.Router,
+		TLSConfig: s.TLSConfig,
+	}
+
+	specifiedInTLSConfig := ""
+	if err := server.ListenAndServeTLS(specifiedInTLSConfig, specifiedInTLSConfig); err != nil {
+		log.Fatal().Err(err).Str("type", "server").Msg("Failed to run server")
 	}
 }
 
