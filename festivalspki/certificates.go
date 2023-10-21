@@ -31,7 +31,7 @@ func LoadServerCertificates(serverCert string, serverKey string, rootCACert stri
 
 // LoadX509Certificate reads and parses a certificate from a .crt file.
 // The file must contain PEM encoded data. The certificate file may only contain one certificate.
-func LoadX509Certificate(certFile string) (*x509.Certificate, error) {
+func loadX509Certificate(certFile string) (*x509.Certificate, error) {
 
 	rootCACertContent, err := os.ReadFile(certFile)
 	if err != nil {
