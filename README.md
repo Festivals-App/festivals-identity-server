@@ -23,8 +23,7 @@ A live and lightweight go server app providing a simple RESTful API using [go-ch
 1. Make server run
 2. Make server serves tls
 3. Make other server serve tls
-4. Make nodes only needing one server key managed by identity server (after install we only need one server key (+tls certificates) to stitch all nodes together)
-5. implement jwt to validate requests to other nodes (especialy for admin requests)
+4. implement jwt to validate requests to other partys (especialy for admin requests)
 
 
 TBA
