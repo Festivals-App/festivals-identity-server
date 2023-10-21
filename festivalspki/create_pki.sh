@@ -9,7 +9,7 @@
 
 # Check if all passwords are supplied
 #
-if [ $# -ne 3 ]; then
-    echo "$0: usage: sudo ./create_pki.sh <ca_root_pw> <mysql_backup_pw> <read_write_pw>"
+if [ $# -ne 1 ]; then
+    echo "$0: usage: sudo ./create_pki.sh <ca_key_pw> <ca_common_name>"
     exit 1
 fi
