@@ -16,15 +16,13 @@ func LoadServerCertificates(serverCert string, serverKey string, rootCACert stri
 
 		certificate, err := tls.LoadX509KeyPair(serverCert, serverKey)
 		if err != nil {
-			log.Debug().Err(err).Msg("Failed to load local certificates. Fallback to Lets Encrypt autocert.")
 			return certManager.GetCertificate(hello)
 		}
-		rootCACert, err := LoadX509Certificate(rootCACert)
+		rootCACert, err := loadX509Certificate(rootCACert)
 		if err != nil {
 			log.Panic().Err(err).Str("type", "server").Msg("Failed to load FestivalsApp Root CA certificate")
 		}
 		certificate.Certificate = append(certificate.Certificate, rootCACert.Raw)
-		log.Debug().Msg("Using development server TLS certificates")
 		return &certificate, err
 	}
 }
