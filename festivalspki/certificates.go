@@ -31,14 +31,14 @@ func LoadServerCertificates(serverCert string, serverKey string, rootCACert stri
 // The file must contain PEM encoded data. The certificate file may only contain one certificate.
 func LoadX509Certificate(certFile string) (*x509.Certificate, error) {
 
-	rootCACertContent, err := os.ReadFile(certFile)
+	certContent, err := os.ReadFile(certFile)
 	if err != nil {
 		return nil, err
 	}
-	block, _ := pem.Decode(rootCACertContent)
-	rootCACert, err := x509.ParseCertificate(block.Bytes)
+	block, _ := pem.Decode(certContent)
+	cert, err := x509.ParseCertificate(block.Bytes)
 	if err != nil {
 		return nil, err
 	}
-	return rootCACert, nil
+	return cert, nil
 }
