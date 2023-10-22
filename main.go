@@ -33,7 +33,7 @@ func main() {
 	go http.ListenAndServe(":80", serverInstance.CertManager.HTTPHandler(nil))
 	log.Info().Msg("Start redirecting http traffic from port 80 to port " + strconv.Itoa(serverInstance.Config.ServicePort) + " and https")
 
-	go serverInstance.Run(conf.ServiceBindAddress + ":" + strconv.Itoa(conf.ServicePort))
+	go serverInstance.Run(conf)
 	log.Info().Msg("Server did start.")
 
 	go sendHeartbeat(conf)
@@ -48,7 +48,7 @@ func sendHeartbeat(conf *config.Config) {
 	for {
 		timer := time.After(time.Second * 2)
 		<-timer
-		var beat *heartbeat.Heartbeat = &heartbeat.Heartbeat{Service: "festivals-identity-server", Host: conf.ServiceBindAddress, Port: conf.ServicePort, Available: true}
+		var beat *heartbeat.Heartbeat = &heartbeat.Heartbeat{Service: "festivals-identity-server", Host: conf.ServiceBindHost, Port: conf.ServicePort, Available: true}
 		err := heartbeat.SendHeartbeat(conf.LoversEar, conf.ServiceKey, beat)
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to send heartbeat")

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/Festivals-App/festivals-gateway/server/logger"
 	"github.com/Festivals-App/festivals-identity-server/festivalspki"
@@ -102,17 +103,15 @@ func (s *Server) setRoutes() {
 	//s.Router.Get("/festivals/{objectID}", s.handleRequest(handler.GetFestival))
 }
 
-// Run the server on it's router
-func (s *Server) Run(host string) {
+func (s *Server) Run(conf *config.Config) {
 
 	server := http.Server{
-		Addr:      host,
+		Addr:      conf.ServiceBindHost + ":" + strconv.Itoa(conf.ServicePort),
 		Handler:   s.Router,
 		TLSConfig: s.TLSConfig,
 	}
 
-	specifiedInTLSConfig := ""
-	if err := server.ListenAndServeTLS(specifiedInTLSConfig, specifiedInTLSConfig); err != nil {
+	if err := server.ListenAndServeTLS("", ""); err != nil {
 		log.Fatal().Err(err).Str("type", "server").Msg("Failed to run server")
 	}
 }
