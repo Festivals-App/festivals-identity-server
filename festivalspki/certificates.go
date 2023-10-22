@@ -18,7 +18,7 @@ func LoadServerCertificates(serverCert string, serverKey string, rootCACert stri
 		if err != nil {
 			return certManager.GetCertificate(hello)
 		}
-		rootCACert, err := loadX509Certificate(rootCACert)
+		rootCACert, err := LoadX509Certificate(rootCACert)
 		if err != nil {
 			log.Panic().Err(err).Str("type", "server").Msg("Failed to load FestivalsApp Root CA certificate")
 		}
@@ -29,7 +29,7 @@ func LoadServerCertificates(serverCert string, serverKey string, rootCACert stri
 
 // LoadX509Certificate reads and parses a certificate from a .crt file.
 // The file must contain PEM encoded data. The certificate file may only contain one certificate.
-func loadX509Certificate(certFile string) (*x509.Certificate, error) {
+func LoadX509Certificate(certFile string) (*x509.Certificate, error) {
 
 	rootCACertContent, err := os.ReadFile(certFile)
 	if err != nil {
