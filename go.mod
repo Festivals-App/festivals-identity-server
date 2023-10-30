@@ -3,7 +3,7 @@ module github.com/Festivals-App/festivals-identity-server
 go 1.20
 
 require (
-	github.com/Festivals-App/festivals-gateway v1.4.9
+	github.com/Festivals-App/festivals-gateway v1.5.0
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/golang-jwt/jwt/v5 v5.0.0
