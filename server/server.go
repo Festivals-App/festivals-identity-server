@@ -37,11 +37,11 @@ func (s *Server) Initialize(config *config.Config) {
 		config.DB.Port,
 		config.DB.Name,
 		config.DB.Charset)
-	db, err := sql.Open(config.DB.Dialect, dbURI)
+	db, _ := sql.Open(config.DB.Dialect, dbURI)
 
-	if err != nil {
-		//log.Fatal().Err((err)).Msg("Server initialize: could not connect to database")
-	}
+	//if err != nil {
+	//log.Fatal().Err((err)).Msg("Server initialize: could not connect to database")
+	//}
 
 	s.DB = db
 	s.Router = chi.NewRouter()
