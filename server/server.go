@@ -64,6 +64,7 @@ func (s *Server) setTLSHandling() {
 	}
 
 	tlsConfig := certManager.TLSConfig()
+	tlsConfig.ClientAuth = tls.RequireAndVerifyClientCert
 	tlsConfig.GetCertificate = festivalspki.LoadServerCertificates(s.Config.TLSCert, s.Config.TLSKey, s.Config.TLSRootCert, &certManager)
 	s.CertManager = &certManager
 	s.TLSConfig = tlsConfig
