@@ -10,6 +10,11 @@
   <br/><br/>
 </h1>
 
+A lightweight go server app providing a RESTful API, called FestivalsIdentityAPI. The FestivalsIdentityAPI exposes all authorization and authentication functions needed by the the FestivalsApp components.
+
+![Figure 1: Architecture Overview Highlighted](https://github.com/Festivals-App/festivals-documentation/blob/main/images/architecture/overview_id.png "Figure 1: Architecture Overview Highlighted")
+
+<hr/>
 <p align="center">
   <a href="#development">Development</a> •
   <a href="#deployment">Deployment</a> •
@@ -18,10 +23,7 @@
   <a href="#engage">Engage</a> •
   <a href="#licensing">Licensing</a>
 </p>
-
-A lightweight go server app providing a simple RESTful API using [go-chi/chi](https://github.com/go-chi/chi) and [go-sql-driver/mysql](https://github.com/go-sql-driver/mysql).
-
-![Figure 1: Architecture Overview Highlighted](https://github.com/Festivals-App/festivals-documentation/blob/main/images/architecture/overview_id.png "Figure 1: Architecture Overview Highlighted")
+<hr/>
 
 ## Development
 
@@ -29,7 +31,6 @@ A lightweight go server app providing a simple RESTful API using [go-chi/chi](ht
 2. Make server serves tls
 3. Make other server serve tls
 4. implement jwt to validate requests to other partys (especialy for admin requests)
-
 
 TBA
 
