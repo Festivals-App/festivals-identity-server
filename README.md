@@ -6,7 +6,7 @@
 
 <h1 align="center">
   <br/><br/>
-    Festivals Identity Server
+    Festivals App Identity Server
   <br/><br/>
 </h1>
 
