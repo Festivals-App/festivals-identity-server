@@ -1,22 +1,27 @@
-<h1 align="center">
-    Festivals Identity Server
-</h1>
-
 <p align="center">
    <a href="https://github.com/festivals-app/festivals-identity-server/commits/" title="Last Commit"><img src="https://img.shields.io/github/last-commit/festivals-app/festivals-identity-server?style=flat"></a>
    <a href="https://github.com/festivals-app/festivals-identity-server/issues" title="Open Issues"><img src="https://img.shields.io/github/issues/festivals-app/festivals-identity-server?style=flat"></a>
    <a href="./LICENSE" title="License"><img src="https://img.shields.io/github/license/festivals-app/festivals-identity-server.svg"></a>
 </p>
 
+<h1 align="center">
+  <br/><br/>
+    Festivals Identity Server
+  <br/><br/>
+</h1>
+
 <p align="center">
   <a href="#development">Development</a> •
-  <a href="#usage">Usage</a> •
   <a href="#deployment">Deployment</a> •
+  <a href="#festivalsidentityapi">FestivalsIdentityAPI</a> •
+  <a href="#architecture">Architecture</a> •
   <a href="#engage">Engage</a> •
   <a href="#licensing">Licensing</a>
 </p>
 
-A live and lightweight go server app providing a simple RESTful API using [go-chi/chi](https://github.com/go-chi/chi) and [go-sql-driver/mysql](https://github.com/go-sql-driver/mysql).
+A lightweight go server app providing a simple RESTful API using [go-chi/chi](https://github.com/go-chi/chi) and [go-sql-driver/mysql](https://github.com/go-sql-driver/mysql).
+
+![Figure 1: Architecture Overview Highlighted](https://github.com/Festivals-App/festivals-documentation/blob/main/images/architecture/overview_id.png "Figure 1: Architecture Overview Highlighted")
 
 ## Development
 
@@ -35,36 +40,6 @@ TBA
 ### Setup development
 
 TBA
-
-## Usage
-
-TBA
-
-### Structure
-```
-├── server
-│   ├── server.go               // server logic
-│   │
-│   ├── handler                 // API handlers
-│   │   ├── common.go           // Common response functions
-│   │   ├── image.go            // APIs for handling images
-│   │   └── status.go           // APIs getting server status information
-│   │
-│   └── manipulate
-│       ├── resize.go            // APIs for resizing images
-│       └── toolbox.go           // Misc funktions
-│
-├── config
-│   └── config.go               // Configuration
-│
-└── main.go               
-```
-### Documentation
-
-The FestivalsIdentityAPI is documented in detail [here](./DOCUMENTATION.md).
-
-The full documentation for the Festivals App is in the [festivals-documentation](https://github.com/festivals-app/festivals-documentation) repository. 
-The documentation repository contains technical documents, architecture information, UI/UX specifications, and whitepapers related to this implementation.
 
 ## Deployment
 
@@ -86,18 +61,6 @@ chmod +x update.sh
 sudo ./update.sh
 ```
 
-### Docker
-
-```bash
-TBA
-```
-
-### macOS
-
-```bash
-TBA
-```
-
 ### Build and Run manually
 ```bash
 cd $GOPATH/src/github.com/Festivals-App/festivals-fileserver
@@ -107,21 +70,29 @@ go build main.go
 # Default API Endpoint : http://localhost:1910
 ```
 
+### FestivalsIdentityAPI
+
+The FestivalsIdentityAPI is documented in detail [here](./DOCUMENTATION.md).
+
+## Architecture
+
+The general documentation for the Festivals App is in the [festivals-documentation](https://github.com/festivals-app/festivals-documentation) repository. 
+The documentation repository contains architecture information, general deployment documentation, templates and other helpful documents.
+
 ## Engage
 
-TBA
+I welcome every contribution, whether it is a pull request or a fixed typo. The best place to discuss questions and suggestions regarding the festivals-identity-server is the [issues](https://github.com/festivals-app/festivals-identity-server/issues/) section. More general information and a good starting point if you want to get involved is the [festival-documentation](https://github.com/Festivals-App/festivals-documentation) repository.
 
 The following channels are available for discussions, feedback, and support requests:
 
 | Type                     | Channel                                                |
 | ------------------------ | ------------------------------------------------------ |
 | **General Discussion**   | <a href="https://github.com/festivals-app/festivals-documentation/issues/new/choose" title="General Discussion"><img src="https://img.shields.io/github/issues/festivals-app/festivals-documentation/question.svg?style=flat-square"></a> </a>   |
-| **Concept Feedback**    | <a href="https://github.com/festivals-app/festivals-documentation/issues/new/choose" title="Open Concept Feedback"><img src="https://img.shields.io/github/issues/festivals-app/festivals-documentation/architecture.svg?style=flat-square"></a>  |
-| **Other Requests**    | <a href="mailto:phisto05@gmail.com" title="Email Festivals Team"><img src="https://img.shields.io/badge/email-Festivals%20team-green?logo=mail.ru&style=flat-square&logoColor=white"></a>   |
+| **Other Requests**    | <a href="mailto:simon.cay.gaus@gmail.com" title="Email me"><img src="https://img.shields.io/badge/email-Simon-green?logo=mail.ru&style=flat-square&logoColor=white"></a>   |
 
 ## Licensing
 
-Copyright (c) 2020 Simon Gaus.
+Copyright (c) 2020-2023 Simon Gaus.
 
 Licensed under the **GNU Lesser General Public License v3.0** (the "License"); you may not use this file except in compliance with the License.
 
