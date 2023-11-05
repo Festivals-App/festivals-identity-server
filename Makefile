@@ -26,7 +26,7 @@ uninstall:
 run:
 	./festivals-identity-server
 
-stop:
+stop: 
 	killall festivals-identity-server
 
 clean:
