@@ -19,6 +19,7 @@ type Config struct {
 	TLSCert                    string
 	TLSKey                     string
 	LoversEar                  string
+	Interval                   int
 	JwtExpiration              int
 	AccessTokenPrivateKeyPath  string
 	AccessTokenPublicKeyPath   string
@@ -74,6 +75,7 @@ func ParseConfig(cfgFile string) *Config {
 	tlskey := content.Get("tls.key").(string)
 
 	loversear := content.Get("heartbeat.endpoint").(string)
+	interval := content.Get("heartbeat.interval").(int64)
 
 	jwtExpiration := content.Get("jwt.expiration").(int64)
 	accessTokenPrivateKeyPath := content.Get("jwt.accessprivatekeypath").(string)
@@ -96,6 +98,7 @@ func ParseConfig(cfgFile string) *Config {
 		TLSCert:                    tlscert,
 		TLSKey:                     tlskey,
 		LoversEar:                  loversear,
+		Interval:                   int(interval),
 		JwtExpiration:              int(jwtExpiration),
 		AccessTokenPublicKeyPath:   accessTokenPrivateKeyPath,
 		AccessTokenPrivateKeyPath:  accessTokenPublicKeyPath,

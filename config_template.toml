@@ -21,6 +21,7 @@ database-name = "festivals_identity_database"
 
 [heartbeat]
 endpoint = "localhost"
+interval = 6
 
 [jwt]
 expiration = 1000

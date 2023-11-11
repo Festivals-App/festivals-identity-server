@@ -45,11 +45,17 @@ func main() {
 }
 
 func sendHeartbeat(conf *config.Config) {
-	for {
-		timer := time.After(time.Second * 2)
-		<-timer
-		var beat *heartbeat.Heartbeat = &heartbeat.Heartbeat{Service: "festivals-identity-server", Host: "https://" + conf.ServiceBindHost, Port: conf.ServicePort, Available: true}
-		err := heartbeat.SendHeartbeat(conf.LoversEar, conf.ServiceKey, conf.TLSCert, conf.TLSKey, conf.TLSRootCert, beat)
+
+	heartbeatClient, err := heartbeat.HeartbeatClient(conf.TLSCert, conf.TLSKey)
+	if err != nil {
+		log.Fatal().Err(err).Str("type", "server").Msg("Failed to create heartbeat client")
+	}
+	var beat *heartbeat.Heartbeat = &heartbeat.Heartbeat{Service: "festivals-identity-server", Host: "https://" + conf.ServiceBindHost, Port: conf.ServicePort, Available: true}
+
+	t := time.NewTicker(time.Duration(conf.Interval) * time.Second)
+	defer t.Stop()
+	for range t.C {
+		err = heartbeat.SendHeartbeat(heartbeatClient, conf.LoversEar, conf.ServiceKey, beat)
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to send heartbeat")
 		}
