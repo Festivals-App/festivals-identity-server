@@ -14,11 +14,6 @@ require (
 )
 
 require (
-	golang.org/x/net v0.18.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
-)
-
-require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/go-github v17.0.0+incompatible // indirect
 	github.com/google/go-querystring v1.1.0 // indirect

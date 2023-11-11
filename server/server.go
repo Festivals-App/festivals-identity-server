@@ -15,16 +15,20 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/rs/zerolog/log"
-	"golang.org/x/crypto/acme/autocert"
 )
 
 // Server has router and db instances
 type Server struct {
-	Router      *chi.Mux
-	DB          *sql.DB
-	Config      *config.Config
-	CertManager *autocert.Manager
-	TLSConfig   *tls.Config
+	Router    *chi.Mux
+	DB        *sql.DB
+	Config    *config.Config
+	TLSConfig *tls.Config
+}
+
+func NewServer(config *config.Config) *Server {
+	server := &Server{}
+	server.Initialize(config)
+	return server
 }
 
 // Initialize the server with predefined configuration
@@ -54,19 +58,10 @@ func (s *Server) Initialize(config *config.Config) {
 
 func (s *Server) setTLSHandling() {
 
-	base := s.Config.ServiceBindAddress
-	hosts := []string{base}
-
-	certManager := autocert.Manager{
-		Prompt:     autocert.AcceptTOS,
-		HostPolicy: autocert.HostWhitelist(hosts...),
-		Cache:      autocert.DirCache("/etc/letsencrypt/live/" + base),
+	tlsConfig := &tls.Config{
+		ClientAuth:     tls.RequireAndVerifyClientCert,
+		GetCertificate: festivalspki.LoadServerCertificateHandler(s.Config.TLSCert, s.Config.TLSKey, s.Config.TLSRootCert),
 	}
-
-	tlsConfig := certManager.TLSConfig()
-	tlsConfig.ClientAuth = tls.RequireAndVerifyClientCert
-	tlsConfig.GetCertificate = festivalspki.LoadServerCertificateHandler(s.Config.TLSCert, s.Config.TLSKey, s.Config.TLSRootCert)
-	s.CertManager = &certManager
 	s.TLSConfig = tlsConfig
 }
 
