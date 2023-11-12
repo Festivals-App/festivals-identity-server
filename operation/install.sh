@@ -196,6 +196,7 @@ echo "Create log directory at '/var/log/festivals-identity-server'."
 ## Prepare update workflow
 #
 mv update.sh /usr/local/festivals-identity-server/update.sh
+chmod +x /usr/local/festivals-identity-server/update.sh
 cp /etc/sudoers /tmp/sudoers.bak
 echo "$WEB_USER ALL = (ALL) NOPASSWD: /usr/local/festivals-identity-server/update.sh" >> /tmp/sudoers.bak
 # Check syntax of the backup file to make sure it is correct.
