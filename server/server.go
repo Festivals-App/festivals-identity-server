@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/Festivals-App/festivals-gateway/server/logger"
 	"github.com/Festivals-App/festivals-identity-server/server/config"
@@ -102,9 +103,13 @@ func (s *Server) setRoutes() {
 func (s *Server) Run(conf *config.Config) {
 
 	server := http.Server{
-		Addr:      conf.ServiceBindHost + ":" + strconv.Itoa(conf.ServicePort),
-		Handler:   s.Router,
-		TLSConfig: s.TLSConfig,
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		ReadHeaderTimeout: 5 * time.Second,
+		Addr:              conf.ServiceBindHost + ":" + strconv.Itoa(conf.ServicePort),
+		Handler:           s.Router,
+		TLSConfig:         s.TLSConfig,
 	}
 
 	if err := server.ListenAndServeTLS("", ""); err != nil {
