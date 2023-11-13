@@ -190,7 +190,7 @@ else
   echo "Could not modify /etc/sudoers file. Please do this manually." ; exit 1;
 fi
 
-## Set appropriate directory permissions
+## Set appropriate permissions
 #
 chown -R "$WEB_USER":"$WEB_USER" /usr/local/festivals-identity-server
 chown -R "$WEB_USER":"$WEB_USER" /var/log/festivals-identity-server
