@@ -1,5 +1,6 @@
 package token
 
+/*
 import (
 	"crypto/hmac"
 	"crypto/sha256"
@@ -116,3 +117,4 @@ func (auth *AuthService) GenerateCustomKey(userID string, tokenHash string) stri
 	sha := hex.EncodeToString(h.Sum(nil))
 	return sha
 }
+*/
