@@ -10,7 +10,7 @@ import (
 
 	"github.com/Festivals-App/festivals-identity-server/server/config"
 	"github.com/Festivals-App/festivals-identity-server/server/model"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/rs/zerolog/log"
 )
 

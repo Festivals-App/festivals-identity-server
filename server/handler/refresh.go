@@ -3,6 +3,8 @@ package handler
 import (
 	"database/sql"
 	"net/http"
+
+	servertools "github.com/Festivals-App/festivals-server-tools"
 )
 
 func Refresh(db *sql.DB, w http.ResponseWriter, r *http.Request) {
@@ -12,5 +14,5 @@ func Refresh(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		unauthorizedResponse(w)
 		return
 	}
-	respondJSON(w, http.StatusOK, user)
+	servertools.RespondJSON(w, http.StatusOK, user)
 }

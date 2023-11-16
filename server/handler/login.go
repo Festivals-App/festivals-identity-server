@@ -6,6 +6,7 @@ import (
 
 	"github.com/Festivals-App/festivals-identity-server/server/database"
 	"github.com/Festivals-App/festivals-identity-server/server/model"
+	servertools "github.com/Festivals-App/festivals-server-tools"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -33,7 +34,7 @@ func Login(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		// If the password is correct return the authentication jwt token
 		if err == nil {
 
-			respondJSON(w, http.StatusOK, requestedUser)
+			servertools.RespondJSON(w, http.StatusOK, requestedUser)
 			return
 		}
 	}

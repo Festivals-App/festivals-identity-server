@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/Festivals-App/festivals-identity-server/server/model"
+	servertools "github.com/Festivals-App/festivals-server-tools"
 )
 
 func Signup(db *sql.DB, w http.ResponseWriter, r *http.Request) {
@@ -16,7 +17,7 @@ func Signup(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		unauthorizedResponse(w)
 		return
 	}
-	respondJSON(w, http.StatusOK, user)
+	servertools.RespondJSON(w, http.StatusOK, user)
 }
 
 func GetUserFromRequest(r *http.Request) (*model.User, error) {

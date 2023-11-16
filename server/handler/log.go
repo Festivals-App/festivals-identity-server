@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	servertools "github.com/Festivals-App/festivals-server-tools"
 	"github.com/rs/zerolog/log"
 )
 
@@ -14,10 +15,10 @@ func GetLog(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	l, err := Log("/var/log/festivals-identity-server/info.log")
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to get log")
-		respondError(w, http.StatusBadRequest, "Failed to get log")
+		servertools.RespondError(w, http.StatusBadRequest, "Failed to get log")
 		return
 	}
-	respondString(w, http.StatusOK, l)
+	servertools.RespondString(w, http.StatusOK, l)
 }
 
 func GetTraceLog(db *sql.DB, w http.ResponseWriter, r *http.Request) {
@@ -25,10 +26,10 @@ func GetTraceLog(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	l, err := Log("/var/log/festivals-identity-server/trace.log")
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to get trace log")
-		respondError(w, http.StatusBadRequest, "Failed to get trace log")
+		servertools.RespondError(w, http.StatusBadRequest, "Failed to get trace log")
 		return
 	}
-	respondString(w, http.StatusOK, l)
+	servertools.RespondString(w, http.StatusOK, l)
 }
 
 func Log(location string) (string, error) {
