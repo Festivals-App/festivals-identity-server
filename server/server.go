@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Festivals-App/festivals-gateway/server/logger"
 	"github.com/Festivals-App/festivals-identity-server/server/config"
 	"github.com/Festivals-App/festivals-identity-server/server/handler"
 	festivalspki "github.com/Festivals-App/festivals-pki"
+	servertools "github.com/Festivals-App/festivals-server-tools"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	_ "github.com/go-sql-driver/mysql"
@@ -71,7 +71,7 @@ func (s *Server) setMiddleware() {
 	// tell the router which middleware to use
 	s.Router.Use(
 		// used to log the request to the console
-		logger.Middleware(logger.TraceLogger("/var/log/festivals-identity-server/trace.log")),
+		servertools.Middleware(servertools.TraceLogger("/var/log/festivals-identity-server/trace.log")),
 		// tries to recover after panics (?)
 		middleware.Recoverer,
 	)
