@@ -40,6 +40,9 @@ fi
 #
 mkdir -p /usr/local/festivals-identity-server/install || { echo "Failed to create working directory. Exiting." ; exit 1; }
 cd /usr/local/festivals-identity-server/install || { echo "Failed to access working directory. Exiting." ; exit 1; }
+echo "Installing festivals-identity-server using port 22580."
+sleep 1
+
 
 # Install mysql if needed.
 #
@@ -122,11 +125,6 @@ echo "Installing a cronjob to periodically run a backup"
 sleep 1
 echo "0 3 * * * $WEB_USER /srv/festivals-identity-server/backups/backup.sh" | sudo tee -a /etc/cron.d/festivals_identity_server_backup
 
-# Installing festivals-identity-server binary
-#
-echo "Installing festivals-identity-server using port 22580."
-sleep 1
-
 # Get system os
 #
 if [ "$(uname -s)" = "Darwin" ]; then
@@ -190,13 +188,6 @@ else
   echo "Could not modify /etc/sudoers file. Please do this manually." ; exit 1;
 fi
 
-## Set appropriate permissions
-#
-chown -R "$WEB_USER":"$WEB_USER" /usr/local/festivals-identity-server
-chown -R "$WEB_USER":"$WEB_USER" /var/log/festivals-identity-server
-chown -R "$WEB_USER":"$WEB_USER" /srv/festivals-identity-server
-chown "$WEB_USER":"$WEB_USER" /etc/festivals-identity-server.conf
-
 # Enable and configure the firewall.
 #
 if command -v ufw > /dev/null; then
@@ -228,6 +219,13 @@ elif ! [ "$(uname -s)" = "Darwin" ]; then
   echo "Systemd is missing and not on macOS. Exiting."
   exit 1
 fi
+
+## Set appropriate permissions
+#
+chown -R "$WEB_USER":"$WEB_USER" /usr/local/festivals-identity-server
+chown -R "$WEB_USER":"$WEB_USER" /var/log/festivals-identity-server
+chown -R "$WEB_USER":"$WEB_USER" /srv/festivals-identity-server
+chown "$WEB_USER":"$WEB_USER" /etc/festivals-identity-server.conf
 
 # Cleanup
 #
