@@ -6,7 +6,7 @@ REF=refs/tags/development
 export
 
 build:
-	go build -v -ldflags="-X 'github.com/Festivals-App/festivals-identity-server/server/status.ServerVersion=$(VERSION)' -X 'github.com/Festivals-App/festivals-identity-server/server/status.BuildTime=$(DATE)' -X 'github.com/Festivals-App/festivals-identity-server/server/status.GitRef=$(REF)'" -o festivals-identity-server main.go
+	go build -ldflags="-X 'github.com/Festivals-App/festivals-identity-server/server/status.ServerVersion=$(VERSION)' -X 'github.com/Festivals-App/festivals-identity-server/server/status.BuildTime=$(DATE)' -X 'github.com/Festivals-App/festivals-identity-server/server/status.GitRef=$(REF)'" -o festivals-identity-server main.go
 
 install:
 	cp festivals-identity-server /usr/local/bin/festivals-identity-server
