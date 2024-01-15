@@ -14,6 +14,7 @@ import (
 	servertools "github.com/Festivals-App/festivals-server-tools"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/rs/zerolog/log"
 )
@@ -35,26 +36,63 @@ func NewServer(config *config.Config) *Server {
 // Initialize the server with predefined configuration
 func (s *Server) Initialize(config *config.Config) {
 
-	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True",
+	s.Config = config
+	s.Router = chi.NewRouter()
+
+	//s.setDatabase()
+	s.setTLSHandling()
+	s.setMiddleware()
+	s.setRoutes()
+}
+
+var mysqlTLSConfigKey string = "org.festivals.mysql.tls"
+
+func (s *Server) setDatabase() {
+
+	config := s.Config
+
+	rootCertPool, err := festivalspki.LoadCertificatePool(config.DB.ClientCA)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Faile to create pool with root CA file.")
+	}
+
+	certs, err := tls.LoadX509KeyPair(config.DB.ClientCert, config.DB.ClientKey)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Faile to load database client certificate.")
+	}
+
+	tlsConfig := &tls.Config{
+		ClientAuth:   tls.RequireAndVerifyClientCert,
+		RootCAs:      rootCertPool,
+		Certificates: []tls.Certificate{certs},
+	}
+	mysql.RegisterTLSConfig(mysqlTLSConfigKey, tlsConfig)
+
+	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&tls=%s",
 		config.DB.Username,
 		config.DB.Password,
 		config.DB.Host,
 		config.DB.Port,
 		config.DB.Name,
-		config.DB.Charset)
-	db, _ := sql.Open(config.DB.Dialect, dbURI)
+		config.DB.Charset,
+		mysqlTLSConfigKey,
+	)
+	db, err := sql.Open(config.DB.Dialect, dbURI)
 
-	//if err != nil {
-	//log.Fatal().Err((err)).Msg("Server initialize: could not connect to database")
-	//}
+	if err != nil {
+		log.Fatal().Err(err).Msg("Failed to open database handle.")
+	}
+
+	err = db.Ping()
+	if err != nil {
+		log.Fatal().Err(err).Msg("Failed to connect to database.")
+	}
+
+	db.SetConnMaxLifetime(time.Minute * 3)
+	db.SetMaxOpenConns(10)
+	db.SetMaxIdleConns(10)
 
 	s.DB = db
-	s.Router = chi.NewRouter()
-	s.Config = config
-
-	s.setTLSHandling()
-	s.setMiddleware()
-	s.setRoutes()
 }
 
 func (s *Server) setTLSHandling() {
