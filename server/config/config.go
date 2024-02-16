@@ -29,16 +29,13 @@ type Config struct {
 }
 
 type DBConfig struct {
-	Dialect    string
-	Host       string
-	Port       int
-	Username   string
-	Password   string
-	ClientCA   string
-	ClientCert string
-	ClientKey  string
-	Name       string
-	Charset    string
+	Dialect  string
+	Host     string
+	Port     int
+	Username string
+	Password string
+	Name     string
+	Charset  string
 }
 
 func DefaultConfig() *Config {
@@ -86,13 +83,7 @@ func ParseConfig(cfgFile string) *Config {
 	refreshTokenPrivateKeyPath := content.Get("jwt.refreshprivatekeypath").(string)
 	refreshTokenPublicKeyPath := content.Get("jwt.refreshpublickeypath").(string)
 
-	dbHost := content.Get("database.host").(string)
-	dbPort := content.Get("database.port").(int64)
-	dbUsername := content.Get("database.username").(string)
 	dbPassword := content.Get("database.password").(string)
-	dbClientCA := content.Get("database.festivalsapp-root-ca").(string)
-	dbClientCert := content.Get("database.cert").(string)
-	dbClientKey := content.Get("database.key").(string)
 
 	return &Config{
 		ServiceBindAddress:         serviceBindAdress,
@@ -105,21 +96,18 @@ func ParseConfig(cfgFile string) *Config {
 		LoversEar:                  loversear,
 		Interval:                   int(interval),
 		JwtExpiration:              int(jwtExpiration),
-		AccessTokenPublicKeyPath:   accessTokenPrivateKeyPath,
-		AccessTokenPrivateKeyPath:  accessTokenPublicKeyPath,
+		AccessTokenPublicKeyPath:   accessTokenPublicKeyPath,
+		AccessTokenPrivateKeyPath:  accessTokenPrivateKeyPath,
 		RefreshTokenPrivateKeyPath: refreshTokenPrivateKeyPath,
 		RefreshTokenPublicKeyPath:  refreshTokenPublicKeyPath,
 		DB: &DBConfig{
-			Dialect:    "mysql",
-			Host:       dbHost,
-			Port:       int(dbPort),
-			Username:   dbUsername,
-			Password:   dbPassword,
-			ClientCA:   dbClientCA,
-			ClientCert: dbClientCert,
-			ClientKey:  dbClientKey,
-			Name:       "festivals_identity_database",
-			Charset:    "utf8",
+			Dialect:  "mysql",
+			Host:     "localhost",
+			Port:     int(3306),
+			Username: "festivals.identity.writer",
+			Password: dbPassword,
+			Name:     "festivals_identity_database",
+			Charset:  "utf8",
 		},
 	}
 }

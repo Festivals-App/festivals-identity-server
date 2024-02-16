@@ -20,8 +20,7 @@ A lightweight go server app providing a RESTful API, called FestivalsIdentityAPI
   <a href="#deployment">Deployment</a> •
   <a href="#festivalsidentityapi">FestivalsIdentityAPI</a> •
   <a href="#architecture">Architecture</a> •
-  <a href="#engage">Engage</a> •
-  <a href="#licensing">Licensing</a>
+  <a href="#engage">Engage</a>
 </p>
 <hr/>
 
@@ -34,41 +33,39 @@ A lightweight go server app providing a RESTful API, called FestivalsIdentityAPI
 
 TBA
 
-### Requirements
-
--  go 1.20
-
-### Setup development
-
-TBA
+#### Requirements
+- [Golang](https://go.dev/) Version 1.21.5+
+- [Visual Studio Code](https://code.visualstudio.com/download) 1.85.2+
+    * Plugin recommendations are managed via [workspace recommendations](https://code.visualstudio.com/docs/editor/extension-marketplace#_recommended-extensions).
+- [Bash script](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) friendly environment
 
 ## Deployment
+Running the festivals-identity-server is pretty easy because Go binaries are able to run without system dependencies 
+on the target for which they are compiled. The festivals-identity-server expects either a config file at `/etc/festivals-server.conf`,
+the environment variables set or the template config file present in the directory it runs from. 
+You also need to setup the database correctly and provide all needed certificates in the right format, see [festivals-pki](https://github.com/Festivals-App/festivals-pki).
 
-The install, update and uninstall scripts should work with any system that uses *systemd* and *firewalld* or *ufw*. 
-Additionally the scripts will somewhat work under macOS but won't configure the firewall or launch service.
-
-Installing
 ```bash
+#Installing
 curl -o install.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/master/operation/install.sh
 chmod +x install.sh
 sudo ./install.sh <mysql_root_pw> <mysql_backup_pw> <read_write_pw>
 sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf          // edit bind-address=<private-ip>
-```
 
-Updating
-```bash
+#Updating
 curl -o update.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/master/operation/update.sh
 chmod +x update.sh
 sudo ./update.sh
+
+#To see if the server is running use:
+sudo systemctl status festivals-identity-server
 ```
 
-### Build and Run manually
+#### Build and run using make
 ```bash
-cd $GOPATH/src/github.com/Festivals-App/festivals-fileserver
-go build main.go
-./main
-
-# Default API Endpoint : http://localhost:1910
+make build
+make run
+# Default API Endpoint : http://localhost:22580
 ```
 
 ### FestivalsIdentityAPI
@@ -76,12 +73,12 @@ go build main.go
 The FestivalsIdentityAPI is documented in detail [here](./DOCUMENTATION.md).
 
 ## Architecture
+There are a three diffrent security mechanisms to secure the festivalsapp backend, at first every party needs a valid client certificate from the FestivalsApp Root CA to communicate with other partys via mTLS, for more information [see the festivals-pki repository](https://github.com/Festivals-App/festivals-pki). After secure communication is established, clients need either an API key for the read-only parts of the FestivalsAPI or an JSON Web Token ([JWT](https://de.wikipedia.org/wiki/JSON_Web_Token)) for everything else. The JWT is used to implement a role-based access control ([RBAC](https://de.wikipedia.org/wiki/Role_Based_Access_Control)) to decide whether the user is authorized to access the given function.
 
 The general documentation for the Festivals App is in the [festivals-documentation](https://github.com/festivals-app/festivals-documentation) repository. 
 The documentation repository contains architecture information, general deployment documentation, templates and other helpful documents.
 
 ## Engage
-
 I welcome every contribution, whether it is a pull request or a fixed typo. The best place to discuss questions and suggestions regarding the festivals-identity-server is the [issues](https://github.com/festivals-app/festivals-identity-server/issues/) section. More general information and a good starting point if you want to get involved is the [festival-documentation](https://github.com/Festivals-App/festivals-documentation) repository.
 
 The following channels are available for discussions, feedback, and support requests:
@@ -91,12 +88,5 @@ The following channels are available for discussions, feedback, and support requ
 | **General Discussion**   | <a href="https://github.com/festivals-app/festivals-documentation/issues/new/choose" title="General Discussion"><img src="https://img.shields.io/github/issues/festivals-app/festivals-documentation/question.svg?style=flat-square"></a> </a>   |
 | **Other Requests**    | <a href="mailto:simon.cay.gaus@gmail.com" title="Email me"><img src="https://img.shields.io/badge/email-Simon-green?logo=mail.ru&style=flat-square&logoColor=white"></a>   |
 
-## Licensing
-
-Copyright (c) 2020-2023 Simon Gaus.
-
-Licensed under the **GNU Lesser General Public License v3.0** (the "License"); you may not use this file except in compliance with the License.
-
-You may obtain a copy of the License at https://www.gnu.org/licenses/lgpl-3.0.html.
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the [LICENSE](./LICENSE) for the specific language governing permissions and limitations under the License.
+#### Licensing
+Copyright (c) 2020-2024 Simon Gaus. Licensed under the [**GNU Lesser General Public License v3.0**](./LICENSE)

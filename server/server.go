@@ -5,16 +5,18 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"slices"
 	"strconv"
 	"time"
 
+	token "github.com/Festivals-App/festivals-identity-server/jwt"
 	"github.com/Festivals-App/festivals-identity-server/server/config"
+	"github.com/Festivals-App/festivals-identity-server/server/database"
 	"github.com/Festivals-App/festivals-identity-server/server/handler"
 	festivalspki "github.com/Festivals-App/festivals-pki"
 	servertools "github.com/Festivals-App/festivals-server-tools"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/rs/zerolog/log"
 )
@@ -25,6 +27,7 @@ type Server struct {
 	DB        *sql.DB
 	Config    *config.Config
 	TLSConfig *tls.Config
+	Auth      *token.AuthService
 }
 
 func NewServer(config *config.Config) *Server {
@@ -39,44 +42,24 @@ func (s *Server) Initialize(config *config.Config) {
 	s.Config = config
 	s.Router = chi.NewRouter()
 
-	//s.setDatabase()
-	s.setTLSHandling()
+	s.setDatabase(config)
+	s.setTLSHandling(config)
+	s.setAuthService(config)
 	s.setMiddleware()
 	s.setRoutes()
 }
 
-var mysqlTLSConfigKey string = "org.festivals.mysql.tls"
+func (s *Server) setDatabase(config *config.Config) {
 
-func (s *Server) setDatabase() {
-
-	config := s.Config
-
-	rootCertPool, err := festivalspki.LoadCertificatePool(config.DB.ClientCA)
-	if err != nil {
-		log.Fatal().Err(err).Msg("Faile to create pool with root CA file.")
-	}
-
-	certs, err := tls.LoadX509KeyPair(config.DB.ClientCert, config.DB.ClientKey)
-	if err != nil {
-		log.Fatal().Err(err).Msg("Faile to load database client certificate.")
-	}
-
-	tlsConfig := &tls.Config{
-		ClientAuth:   tls.RequireAndVerifyClientCert,
-		RootCAs:      rootCertPool,
-		Certificates: []tls.Certificate{certs},
-	}
-	mysql.RegisterTLSConfig(mysqlTLSConfigKey, tlsConfig)
-
-	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&tls=%s",
+	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True",
 		config.DB.Username,
 		config.DB.Password,
 		config.DB.Host,
 		config.DB.Port,
 		config.DB.Name,
 		config.DB.Charset,
-		mysqlTLSConfigKey,
 	)
+
 	db, err := sql.Open(config.DB.Dialect, dbURI)
 
 	if err != nil {
@@ -88,20 +71,24 @@ func (s *Server) setDatabase() {
 		log.Fatal().Err(err).Msg("Failed to connect to database.")
 	}
 
-	db.SetConnMaxLifetime(time.Minute * 3)
-	db.SetMaxOpenConns(10)
-	db.SetMaxIdleConns(10)
+	db.SetConnMaxIdleTime(time.Minute * 1)
+	db.SetConnMaxLifetime(time.Minute * 5)
 
 	s.DB = db
 }
 
-func (s *Server) setTLSHandling() {
+func (s *Server) setTLSHandling(config *config.Config) {
 
 	tlsConfig := &tls.Config{
 		ClientAuth:     tls.RequireAndVerifyClientCert,
-		GetCertificate: festivalspki.LoadServerCertificateHandler(s.Config.TLSCert, s.Config.TLSKey, s.Config.TLSRootCert),
+		GetCertificate: festivalspki.LoadServerCertificateHandler(config.TLSCert, config.TLSKey, config.TLSRootCert),
 	}
 	s.TLSConfig = tlsConfig
+}
+
+func (s *Server) setAuthService(config *config.Config) {
+
+	s.Auth = token.NewAuthService(config.AccessTokenPrivateKeyPath, config.AccessTokenPublicKeyPath, config.JwtExpiration, config.ServiceBindHost)
 }
 
 func (s *Server) setMiddleware() {
@@ -118,24 +105,35 @@ func (s *Server) setMiddleware() {
 // setRouters sets the all required routers
 func (s *Server) setRoutes() {
 
-	s.Router.Get("/version", s.handleRequestWithoutValidation(handler.GetVersion))
-	s.Router.Get("/info", s.handleRequestWithoutValidation(handler.GetInfo))
-	s.Router.Get("/health", s.handleRequestWithoutValidation(handler.GetHealth))
+	s.Router.Get("/version", s.handleRequest(handler.GetVersion))
+	s.Router.Get("/info", s.handleRequest(handler.GetInfo))
+	s.Router.Get("/health", s.handleRequest(handler.GetHealth))
 
 	s.Router.Post("/update", s.handleRequest(handler.MakeUpdate))
 	s.Router.Get("/log", s.handleRequest(handler.GetLog))
 	s.Router.Get("/log/trace", s.handleRequest(handler.GetTraceLog))
 
-	s.Router.Post("/signup", s.handleRequestWithoutValidation(handler.Signup))
-	s.Router.Post("/login", s.handleRequestWithoutValidation(handler.Login))
+	s.Router.Post("/users/signup", s.handleAPIRequest(handler.Signup))
+	s.Router.Get("/users/login", s.handleAPIRequest(handler.Login))
+	s.Router.Get("/users", s.handleRequest(handler.GetUsers))
+	s.Router.Post("/users/{objectID}/change-password", s.handleRequest(handler.ChangePassword))
+	s.Router.Post("/users/{objectID}/suspend", s.handleRequest(handler.SuspendUser))
+	s.Router.Post("/users/{objectID}/role/{resourceID}", s.handleRequest(handler.SetUserRole))
 
-	s.Router.Post("/refresh", s.handleRequest(handler.Signup))
-	s.Router.Post("/change-password", s.handleRequest(handler.Signup))
+	s.Router.Post("/users/{objectID}/festival/{resourceID}", s.handleServiceRequest(handler.SetFestivalForUser))
+	s.Router.Post("/users/{objectID}/artist/{resourceID}", s.handleServiceRequest(handler.SetArtistForUser))
+	s.Router.Post("/users/{objectID}/location/{resourceID}", s.handleServiceRequest(handler.SetLocationForUser))
+	s.Router.Delete("/users/{objectID}/festival/{resourceID}", s.handleServiceRequest(handler.RemoveFestivalForUser))
+	s.Router.Delete("/users/{objectID}/artist/{resourceID}", s.handleServiceRequest(handler.RemoveArtistForUser))
+	s.Router.Delete("/users/{objectID}/location/{resourceID}", s.handleServiceRequest(handler.RemoveLocationForUser))
 
-	//s.Router.Get("/user", s.handleRequest(handler.GetLog))
+	s.Router.Get("/api-keys", s.handleServiceRequest(handler.GetAPIKeys))
+	s.Router.Post("/api-keys", s.handleRequest(handler.AddAPIKey))
+	s.Router.Delete("/api-keys", s.handleRequest(handler.DeleteAPIKey))
 
-	//s.Router.Get("/festivals", s.handleRequest(handler.GetFestivals))
-	//s.Router.Get("/festivals/{objectID}", s.handleRequest(handler.GetFestival))
+	s.Router.Get("/service-keys", s.handleRequest(handler.GetServiceKeys))
+	s.Router.Post("/service-keys", s.handleRequest(handler.AddServiceKey))
+	s.Router.Delete("/service-keys", s.handleRequest(handler.DeleteServiceKey))
 }
 
 func (s *Server) Run(conf *config.Config) {
@@ -155,19 +153,82 @@ func (s *Server) Run(conf *config.Config) {
 	}
 }
 
-// function prototype to inject DB instance in handleRequest()
-type RequestHandlerFunction func(db *sql.DB, w http.ResponseWriter, r *http.Request)
+type JWTAuthenticatedHandlerFunction func(auth *token.AuthService, claims *token.UserClaims, db *sql.DB, w http.ResponseWriter, r *http.Request)
 
-func (s *Server) handleRequest(requestHandler RequestHandlerFunction) http.HandlerFunc {
+func (s *Server) handleRequest(requestHandler JWTAuthenticatedHandlerFunction) http.HandlerFunc {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		requestHandler(s.DB, w, r)
+
+		claims := token.GetValidClaims(r, s.Auth)
+		if claims == nil {
+			servertools.UnauthorizedResponse(w)
+			return
+		}
+		requestHandler(s.Auth, claims, s.DB, w, r)
 	})
 }
 
-func (s *Server) handleRequestWithoutValidation(requestHandler RequestHandlerFunction) http.HandlerFunc {
+type APIKeyAuthenticatedHandlerFunction func(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request)
+
+func (s *Server) handleAPIRequest(requestHandler APIKeyAuthenticatedHandlerFunction) http.HandlerFunc {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		requestHandler(s.DB, w, r)
+
+		apikey := token.GetAPIToken(r)
+		allAPIKeys, err := database.GetAllAPIKeys(s.DB)
+		if err != nil {
+			servertools.RespondError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+			return
+		}
+		if !slices.Contains(getAPIKeyValues(allAPIKeys), apikey) {
+			servertools.UnauthorizedResponse(w)
+			return
+		}
+		requestHandler(s.Auth, s.DB, w, r)
 	})
+}
+
+type ServiceKeyAuthenticatedHandlerFunction func(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request)
+
+func (s *Server) handleServiceRequest(requestHandler ServiceKeyAuthenticatedHandlerFunction) http.HandlerFunc {
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		servicekey := token.GetServiceToken(r)
+		if servicekey == "" {
+			claims := token.GetValidClaims(r, s.Auth)
+			if claims != nil && claims.UserRole == token.ADMIN {
+				requestHandler(s.Auth, s.DB, w, r)
+				return
+			}
+			servertools.UnauthorizedResponse(w)
+			return
+		}
+		allServiceKeys, err := database.GetAllServiceKeys(s.DB)
+		if err != nil {
+			servertools.RespondError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+			return
+		}
+		if !slices.Contains(getServiceKeyValues(allServiceKeys), servicekey) {
+			servertools.UnauthorizedResponse(w)
+			return
+		}
+		requestHandler(s.Auth, s.DB, w, r)
+	})
+}
+
+func getServiceKeyValues(keys []token.ServiceKey) []string {
+	var data []string
+	for _, key := range keys {
+		data = append(data, key.Key)
+	}
+	return data
+}
+
+func getAPIKeyValues(keys []token.APIKey) []string {
+	var data []string
+	for _, key := range keys {
+		data = append(data, key.Key)
+	}
+	return data
 }

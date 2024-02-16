@@ -6,11 +6,18 @@ import (
 	"net/http"
 	"os"
 
+	token "github.com/Festivals-App/festivals-identity-server/jwt"
 	servertools "github.com/Festivals-App/festivals-server-tools"
 	"github.com/rs/zerolog/log"
 )
 
-func GetLog(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+func GetLog(auth *token.AuthService, claims *token.UserClaims, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+
+	if claims.UserRole != token.ADMIN {
+		log.Error().Msg("User is not authorized to get log file.")
+		servertools.UnauthorizedResponse(w)
+		return
+	}
 
 	l, err := Log("/var/log/festivals-identity-server/info.log")
 	if err != nil {
@@ -21,7 +28,13 @@ func GetLog(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	servertools.RespondString(w, http.StatusOK, l)
 }
 
-func GetTraceLog(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+func GetTraceLog(auth *token.AuthService, claims *token.UserClaims, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+
+	if claims.UserRole != token.ADMIN {
+		log.Error().Msg("User is not authorized to get trace log file.")
+		servertools.UnauthorizedResponse(w)
+		return
+	}
 
 	l, err := Log("/var/log/festivals-identity-server/trace.log")
 	if err != nil {
