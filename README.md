@@ -26,12 +26,10 @@ A lightweight go server app providing a RESTful API, called FestivalsIdentityAPI
 
 ## Development
 
-1. Make server run
-2. Make server serves tls
-3. Make other server serve tls
-4. implement jwt to validate requests to other partys (especialy for admin requests)
-
-TBA
+1. Make server run ✅
+2. Make server serves tls ✅
+3. Make other server serve tls ✅
+4. implement jwt to validate requests to other partys (especialy for admin requests) ✅
 
 #### Requirements
 - [Golang](https://go.dev/) Version 1.21.5+
