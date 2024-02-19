@@ -97,6 +97,24 @@ func Login(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.R
 	servertools.UnauthorizedResponse(w)
 }
 
+func Refresh(auth *token.AuthService, claims *token.UserClaims, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+
+	requestedUser, err := database.GetUserByID(db, claims.UserID)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to fetch user.")
+		servertools.UnauthorizedResponse(w)
+		return
+	}
+
+	token, err := database.RegenerateAccessToken(requestedUser, claims, db, auth)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to regenerate access token for user.")
+		servertools.RespondError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+		return
+	}
+	servertools.RespondString(w, http.StatusOK, token)
+}
+
 func GetUsers(auth *token.AuthService, claims *token.UserClaims, db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	if claims.UserRole != token.ADMIN {

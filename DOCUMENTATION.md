@@ -51,6 +51,7 @@ otherwise an `error` field is returned and will always contain a string with the
 [Users](#users)
 * POST             `/users/signup`
 * GET              `/users/login`
+* GET              `/users/refresh`
 * GET              `/users`
 * POST             `/users/{objectID}/change-password`
 * POST             `/users/{objectID}/suspend`
@@ -94,6 +95,20 @@ Login to the festivalsapp backend.
  
  * Examples:  
     `GET https://localhost:22580/users/login`
+ * Returns:
+     * Returns the JWT on success.
+     * Codes `200`/`40x`/`50x`
+     * The raw JWT or `error` field
+
+------------------------------------------------------------------------------------
+#### GET `/users/refresh`
+
+Refresh the JWT to the festivalsapp backend. This will only refresh the users claims but not the expiration date. 
+ 
+ * Authorization: JWT
+ 
+ * Examples:  
+    `GET https://localhost:22580/users/refresh`
  * Returns:
      * Returns the JWT on success.
      * Codes `200`/`40x`/`50x`
