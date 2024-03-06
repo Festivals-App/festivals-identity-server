@@ -12,6 +12,12 @@ import (
 
 func MakeUpdate(auth *token.AuthService, claims *token.UserClaims, db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
+	if claims.UserRole != token.ADMIN {
+		log.Error().Msg("User is not authorized to get server version.")
+		servertools.UnauthorizedResponse(w)
+		return
+	}
+
 	newVersion, err := servertools.RunUpdate(status.ServerVersion, "Festivals-App", "festivals-identity-server", "/usr/local/festivals-identity-server/update.sh")
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to update")
