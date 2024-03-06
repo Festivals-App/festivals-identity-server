@@ -94,6 +94,71 @@ FOREIGN 	KEY (`associated_user`)                 REFERENCES users (user_id)
 
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='This table maps locations to users.';
 
+-- Create the table to map events to users
+CREATE TABLE IF NOT EXISTS `map_event_user` (
+
+    `map_id` 				 	int unsigned 		NOT NULL AUTO_INCREMENT		        COMMENT 'The id of the map entry.',
+    `associated_event` 		    int unsigned 		NOT NULL					        COMMENT 'The id of the mapped event.',
+    `associated_user` 	    	int unsigned 		NOT NULL					        COMMENT 'The id of the mapped user.',
+
+PRIMARY 	KEY (`map_id`),
+UNIQUE 	  	KEY (`associated_event`),
+FOREIGN 	KEY (`associated_user`)                 REFERENCES users (user_id)
+
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='This table maps events to users.';
+
+-- Create the table to map links to users
+CREATE TABLE IF NOT EXISTS `map_link_user` (
+
+    `map_id` 				 	int unsigned 		NOT NULL AUTO_INCREMENT		        COMMENT 'The id of the map entry.',
+    `associated_link` 		    int unsigned 		NOT NULL					        COMMENT 'The id of the mapped link.',
+    `associated_user` 	    	int unsigned 		NOT NULL					        COMMENT 'The id of the mapped user.',
+
+PRIMARY 	KEY (`map_id`),
+UNIQUE 	  	KEY (`associated_link`),
+FOREIGN 	KEY (`associated_user`)                 REFERENCES users (user_id)
+
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='This table maps links to users.';
+
+-- Create the table to map images to users
+CREATE TABLE IF NOT EXISTS `map_image_user` (
+
+    `map_id` 				 	int unsigned 		NOT NULL AUTO_INCREMENT		        COMMENT 'The id of the map entry.',
+    `associated_image` 		    int unsigned 		NOT NULL					        COMMENT 'The id of the mapped image.',
+    `associated_user` 	    	int unsigned 		NOT NULL					        COMMENT 'The id of the mapped user.',
+
+PRIMARY 	KEY (`map_id`),
+UNIQUE 	  	KEY (`associated_image`),
+FOREIGN 	KEY (`associated_user`)                 REFERENCES users (user_id)
+
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='This table maps images to users.';
+
+-- Create the table to map places to users
+CREATE TABLE IF NOT EXISTS `map_place_user` (
+
+    `map_id` 				 	int unsigned 		NOT NULL AUTO_INCREMENT		        COMMENT 'The id of the map entry.',
+    `associated_place` 		    int unsigned 		NOT NULL					        COMMENT 'The id of the mapped place.',
+    `associated_user` 	    	int unsigned 		NOT NULL					        COMMENT 'The id of the mapped user.',
+
+PRIMARY 	KEY (`map_id`),
+UNIQUE 	  	KEY (`associated_place`),
+FOREIGN 	KEY (`associated_user`)                 REFERENCES users (user_id)
+
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='This table maps places to users.';
+
+-- Create the table to map tags to users
+CREATE TABLE IF NOT EXISTS `map_tag_user` (
+
+    `map_id` 				 	int unsigned 		NOT NULL AUTO_INCREMENT		        COMMENT 'The id of the map entry.',
+    `associated_tag` 		    int unsigned 		NOT NULL					        COMMENT 'The id of the mapped tag.',
+    `associated_user` 	    	int unsigned 		NOT NULL					        COMMENT 'The id of the mapped user.',
+
+PRIMARY 	KEY (`map_id`),
+UNIQUE 	  	KEY (`associated_tag`),
+FOREIGN 	KEY (`associated_user`)                 REFERENCES users (user_id)
+
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='This table maps tags to users.';
+
 /**
 Insert default admin user (default password: we4711)
 */

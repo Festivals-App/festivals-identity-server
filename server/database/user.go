@@ -117,6 +117,8 @@ func SetRoleForUser(db *sql.DB, userID string, newUserRole int) (bool, error) {
 	return true, nil
 }
 
+// FESTIVALS
+
 func GetFestivalsForUser(db *sql.DB, userID string) ([]int, error) {
 
 	query := "SELECT `associated_festival` FROM map_festival_user WHERE `associated_user`=?;"
@@ -139,10 +141,10 @@ func GetFestivalsForUser(db *sql.DB, userID string) ([]int, error) {
 	return ids, nil
 }
 
-func SetFestivalForUser(db *sql.DB, festivalID string, userID string) (bool, error) {
+func SetFestivalForUser(db *sql.DB, objectID string, userID string) (bool, error) {
 
 	query := "INSERT INTO map_festival_user(`associated_festival`, `associated_user`) VALUES (?, ?);"
-	vars := []interface{}{festivalID, userID}
+	vars := []interface{}{objectID, userID}
 	result, err := executeQuery(db, query, vars)
 	if err != nil {
 		return false, err
@@ -154,10 +156,10 @@ func SetFestivalForUser(db *sql.DB, festivalID string, userID string) (bool, err
 	return insertID != 0, nil
 }
 
-func RemoveFestivalForUser(db *sql.DB, festivalID string, userID string) (bool, error) {
+func RemoveFestivalForUser(db *sql.DB, objectID string, userID string) (bool, error) {
 
 	query := "DELETE FROM map_festival_user WHERE `associated_festival`=? AND `associated_user`=?;"
-	vars := []interface{}{festivalID, userID}
+	vars := []interface{}{objectID, userID}
 
 	result, err := executeQuery(db, query, vars)
 	if err != nil {
@@ -172,6 +174,8 @@ func RemoveFestivalForUser(db *sql.DB, festivalID string, userID string) (bool, 
 	}
 	return true, nil
 }
+
+// ARTISTS
 
 func GetArtistsForUser(db *sql.DB, userID string) ([]int, error) {
 
@@ -195,10 +199,10 @@ func GetArtistsForUser(db *sql.DB, userID string) ([]int, error) {
 	return ids, nil
 }
 
-func SetArtistForUser(db *sql.DB, artistID string, userID string) (bool, error) {
+func SetArtistForUser(db *sql.DB, objectID string, userID string) (bool, error) {
 
 	query := "INSERT INTO map_artist_user(`associated_artist`, `associated_user`) VALUES (?, ?);"
-	vars := []interface{}{artistID, userID}
+	vars := []interface{}{objectID, userID}
 
 	result, err := executeQuery(db, query, vars)
 	if err != nil {
@@ -211,10 +215,10 @@ func SetArtistForUser(db *sql.DB, artistID string, userID string) (bool, error) 
 	return insertID != 0, nil
 }
 
-func RemoveArtistForUser(db *sql.DB, arrtistID string, userID string) (bool, error) {
+func RemoveArtistForUser(db *sql.DB, objectID string, userID string) (bool, error) {
 
 	query := "DELETE FROM map_artist_user WHERE `associated_artist`=? AND `associated_user`=?;"
-	vars := []interface{}{arrtistID, userID}
+	vars := []interface{}{objectID, userID}
 
 	result, err := executeQuery(db, query, vars)
 	if err != nil {
@@ -229,6 +233,8 @@ func RemoveArtistForUser(db *sql.DB, arrtistID string, userID string) (bool, err
 	}
 	return true, nil
 }
+
+// LOCATIONS
 
 func GetLocationsForUser(db *sql.DB, userID string) ([]int, error) {
 
@@ -252,10 +258,10 @@ func GetLocationsForUser(db *sql.DB, userID string) ([]int, error) {
 	return ids, nil
 }
 
-func SetLocationForUser(db *sql.DB, locationID string, userID string) (bool, error) {
+func SetLocationForUser(db *sql.DB, objectID string, userID string) (bool, error) {
 
 	query := "INSERT INTO map_location_user(`associated_location`, `associated_user`) VALUES (?, ?);"
-	vars := []interface{}{locationID, userID}
+	vars := []interface{}{objectID, userID}
 
 	result, err := executeQuery(db, query, vars)
 	if err != nil {
@@ -268,10 +274,305 @@ func SetLocationForUser(db *sql.DB, locationID string, userID string) (bool, err
 	return insertID != 0, nil
 }
 
-func RemoveLocationForUser(db *sql.DB, locationID string, userID string) (bool, error) {
+func RemoveLocationForUser(db *sql.DB, objectID string, userID string) (bool, error) {
 
 	query := "DELETE FROM map_location_user WHERE `associated_location`=? AND `associated_user`=?;"
-	vars := []interface{}{locationID, userID}
+	vars := []interface{}{objectID, userID}
+
+	result, err := executeQuery(db, query, vars)
+	if err != nil {
+		return false, err
+	}
+	numOfAffectedRows, err := result.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+	if numOfAffectedRows != 1 {
+		return false, err
+	}
+	return true, nil
+}
+
+// EVENTS
+
+func GetEventsForUser(db *sql.DB, userID string) ([]int, error) {
+
+	query := "SELECT `associated_event` FROM map_event_user WHERE `associated_user`=?;"
+	vars := []interface{}{userID}
+
+	rows, err := executeRowQuery(db, query, vars)
+	if err != nil {
+		return nil, err
+	}
+	ids := []int{}
+	for rows.Next() {
+		var fid int
+		err = rows.Scan(&fid)
+		if err != nil {
+			return nil, err
+		}
+
+		ids = append(ids, fid)
+	}
+	return ids, nil
+}
+
+func SetEventForUser(db *sql.DB, objectID string, userID string) (bool, error) {
+
+	query := "INSERT INTO map_event_user(`associated_event`, `associated_user`) VALUES (?, ?);"
+	vars := []interface{}{objectID, userID}
+
+	result, err := executeQuery(db, query, vars)
+	if err != nil {
+		return false, err
+	}
+	insertID, err := result.LastInsertId()
+	if err != nil {
+		return false, err
+	}
+	return insertID != 0, nil
+}
+
+func RemoveEventForUser(db *sql.DB, objectID string, userID string) (bool, error) {
+
+	query := "DELETE FROM map_event_user WHERE `associated_event`=? AND `associated_user`=?;"
+	vars := []interface{}{objectID, userID}
+
+	result, err := executeQuery(db, query, vars)
+	if err != nil {
+		return false, err
+	}
+	numOfAffectedRows, err := result.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+	if numOfAffectedRows != 1 {
+		return false, err
+	}
+	return true, nil
+}
+
+// LINKS
+
+func GetLinksForUser(db *sql.DB, userID string) ([]int, error) {
+
+	query := "SELECT `associated_link` FROM map_link_user WHERE `associated_user`=?;"
+	vars := []interface{}{userID}
+
+	rows, err := executeRowQuery(db, query, vars)
+	if err != nil {
+		return nil, err
+	}
+	ids := []int{}
+	for rows.Next() {
+		var fid int
+		err = rows.Scan(&fid)
+		if err != nil {
+			return nil, err
+		}
+
+		ids = append(ids, fid)
+	}
+	return ids, nil
+}
+
+func SetLinkForUser(db *sql.DB, objectID string, userID string) (bool, error) {
+
+	query := "INSERT INTO map_link_user(`associated_link`, `associated_user`) VALUES (?, ?);"
+	vars := []interface{}{objectID, userID}
+
+	result, err := executeQuery(db, query, vars)
+	if err != nil {
+		return false, err
+	}
+	insertID, err := result.LastInsertId()
+	if err != nil {
+		return false, err
+	}
+	return insertID != 0, nil
+}
+
+func RemoveLinkForUser(db *sql.DB, objectID string, userID string) (bool, error) {
+
+	query := "DELETE FROM map_link_user WHERE `associated_link`=? AND `associated_user`=?;"
+	vars := []interface{}{objectID, userID}
+
+	result, err := executeQuery(db, query, vars)
+	if err != nil {
+		return false, err
+	}
+	numOfAffectedRows, err := result.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+	if numOfAffectedRows != 1 {
+		return false, err
+	}
+	return true, nil
+}
+
+// IMAGES
+
+func GetImagesForUser(db *sql.DB, userID string) ([]int, error) {
+
+	query := "SELECT `associated_image` FROM map_image_user WHERE `associated_user`=?;"
+	vars := []interface{}{userID}
+
+	rows, err := executeRowQuery(db, query, vars)
+	if err != nil {
+		return nil, err
+	}
+	ids := []int{}
+	for rows.Next() {
+		var fid int
+		err = rows.Scan(&fid)
+		if err != nil {
+			return nil, err
+		}
+
+		ids = append(ids, fid)
+	}
+	return ids, nil
+}
+
+func SetImageForUser(db *sql.DB, objectID string, userID string) (bool, error) {
+
+	query := "INSERT INTO map_image_user(`associated_image`, `associated_user`) VALUES (?, ?);"
+	vars := []interface{}{objectID, userID}
+
+	result, err := executeQuery(db, query, vars)
+	if err != nil {
+		return false, err
+	}
+	insertID, err := result.LastInsertId()
+	if err != nil {
+		return false, err
+	}
+	return insertID != 0, nil
+}
+
+func RemoveImageForUser(db *sql.DB, objectID string, userID string) (bool, error) {
+
+	query := "DELETE FROM map_image_user WHERE `associated_image`=? AND `associated_user`=?;"
+	vars := []interface{}{objectID, userID}
+
+	result, err := executeQuery(db, query, vars)
+	if err != nil {
+		return false, err
+	}
+	numOfAffectedRows, err := result.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+	if numOfAffectedRows != 1 {
+		return false, err
+	}
+	return true, nil
+}
+
+// PLACES
+
+func GetPlacesForUser(db *sql.DB, userID string) ([]int, error) {
+
+	query := "SELECT `associated_place` FROM map_place_user WHERE `associated_user`=?;"
+	vars := []interface{}{userID}
+
+	rows, err := executeRowQuery(db, query, vars)
+	if err != nil {
+		return nil, err
+	}
+	ids := []int{}
+	for rows.Next() {
+		var fid int
+		err = rows.Scan(&fid)
+		if err != nil {
+			return nil, err
+		}
+
+		ids = append(ids, fid)
+	}
+	return ids, nil
+}
+
+func SetPlaceForUser(db *sql.DB, objectID string, userID string) (bool, error) {
+
+	query := "INSERT INTO map_place_user(`associated_place`, `associated_user`) VALUES (?, ?);"
+	vars := []interface{}{objectID, userID}
+
+	result, err := executeQuery(db, query, vars)
+	if err != nil {
+		return false, err
+	}
+	insertID, err := result.LastInsertId()
+	if err != nil {
+		return false, err
+	}
+	return insertID != 0, nil
+}
+
+func RemovePlaceForUser(db *sql.DB, objectID string, userID string) (bool, error) {
+
+	query := "DELETE FROM map_place_user WHERE `associated_place`=? AND `associated_user`=?;"
+	vars := []interface{}{objectID, userID}
+
+	result, err := executeQuery(db, query, vars)
+	if err != nil {
+		return false, err
+	}
+	numOfAffectedRows, err := result.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+	if numOfAffectedRows != 1 {
+		return false, err
+	}
+	return true, nil
+}
+
+// TAGS
+
+func GetTagsForUser(db *sql.DB, userID string) ([]int, error) {
+
+	query := "SELECT `associated_tag` FROM map_tag_user WHERE `associated_user`=?;"
+	vars := []interface{}{userID}
+
+	rows, err := executeRowQuery(db, query, vars)
+	if err != nil {
+		return nil, err
+	}
+	ids := []int{}
+	for rows.Next() {
+		var fid int
+		err = rows.Scan(&fid)
+		if err != nil {
+			return nil, err
+		}
+
+		ids = append(ids, fid)
+	}
+	return ids, nil
+}
+
+func SetTagForUser(db *sql.DB, objectID string, userID string) (bool, error) {
+
+	query := "INSERT INTO map_tag_user(`associated_tag`, `associated_user`) VALUES (?, ?);"
+	vars := []interface{}{objectID, userID}
+
+	result, err := executeQuery(db, query, vars)
+	if err != nil {
+		return false, err
+	}
+	insertID, err := result.LastInsertId()
+	if err != nil {
+		return false, err
+	}
+	return insertID != 0, nil
+}
+
+func RemoveTagForUser(db *sql.DB, objectID string, userID string) (bool, error) {
+
+	query := "DELETE FROM map_tag_user WHERE `associated_tag`=? AND `associated_user`=?;"
+	vars := []interface{}{objectID, userID}
 
 	result, err := executeQuery(db, query, vars)
 	if err != nil {

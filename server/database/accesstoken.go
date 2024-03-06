@@ -31,12 +31,47 @@ func GenerateAccessToken(user *token.User, db *sql.DB, auth *token.AuthService) 
 		return "", errors.New("could not generate access token. please try again later")
 	}
 
+	userEvents, err := GetEventsForUser(db, userID)
+	if err != nil {
+		log.Error().Err(err).Msg("Unable to fetch events for user.")
+		return "", errors.New("could not generate access token. please try again later")
+	}
+
+	userLinks, err := GetLinksForUser(db, userID)
+	if err != nil {
+		log.Error().Err(err).Msg("Unable to fetch links for user.")
+		return "", errors.New("could not generate access token. please try again later")
+	}
+
+	userImages, err := GetImagesForUser(db, userID)
+	if err != nil {
+		log.Error().Err(err).Msg("Unable to fetch images for user.")
+		return "", errors.New("could not generate access token. please try again later")
+	}
+
+	userPlaces, err := GetPlacesForUser(db, userID)
+	if err != nil {
+		log.Error().Err(err).Msg("Unable to fetch places for user.")
+		return "", errors.New("could not generate access token. please try again later")
+	}
+
+	userTags, err := GetTagsForUser(db, userID)
+	if err != nil {
+		log.Error().Err(err).Msg("Unable to fetch tags for user.")
+		return "", errors.New("could not generate access token. please try again later")
+	}
+
 	claims := token.UserClaims{
 		UserID:        userID,
 		UserRole:      userRole,
 		UserFestivals: userFestivals,
 		UserArtists:   userArtists,
 		UserLocations: userLocations,
+		UserEvents:    userEvents,
+		UserLinks:     userLinks,
+		UserImages:    userImages,
+		UserPlaces:    userPlaces,
+		UserTags:      userTags,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(auth.TokenLifetime)),
 			Issuer:    auth.Issuer,
@@ -67,12 +102,47 @@ func RegenerateAccessToken(user *token.User, oldClaims *token.UserClaims, db *sq
 		return "", errors.New("could not generate access token. please try again later")
 	}
 
+	userEvents, err := GetEventsForUser(db, userID)
+	if err != nil {
+		log.Error().Err(err).Msg("Unable to fetch events for user.")
+		return "", errors.New("could not generate access token. please try again later")
+	}
+
+	userLinks, err := GetLinksForUser(db, userID)
+	if err != nil {
+		log.Error().Err(err).Msg("Unable to fetch links for user.")
+		return "", errors.New("could not generate access token. please try again later")
+	}
+
+	userImages, err := GetImagesForUser(db, userID)
+	if err != nil {
+		log.Error().Err(err).Msg("Unable to fetch images for user.")
+		return "", errors.New("could not generate access token. please try again later")
+	}
+
+	userPlaces, err := GetPlacesForUser(db, userID)
+	if err != nil {
+		log.Error().Err(err).Msg("Unable to fetch places for user.")
+		return "", errors.New("could not generate access token. please try again later")
+	}
+
+	userTags, err := GetTagsForUser(db, userID)
+	if err != nil {
+		log.Error().Err(err).Msg("Unable to fetch tags for user.")
+		return "", errors.New("could not generate access token. please try again later")
+	}
+
 	claims := token.UserClaims{
 		UserID:        userID,
 		UserRole:      userRole,
 		UserFestivals: userFestivals,
 		UserArtists:   userArtists,
 		UserLocations: userLocations,
+		UserEvents:    userEvents,
+		UserLinks:     userLinks,
+		UserImages:    userImages,
+		UserPlaces:    userPlaces,
+		UserTags:      userTags,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: oldClaims.ExpiresAt,
 			Issuer:    auth.Issuer,

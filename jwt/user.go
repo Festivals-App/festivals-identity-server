@@ -7,8 +7,9 @@ import (
 )
 
 const (
-	ADMIN   int = 42
-	CREATOR int = 1
+	ADMIN       int = 42
+	CREATOR     int = 1
+	COORDINATOR int = 2
 )
 
 type User struct {
@@ -26,5 +27,10 @@ type UserClaims struct {
 	UserFestivals []int
 	UserArtists   []int
 	UserLocations []int
+	UserEvents    []int
+	UserLinks     []int
+	UserPlaces    []int
+	UserImages    []int
+	UserTags      []int
 	jwt.RegisteredClaims
 }
