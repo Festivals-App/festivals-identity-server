@@ -14,7 +14,7 @@ func (auth *AuthService) ValidateAccessToken(tokenString string) (*UserClaims, e
 	token, err := jwt.ParseWithClaims(tokenString, &UserClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 			log.Error().Msg("Unexpected signing method in auth token")
-			return nil, errors.New("Unexpected signing method in auth token")
+			return nil, errors.New("unexpected signing method in auth token")
 		}
 		return auth.ValidationKey, nil
 	})
