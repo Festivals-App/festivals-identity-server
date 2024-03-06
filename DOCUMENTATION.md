@@ -46,7 +46,10 @@ otherwise an `error` field is returned and will always contain a string with the
 [Server-Status](#server-status)
 * GET              `/info`
 * GET              `/version`
+* POST             `/update`
 * GET              `/health`
+* GET              `/log`
+* GET              `/log/trace`
 
 [Users](#users)
 * POST             `/users/signup`
@@ -68,6 +71,84 @@ otherwise an `error` field is returned and will always contain a string with the
 * GET              `/api-keys`
 * POST             `/api-keys`
 * DELETE           `/api-keys`
+
+------------------------------------------------------------------------------------
+## Server Status
+Determine the state of the server.
+
+Info object
+```
+{
+    "BuildTime":      string,
+    "GitRef":         string,
+    "Version":        string
+}
+```
+
+------------------------------------------------------------------------------------
+#### GET `/info`
+
+ * Authorization: JWT
+ 
+ * Returns
+      * Returns the info object 
+      * Codes `200`/`40x`/`50x`
+      * `data` or `error` field
+
+------------------------------------------------------------------------------------
+#### GET `/version`
+
+ * Authorization: JWT
+ 
+ * Returns
+      * The version of the server application.
+      * Codes `200`/`40x`/`50x`
+      * server version as a string `text/plain`
+
+------------------------------------------------------------------------------------
+#### POST `/update`
+
+Updates to the newest release on github and restarts the service.
+
+ * Authorization: JWT
+ * Returns
+      * The version of the server application.
+      * Codes `202`/`40x`/`50x`
+      * server version as a string `text/plain`
+
+------------------------------------------------------------------------------------
+#### GET `/health`
+
+ * Authorization: JWT
+ 
+ * Returns
+      * Always returns HTTP status code 200
+      * Code `200`
+      * empty `text/plain`
+
+------------------------------------------------------------------------------------
+#### GET `/log`
+
+Returns the service log.
+
+ * Authorization: JWT
+ 
+ * Returns
+      * Returns a string
+      * Codes `200`/`40x`/`50x`
+      * empty `text/plain`
+
+------------------------------------------------------------------------------------
+#### GET `/log/trace`
+
+Returns the service trace log.
+
+ * Authorization: JWT
+ 
+ * Returns
+      * Returns a string
+      * Codes `200`/`40x`/`50x`
+      * empty `text/plain`
 
 ------------------------------------------------------------------------------------
 ## Users
@@ -266,7 +347,7 @@ Deletes the given service key.
 
 Returns all registered API keys.
 
- * Authorization: JWT
+ * Authorization: JWT or service key
  
  * Examples:  
     `GET https://localhost:22580/api-keys`
@@ -318,48 +399,5 @@ Deletes the given api key.
      * Returns nothing on success but a 200 status code.
      * Codes `200`/`40x`/`50x`
      * Nothing or `error` field
-
-------------------------------------------------------------------------------------
-## Server Status
-Determine the state of the server.
-
-Info object
-```
-{
-    "BuildTime":      string,
-    "GitRef":         string,
-    "Version":        string
-}
-```
-
-------------------------------------------------------------------------------------
-#### GET `/info`
-
- * Authorization: JWT
- 
- * Returns
-      * Returns the info object 
-      * Codes `200`/`40x`/`50x`
-      * `data` or `error` field
-
-------------------------------------------------------------------------------------
-#### GET `/version`
-
- * Authorization: JWT
- 
- * Returns
-      * The version of the server application.
-      * Codes `200`/`40x`/`50x`
-      * server version as a string `text/plain`
-
-------------------------------------------------------------------------------------
-#### GET `/health`
-
- * Authorization: JWT
- 
- * Returns
-      * Always returns HTTP status code 200
-      * Code `200`
-      * empty `text/plain`
 
 ------------------------------------------------------------------------------------
