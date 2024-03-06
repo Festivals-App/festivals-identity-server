@@ -136,7 +136,7 @@ Returns the service log.
  * Returns
       * Returns a string
       * Codes `200`/`40x`/`50x`
-      * empty `text/plain`
+      * empty or `text/plain`
 
 ------------------------------------------------------------------------------------
 #### GET `/log/trace`
@@ -148,7 +148,7 @@ Returns the service trace log.
  * Returns
       * Returns a string
       * Codes `200`/`40x`/`50x`
-      * empty `text/plain`
+      * empty or `text/plain`
 
 ------------------------------------------------------------------------------------
 ## Users
