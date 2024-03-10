@@ -15,14 +15,14 @@ func GetServiceToken(r *http.Request) string {
 	return r.Header.Get("Service-Key")
 }
 
-func GetValidClaims(r *http.Request, auth *AuthService) *UserClaims {
+func GetValidClaims(r *http.Request, validator *ValidationService) *UserClaims {
 
 	tokenString := getBearerToken(r)
 	if tokenString == "" {
 		log.Error().Msg("No bearer token send with request.")
 		return nil
 	}
-	token, err := auth.ValidateAccessToken(tokenString)
+	token, err := validator.ValidateAccessToken(tokenString)
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to validate access token for user.")
 		return nil

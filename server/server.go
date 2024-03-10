@@ -28,6 +28,7 @@ type Server struct {
 	Config    *config.Config
 	TLSConfig *tls.Config
 	Auth      *token.AuthService
+	Validator *token.ValidationService
 }
 
 func NewServer(config *config.Config) *Server {
@@ -44,7 +45,7 @@ func (s *Server) Initialize(config *config.Config) {
 
 	s.setDatabase(config)
 	s.setTLSHandling(config)
-	s.setAuthService(config)
+	s.setAuthentication(config)
 	s.setMiddleware()
 	s.setRoutes()
 }
@@ -86,9 +87,16 @@ func (s *Server) setTLSHandling(config *config.Config) {
 	s.TLSConfig = tlsConfig
 }
 
-func (s *Server) setAuthService(config *config.Config) {
+func (s *Server) setAuthentication(config *config.Config) {
 
 	s.Auth = token.NewAuthService(config.AccessTokenPrivateKeyPath, config.AccessTokenPublicKeyPath, config.JwtExpiration, config.ServiceBindHost)
+	s.Validator = token.NewLocalValidationService(config.AccessTokenPublicKeyPath)
+	allAPIKeys, err := database.GetAllAPIKeys(s.DB)
+	if err != nil {
+		log.Fatal().Msg("failed to load API keys from database.")
+	}
+	keyStrings := getAPIKeyValues(allAPIKeys)
+	s.Validator.APIKeys = &keyStrings
 }
 
 func (s *Server) setMiddleware() {
@@ -127,6 +135,8 @@ func (s *Server) setRoutes() {
 	s.Router.Delete("/users/{objectID}/artist/{resourceID}", s.handleServiceRequest(handler.RemoveArtistForUser))
 	s.Router.Delete("/users/{objectID}/location/{resourceID}", s.handleServiceRequest(handler.RemoveLocationForUser))
 
+	s.Router.Get("/validation-key", s.handleServiceRequest(handler.GetValidationKey))
+
 	s.Router.Get("/api-keys", s.handleServiceRequest(handler.GetAPIKeys))
 	s.Router.Post("/api-keys", s.handleRequest(handler.AddAPIKey))
 	s.Router.Delete("/api-keys", s.handleRequest(handler.DeleteAPIKey))
@@ -159,7 +169,7 @@ func (s *Server) handleRequest(requestHandler JWTAuthenticatedHandlerFunction) h
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		claims := token.GetValidClaims(r, s.Auth)
+		claims := token.GetValidClaims(r, s.Validator)
 		if claims == nil {
 			servertools.UnauthorizedResponse(w)
 			return
@@ -175,13 +185,8 @@ func (s *Server) handleAPIRequest(requestHandler APIKeyAuthenticatedHandlerFunct
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		apikey := token.GetAPIToken(r)
-		allAPIKeys, err := database.GetAllAPIKeys(s.DB)
-		if err != nil {
-			log.Error().Msg("failed to load API keys from database.")
-			servertools.RespondError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
-			return
-		}
-		if !slices.Contains(getAPIKeyValues(allAPIKeys), apikey) {
+		allAPIKeys := *s.Validator.APIKeys
+		if !slices.Contains(allAPIKeys, apikey) {
 			servertools.UnauthorizedResponse(w)
 			return
 		}
@@ -197,7 +202,7 @@ func (s *Server) handleServiceRequest(requestHandler ServiceKeyAuthenticatedHand
 
 		servicekey := token.GetServiceToken(r)
 		if servicekey == "" {
-			claims := token.GetValidClaims(r, s.Auth)
+			claims := token.GetValidClaims(r, s.Validator)
 			if claims != nil && claims.UserRole == token.ADMIN {
 				requestHandler(s.Auth, s.DB, w, r)
 				return
