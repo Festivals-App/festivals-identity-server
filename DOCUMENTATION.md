@@ -62,6 +62,9 @@ otherwise an `error` field is returned and will always contain a string with the
 * POST             `/users/{objectID}/{festival|artist|location}/{resourceID}`
 * DELETE           `/users/{objectID}/{festival|artist|location}/{resourceID}`
 
+[Validation-Key](#validation-key)
+* GET              `/validation-key`
+
 [Service-Keys](#service-keys)
 * GET              `/service-keys`
 * POST             `/service-keys`
@@ -280,6 +283,22 @@ Removes the association between the given user and the specified festival, artis
      * Codes `200`/`40x`/`50x`
      * Nothing or `error` field
  
+------------------------------------------------------------------------------------
+## Validation-Key
+
+#### GET `/validation-key`
+
+Returns the public key used to sign the jwt's issued by this identity service.
+
+ * Authorization: JWT or service key
+ 
+ * Examples:  
+    `GET https://localhost:22580/validation-keys`
+ * Returns:
+     * Returns the validation key on success.
+     * Codes `200`/`40x`/`50x`
+     * raw file or `error` field
+
 ------------------------------------------------------------------------------------
 ## Service-Keys
 
