@@ -134,9 +134,20 @@ func (s *Server) setRoutes() {
 	s.Router.Post("/users/{objectID}/festival/{resourceID}", s.handleServiceRequest(handler.SetFestivalForUser))
 	s.Router.Post("/users/{objectID}/artist/{resourceID}", s.handleServiceRequest(handler.SetArtistForUser))
 	s.Router.Post("/users/{objectID}/location/{resourceID}", s.handleServiceRequest(handler.SetLocationForUser))
+	s.Router.Post("/users/{objectID}/event/{resourceID}", s.handleServiceRequest(handler.SetEventForUser))
+	s.Router.Post("/users/{objectID}/link/{resourceID}", s.handleServiceRequest(handler.SetLinkForUser))
+	s.Router.Post("/users/{objectID}/image/{resourceID}", s.handleServiceRequest(handler.SetImageForUser))
+	s.Router.Post("/users/{objectID}/place/{resourceID}", s.handleServiceRequest(handler.SetPlaceForUser))
+	s.Router.Post("/users/{objectID}/tag/{resourceID}", s.handleServiceRequest(handler.SetTagForUser))
+
 	s.Router.Delete("/users/{objectID}/festival/{resourceID}", s.handleServiceRequest(handler.RemoveFestivalForUser))
 	s.Router.Delete("/users/{objectID}/artist/{resourceID}", s.handleServiceRequest(handler.RemoveArtistForUser))
 	s.Router.Delete("/users/{objectID}/location/{resourceID}", s.handleServiceRequest(handler.RemoveLocationForUser))
+	s.Router.Delete("/users/{objectID}/event/{resourceID}", s.handleServiceRequest(handler.RemoveEventForUser))
+	s.Router.Delete("/users/{objectID}/link/{resourceID}", s.handleServiceRequest(handler.RemoveLinkForUser))
+	s.Router.Delete("/users/{objectID}/image/{resourceID}", s.handleServiceRequest(handler.RemoveImageForUser))
+	s.Router.Delete("/users/{objectID}/place/{resourceID}", s.handleServiceRequest(handler.RemovePlaceForUser))
+	s.Router.Delete("/users/{objectID}/tag/{resourceID}", s.handleServiceRequest(handler.RemoveTagForUser))
 
 	s.Router.Get("/validation-key", s.handleServiceRequest(handler.GetValidationKey))
 

@@ -6,6 +6,19 @@ import (
 	token "github.com/Festivals-App/festivals-identity-server/jwt"
 )
 
+type Entity string
+
+const (
+	Festival Entity = "festival"
+	Artist   Entity = "artist"
+	Location Entity = "location"
+	Event    Entity = "event"
+	Link     Entity = "link"
+	Image    Entity = "image"
+	Place    Entity = "place"
+	Tag      Entity = "tag"
+)
+
 func executeRowQuery(db *sql.DB, query string, args []interface{}) (*sql.Rows, error) {
 
 	rows, err := db.Query(query, args...)

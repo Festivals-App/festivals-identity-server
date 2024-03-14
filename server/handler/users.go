@@ -248,46 +248,38 @@ func SetUserRole(auth *token.AuthService, claims *token.UserClaims, db *sql.DB, 
 // Set associated resources
 
 func SetFestivalForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
-
-	userID, err := objectID(r)
-	if err != nil {
-		servertools.RespondError(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
-		return
-	}
-	resourceID, err := resourceID(r)
-	if err != nil {
-		servertools.RespondError(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
-		return
-	}
-	_, err = database.SetFestivalForUser(db, resourceID, userID)
-	if err != nil {
-		servertools.RespondError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
-		return
-	}
-	servertools.RespondCode(w, http.StatusOK)
+	SetEntityForUser(database.Festival, db, w, r)
 }
 
 func SetArtistForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
-
-	userID, err := objectID(r)
-	if err != nil {
-		servertools.RespondError(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
-		return
-	}
-	resourceID, err := resourceID(r)
-	if err != nil {
-		servertools.RespondError(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
-		return
-	}
-	_, err = database.SetArtistForUser(db, resourceID, userID)
-	if err != nil {
-		servertools.RespondError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
-		return
-	}
-	servertools.RespondCode(w, http.StatusOK)
+	SetEntityForUser(database.Artist, db, w, r)
 }
 
 func SetLocationForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	SetEntityForUser(database.Location, db, w, r)
+}
+
+func SetEventForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	SetEntityForUser(database.Event, db, w, r)
+}
+
+func SetLinkForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	SetEntityForUser(database.Link, db, w, r)
+}
+
+func SetImageForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	SetEntityForUser(database.Image, db, w, r)
+}
+
+func SetPlaceForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	SetEntityForUser(database.Place, db, w, r)
+}
+
+func SetTagForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	SetEntityForUser(database.Tag, db, w, r)
+}
+
+func SetEntityForUser(entity database.Entity, db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	userID, err := objectID(r)
 	if err != nil {
@@ -299,7 +291,8 @@ func SetLocationForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWrit
 		servertools.RespondError(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
 		return
 	}
-	_, err = database.SetLocationForUser(db, resourceID, userID)
+	_, err = database.SetEntityForUser(entity, db, resourceID, userID)
+
 	if err != nil {
 		servertools.RespondError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		return
@@ -307,47 +300,41 @@ func SetLocationForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWrit
 	servertools.RespondCode(w, http.StatusOK)
 }
 
-func RemoveFestivalForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+// Remove associated resources
 
-	userID, err := objectID(r)
-	if err != nil {
-		servertools.RespondError(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
-		return
-	}
-	resourceID, err := resourceID(r)
-	if err != nil {
-		servertools.RespondError(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
-		return
-	}
-	_, err = database.RemoveFestivalForUser(db, resourceID, userID)
-	if err != nil {
-		servertools.RespondError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
-		return
-	}
-	servertools.RespondCode(w, http.StatusOK)
+func RemoveFestivalForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	RemoveEntityForUser(database.Festival, db, w, r)
 }
 
 func RemoveArtistForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
-
-	userID, err := objectID(r)
-	if err != nil {
-		servertools.RespondError(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
-		return
-	}
-	resourceID, err := resourceID(r)
-	if err != nil {
-		servertools.RespondError(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
-		return
-	}
-	_, err = database.RemoveArtistForUser(db, resourceID, userID)
-	if err != nil {
-		servertools.RespondError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
-		return
-	}
-	servertools.RespondCode(w, http.StatusOK)
+	RemoveEntityForUser(database.Artist, db, w, r)
 }
 
 func RemoveLocationForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	RemoveEntityForUser(database.Location, db, w, r)
+}
+
+func RemoveEventForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	RemoveEntityForUser(database.Event, db, w, r)
+}
+
+func RemoveLinkForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	RemoveEntityForUser(database.Link, db, w, r)
+}
+
+func RemoveImageForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	RemoveEntityForUser(database.Image, db, w, r)
+}
+
+func RemovePlaceForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	RemoveEntityForUser(database.Place, db, w, r)
+}
+
+func RemoveTagForUser(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	RemoveEntityForUser(database.Tag, db, w, r)
+}
+
+func RemoveEntityForUser(entity database.Entity, db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	userID, err := objectID(r)
 	if err != nil {
@@ -359,7 +346,7 @@ func RemoveLocationForUser(auth *token.AuthService, db *sql.DB, w http.ResponseW
 		servertools.RespondError(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
 		return
 	}
-	_, err = database.RemoveLocationForUser(db, resourceID, userID)
+	_, err = database.RemoveEntityForUser(entity, db, resourceID, userID)
 	if err != nil {
 		servertools.RespondError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		return

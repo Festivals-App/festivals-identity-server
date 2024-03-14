@@ -15,47 +15,42 @@ func GenerateAccessToken(user *token.User, db *sql.DB, auth *token.AuthService) 
 
 	userID := fmt.Sprint(user.ID)
 	userRole := user.Role
-	userFestivals, err := GetFestivalsForUser(db, userID)
+	userFestivals, err := GetEntitiesForUser(Festival, db, userID)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to fetch festivals for user.")
 		return "", errors.New("could not generate access token. please try again later")
 	}
-	userArtists, err := GetArtistsForUser(db, userID)
+	userArtists, err := GetEntitiesForUser(Artist, db, userID)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to fetch artists for user.")
 		return "", errors.New("could not generate access token. please try again later")
 	}
-	userLocations, err := GetLocationsForUser(db, userID)
+	userLocations, err := GetEntitiesForUser(Location, db, userID)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to fetch locations for user.")
 		return "", errors.New("could not generate access token. please try again later")
 	}
-
-	userEvents, err := GetEventsForUser(db, userID)
+	userEvents, err := GetEntitiesForUser(Event, db, userID)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to fetch events for user.")
 		return "", errors.New("could not generate access token. please try again later")
 	}
-
-	userLinks, err := GetLinksForUser(db, userID)
+	userLinks, err := GetEntitiesForUser(Link, db, userID)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to fetch links for user.")
 		return "", errors.New("could not generate access token. please try again later")
 	}
-
-	userImages, err := GetImagesForUser(db, userID)
+	userImages, err := GetEntitiesForUser(Image, db, userID)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to fetch images for user.")
 		return "", errors.New("could not generate access token. please try again later")
 	}
-
-	userPlaces, err := GetPlacesForUser(db, userID)
+	userPlaces, err := GetEntitiesForUser(Place, db, userID)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to fetch places for user.")
 		return "", errors.New("could not generate access token. please try again later")
 	}
-
-	userTags, err := GetTagsForUser(db, userID)
+	userTags, err := GetEntitiesForUser(Tag, db, userID)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to fetch tags for user.")
 		return "", errors.New("could not generate access token. please try again later")
@@ -86,47 +81,42 @@ func RegenerateAccessToken(user *token.User, oldClaims *token.UserClaims, db *sq
 
 	userID := fmt.Sprint(user.ID)
 	userRole := user.Role
-	userFestivals, err := GetFestivalsForUser(db, userID)
+	userFestivals, err := GetEntitiesForUser(Festival, db, userID)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to fetch festivals for user.")
 		return "", errors.New("could not generate access token. please try again later")
 	}
-	userArtists, err := GetArtistsForUser(db, userID)
+	userArtists, err := GetEntitiesForUser(Artist, db, userID)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to fetch artists for user.")
 		return "", errors.New("could not generate access token. please try again later")
 	}
-	userLocations, err := GetLocationsForUser(db, userID)
+	userLocations, err := GetEntitiesForUser(Location, db, userID)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to fetch locations for user.")
 		return "", errors.New("could not generate access token. please try again later")
 	}
-
-	userEvents, err := GetEventsForUser(db, userID)
+	userEvents, err := GetEntitiesForUser(Event, db, userID)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to fetch events for user.")
 		return "", errors.New("could not generate access token. please try again later")
 	}
-
-	userLinks, err := GetLinksForUser(db, userID)
+	userLinks, err := GetEntitiesForUser(Link, db, userID)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to fetch links for user.")
 		return "", errors.New("could not generate access token. please try again later")
 	}
-
-	userImages, err := GetImagesForUser(db, userID)
+	userImages, err := GetEntitiesForUser(Image, db, userID)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to fetch images for user.")
 		return "", errors.New("could not generate access token. please try again later")
 	}
-
-	userPlaces, err := GetPlacesForUser(db, userID)
+	userPlaces, err := GetEntitiesForUser(Place, db, userID)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to fetch places for user.")
 		return "", errors.New("could not generate access token. please try again later")
 	}
-
-	userTags, err := GetTagsForUser(db, userID)
+	userTags, err := GetEntitiesForUser(Tag, db, userID)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to fetch tags for user.")
 		return "", errors.New("could not generate access token. please try again later")
