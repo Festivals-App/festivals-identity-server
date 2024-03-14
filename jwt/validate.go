@@ -125,7 +125,7 @@ func loadValidationKey(endpoint string, serviceKey string, client *http.Client) 
 
 func loadAPIKeys(endpoint string, serviceKey string, client *http.Client) ([]string, error) {
 
-	request, err := http.NewRequest(http.MethodGet, endpoint, nil)
+	request, err := http.NewRequest(http.MethodGet, endpoint+"/api-keys", nil)
 	if err != nil {
 		return nil, err
 	}
