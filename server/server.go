@@ -1,10 +1,12 @@
 package server
 
 import (
+	"crypto/rsa"
 	"crypto/tls"
 	"database/sql"
 	"fmt"
 	"net/http"
+	"os"
 	"slices"
 	"strconv"
 	"time"
@@ -18,6 +20,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/rs/zerolog/log"
 )
 
@@ -90,7 +93,7 @@ func (s *Server) setTLSHandling(config *config.Config) {
 func (s *Server) setAuthentication(config *config.Config) {
 
 	s.Auth = token.NewAuthService(config.AccessTokenPrivateKeyPath, config.AccessTokenPublicKeyPath, config.JwtExpiration, config.ServiceBindHost)
-	s.Validator = token.NewLocalValidationService(config.AccessTokenPublicKeyPath)
+	s.Validator = newLocalValidationService(config.AccessTokenPublicKeyPath)
 	allAPIKeys, err := database.GetAllAPIKeys(s.DB)
 	if err != nil {
 		log.Fatal().Msg("failed to load API keys from database.")
@@ -238,4 +241,19 @@ func getAPIKeyValues(keys []token.APIKey) []string {
 		data = append(data, key.Key)
 	}
 	return data
+}
+
+func newLocalValidationService(publickey string) *token.ValidationService {
+
+	var verifyKey *rsa.PublicKey = nil
+	verifyBytes, err := os.ReadFile(publickey)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Unable to read public auth key.")
+	}
+	verifyKey, err = jwt.ParseRSAPublicKeyFromPEM(verifyBytes)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Unable to parse public auth key.")
+	}
+
+	return &token.ValidationService{Key: verifyKey, APIKeys: &[]string{}, Client: nil}
 }

@@ -8,7 +8,6 @@ import (
 	"io"
 	"net"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -21,9 +20,10 @@ type Validation interface {
 }
 
 type ValidationService struct {
-	ValidationKey    *rsa.PublicKey
-	APIKeys          *[]string
-	ValidationClient *http.Client
+	Key      *rsa.PublicKey
+	APIKeys  *[]string
+	Client   *http.Client
+	Endpoint string
 }
 
 func NewValidationService(endpoint string, clientCert string, clientKey string, serviceKey string) *ValidationService {
@@ -43,22 +43,7 @@ func NewValidationService(endpoint string, clientCert string, clientKey string, 
 		log.Fatal().Err(err).Msg("Failed to load API keys from identity service.")
 	}
 
-	return &ValidationService{ValidationKey: vaidationKey, APIKeys: &keys, ValidationClient: client}
-}
-
-func NewLocalValidationService(publickey string) *ValidationService {
-
-	var verifyKey *rsa.PublicKey = nil
-	verifyBytes, err := os.ReadFile(publickey)
-	if err != nil {
-		log.Fatal().Err(err).Msg("Unable to read public auth key.")
-	}
-	verifyKey, err = jwt.ParseRSAPublicKeyFromPEM(verifyBytes)
-	if err != nil {
-		log.Fatal().Err(err).Msg("Unable to parse public auth key.")
-	}
-
-	return &ValidationService{ValidationKey: verifyKey, APIKeys: &[]string{}, ValidationClient: nil}
+	return &ValidationService{Key: vaidationKey, APIKeys: &keys, Client: client, Endpoint: endpoint}
 }
 
 // ValidateAccessToken parses and validates the given access token
@@ -70,7 +55,7 @@ func (validator *ValidationService) ValidateAccessToken(tokenString string) (*Us
 			log.Error().Msg("Unexpected signing method in auth token")
 			return nil, errors.New("unexpected signing method in auth token")
 		}
-		return validator.ValidationKey, nil
+		return validator.Key, nil
 	})
 
 	if err != nil {
