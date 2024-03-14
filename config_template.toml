@@ -13,13 +13,7 @@ cert = "/usr/local/festivals-identity-server/server.crt"
 key = "/usr/local/festivals-identity-server/server.key"
 
 [database]
-host = "localhost"
-port = 3306
-username = "festivals.identity.writer"
 password = "we4711"
-festivalsapp-root-ca = "/usr/local/festivals-identity-server/ca.crt"
-cert = "/usr/local/festivals-identity-server/database-client.crt"
-key = "/usr/local/festivals-identity-server/database-client.key"
 
 [heartbeat]
 endpoint = "localhost"
@@ -29,3 +23,5 @@ interval = 6
 expiration = 180
 accessprivatekeypath = "./access-private.pem"
 accesspublickeypath = "./access-public.pem"
+refreshprivatekeypath = "./access-private.pem"
+refreshpublickeypath = "./access-private.pem"
