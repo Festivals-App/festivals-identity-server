@@ -149,13 +149,14 @@ func loadAPIKeys(endpoint string, serviceKey string, client *http.Client) ([]str
 		return nil, errors.New("failed to retrieve api keys from identity service with error response: " + string(resBody))
 	}
 
-	var data map[string]interface{}
+	var data map[string][]APIKey
 	err = json.Unmarshal(resBody, &data)
 	if err != nil {
 		return nil, err
 	}
 
-	key_map := data["data"].([]APIKey)
+	key_map := data["data"]
+
 	var rawKeys = []string{}
 	for _, key := range key_map {
 		rawKeys = append(rawKeys, key.Key)
