@@ -36,12 +36,12 @@ type Server struct {
 
 func NewServer(config *config.Config) *Server {
 	server := &Server{}
-	server.Initialize(config)
+	server.initialize(config)
 	return server
 }
 
 // Initialize the server with predefined configuration
-func (s *Server) Initialize(config *config.Config) {
+func (s *Server) initialize(config *config.Config) {
 
 	s.Config = config
 	s.Router = chi.NewRouter()
