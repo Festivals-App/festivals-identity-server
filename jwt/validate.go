@@ -20,13 +20,14 @@ type Validation interface {
 }
 
 type ValidationService struct {
-	Key      *rsa.PublicKey
-	APIKeys  *[]string
-	Client   *http.Client
-	Endpoint string
+	Key         *rsa.PublicKey
+	APIKeys     *[]string
+	ServiceKeys *[]string
+	Client      *http.Client
+	Endpoint    string
 }
 
-func NewValidationService(endpoint string, clientCert string, clientKey string, serviceKey string) *ValidationService {
+func NewValidationService(endpoint string, clientCert string, clientKey string, serviceKey string, loadingServiceKeys bool) *ValidationService {
 
 	client, err := validationClient(clientCert, clientKey)
 	if err != nil {
@@ -43,7 +44,15 @@ func NewValidationService(endpoint string, clientCert string, clientKey string, 
 		log.Fatal().Err(err).Msg("Failed to load API keys from identity service.")
 	}
 
-	return &ValidationService{Key: vaidationKey, APIKeys: &keys, Client: client, Endpoint: endpoint}
+	if loadingServiceKeys {
+		servieKeys, err := loadServiceKeys(endpoint, serviceKey, client)
+		if err != nil {
+			log.Fatal().Err(err).Msg("Failed to load service keys from identity service.")
+		}
+		return &ValidationService{Key: vaidationKey, APIKeys: &keys, ServiceKeys: &servieKeys, Client: client, Endpoint: endpoint}
+	}
+
+	return &ValidationService{Key: vaidationKey, APIKeys: &keys, ServiceKeys: nil, Client: client, Endpoint: endpoint}
 }
 
 // ValidateAccessToken parses and validates the given access token
@@ -150,6 +159,47 @@ func loadAPIKeys(endpoint string, serviceKey string, client *http.Client) ([]str
 	}
 
 	var data map[string][]APIKey
+	err = json.Unmarshal(resBody, &data)
+	if err != nil {
+		return nil, err
+	}
+
+	key_map := data["data"]
+
+	var rawKeys = []string{}
+	for _, key := range key_map {
+		rawKeys = append(rawKeys, key.Key)
+	}
+	return rawKeys, nil
+}
+
+func loadServiceKeys(endpoint string, serviceKey string, client *http.Client) ([]string, error) {
+
+	request, err := http.NewRequest(http.MethodGet, endpoint+"/service-keys", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	request.Header.Set("Content-Type", "application/json; charset=utf-8")
+	request.Header.Set("X-Request-ID", uuid.New().String())
+	request.Header.Set("Service-Key", serviceKey)
+
+	resp, err := client.Do(request)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	resBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, errors.New("failed to retrieve service keys from identity service with error response: " + string(resBody))
+	}
+
+	var data map[string][]ServiceKey
 	err = json.Unmarshal(resBody, &data)
 	if err != nil {
 		return nil, err

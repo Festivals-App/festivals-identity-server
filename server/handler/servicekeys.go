@@ -13,7 +13,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func GetServiceKeys(auth *token.AuthService, claims *token.UserClaims, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+func GetServiceKeys(auth *token.AuthService, db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	keys, err := database.GetAllServiceKeys(db)
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to fetch all service keys.")

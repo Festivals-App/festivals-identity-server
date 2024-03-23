@@ -48,7 +48,7 @@ func (s *Server) Initialize(config *config.Config) {
 
 	s.setDatabase(config)
 	s.setTLSHandling(config)
-	s.setAuthentication(config)
+	s.setIdentityService(config)
 	s.setMiddleware()
 	s.setRoutes()
 }
@@ -90,16 +90,10 @@ func (s *Server) setTLSHandling(config *config.Config) {
 	s.TLSConfig = tlsConfig
 }
 
-func (s *Server) setAuthentication(config *config.Config) {
+func (s *Server) setIdentityService(config *config.Config) {
 
 	s.Auth = token.NewAuthService(config.AccessTokenPrivateKeyPath, config.AccessTokenPublicKeyPath, config.JwtExpiration, config.ServiceBindHost)
-	s.Validator = newLocalValidationService(config.AccessTokenPublicKeyPath)
-	allAPIKeys, err := database.GetAllAPIKeys(s.DB)
-	if err != nil {
-		log.Fatal().Msg("failed to load API keys from database.")
-	}
-	keyStrings := getAPIKeyValues(allAPIKeys)
-	s.Validator.APIKeys = &keyStrings
+	s.Validator = newLocalValidationService(config.AccessTokenPublicKeyPath, s.DB)
 }
 
 func (s *Server) setMiddleware() {
@@ -155,7 +149,7 @@ func (s *Server) setRoutes() {
 	s.Router.Post("/api-keys", s.handleRequest(handler.AddAPIKey))
 	s.Router.Delete("/api-keys", s.handleRequest(handler.DeleteAPIKey))
 
-	s.Router.Get("/service-keys", s.handleRequest(handler.GetServiceKeys))
+	s.Router.Get("/service-keys", s.handleServiceRequest(handler.GetServiceKeys))
 	s.Router.Post("/service-keys", s.handleRequest(handler.AddServiceKey))
 	s.Router.Delete("/service-keys", s.handleRequest(handler.DeleteServiceKey))
 }
@@ -199,8 +193,13 @@ func (s *Server) handleAPIRequest(requestHandler APIKeyAuthenticatedHandlerFunct
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		apikey := token.GetAPIToken(r)
-		allAPIKeys := *s.Validator.APIKeys
-		if !slices.Contains(allAPIKeys, apikey) {
+		allAPIKeys, err := database.GetAllAPIKeys(s.DB)
+		if err != nil {
+			log.Error().Msg("failed to load API keys from database.")
+			servertools.RespondError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+			return
+		}
+		if !slices.Contains(getAPIKeyValues(allAPIKeys), apikey) {
 			servertools.UnauthorizedResponse(w)
 			return
 		}
@@ -254,7 +253,7 @@ func getAPIKeyValues(keys []token.APIKey) []string {
 	return data
 }
 
-func newLocalValidationService(publickey string) *token.ValidationService {
+func newLocalValidationService(publickey string, db *sql.DB) *token.ValidationService {
 
 	var verifyKey *rsa.PublicKey = nil
 	verifyBytes, err := os.ReadFile(publickey)
@@ -266,5 +265,22 @@ func newLocalValidationService(publickey string) *token.ValidationService {
 		log.Fatal().Err(err).Msg("Unable to parse public auth key.")
 	}
 
-	return &token.ValidationService{Key: verifyKey, APIKeys: &[]string{}, Client: nil}
+	/*
+
+		allAPIKeys, err := database.GetAllAPIKeys(db)
+		if err != nil {
+			log.Fatal().Err(err).Msg("Failed to load API keys from database.")
+		}
+		apiKeys := getAPIKeyValues(allAPIKeys)
+
+			allServiceKeys, err := database.GetAllServiceKeys(db)
+			if err != nil {
+				log.Fatal().Err(err).Msg("Failed to load servive keys from database.")
+			}
+			serviceKeys := getServiceKeyValues(allServiceKeys)
+
+			return &token.ValidationService{Key: verifyKey, APIKeys: &apiKeys, ServiceKeys: &serviceKeys, Client: nil, Endpoint: ""}
+	*/
+
+	return &token.ValidationService{Key: verifyKey, APIKeys: nil, ServiceKeys: nil, Client: nil, Endpoint: ""}
 }
