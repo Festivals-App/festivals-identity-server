@@ -6,9 +6,11 @@
 
 <p align="center">
   <a href="#overview">Overview</a> •
-  <a href="#user">User</a> •
-  <a href="#api-keys">API-Keys</a> •
-  <a href="#status">Status</a>
+  <a href="#server-status">Server-Status</a> •
+  <a href="#users">Users</a> •
+  <a href="#validation-key">Validation-Key</a> •
+  <a href="#service-keys">Service-Keys</a> •
+  <a href="#api-keys">API-Keys</a>
 </p>
 
 ### Used Languages
@@ -19,7 +21,7 @@
 
 ### Authentication & Authorization
 
-To use the API you need to provide an API key via a custom header or a JWT with your requests authorization header, for login you need to use basic authentication:
+To use the API you need to provide an API or service key via a custom header or a JWT with your requests authorization header, for login you need to use basic authentication:
 ```
 Api-Key:<api-key>
 Service-Key:<service-key>
@@ -29,7 +31,7 @@ Authorization: Basic <encodedcredentials>
 
 ### Requests
 
-The FestivalFilesAPI API supports the HTTP `GET`, `POST`, `PATCH` and `DELETE` methods.
+The FestivalsIdentityAPI supports the HTTP `GET`, `POST`, `PATCH` and `DELETE` methods.
 
 ### Response
 
@@ -260,7 +262,7 @@ Sets the given user role for the given user. See [here](jwt/user.go) for possibl
 
 Associates the given user with the specified festival, artist or location.
 
- * Authorization: JWT
+ * Authorization: JWT or service key
  
  * Examples:  
     `POST https://localhost:22580/users/3/artist/134`
@@ -274,7 +276,7 @@ Associates the given user with the specified festival, artist or location.
 
 Removes the association between the given user and the specified festival, artist or location.
 
- * Authorization: JWT
+ * Authorization: JWT or service key
  
  * Examples:  
     `DELETE https://localhost:22580/users/3/festival/26`
@@ -306,7 +308,7 @@ Returns the public key used to sign the jwt's issued by this identity service.
 
 Returns all registered service keys.
 
- * Authorization: JWT
+ * Authorization: JWT or service key
  
  * Examples:  
     `GET https://localhost:22580/service-keys`
