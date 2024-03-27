@@ -231,7 +231,7 @@ chown "$WEB_USER":"$WEB_USER" /etc/festivals-identity-server.conf
 #
 echo "Cleanup..."
 cd /usr/local/festivals-identity-server || exit
-rm -R /usr/local/festivals-gateway/install
+rm -R /usr/local/festivals-identity-server/install
 sleep 1
 
 echo "Done!"
