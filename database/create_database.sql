@@ -163,5 +163,4 @@ FOREIGN 	KEY (`associated_user`)                 REFERENCES users (user_id)
 Insert default admin user (default password: we4711)
 */
 
-INSERT INTO  `users`(`user_id`, `user_email`, `user_password`, `user_tokenhash`, `user_role`)
-        VALUES (0, 'admin@email.com', '$2a$12$YbAhewILx82tGkLtEZWiKOfYzBt85RSQtGXhxlQX2hV7qiP51xPES', 'user_tokenhash', 42);
+INSERT INTO  `users`(`user_id`, `user_email`, `user_password`, `user_role`) VALUES (0, 'admin@email.com', '$2a$12$YbAhewILx82tGkLtEZWiKOfYzBt85RSQtGXhxlQX2hV7qiP51xPES', 42);
