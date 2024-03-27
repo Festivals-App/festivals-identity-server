@@ -93,7 +93,7 @@ func (s *Server) setTLSHandling(config *config.Config) {
 func (s *Server) setIdentityService(config *config.Config) {
 
 	s.Auth = token.NewAuthService(config.AccessTokenPrivateKeyPath, config.AccessTokenPublicKeyPath, config.JwtExpiration, config.ServiceBindHost)
-	s.Validator = newLocalValidationService(config.AccessTokenPublicKeyPath, s.DB)
+	s.Validator = newLocalValidationService(config.AccessTokenPublicKeyPath)
 }
 
 func (s *Server) setMiddleware() {
@@ -253,7 +253,7 @@ func getAPIKeyValues(keys []token.APIKey) []string {
 	return data
 }
 
-func newLocalValidationService(publickey string, db *sql.DB) *token.ValidationService {
+func newLocalValidationService(publickey string) *token.ValidationService {
 
 	var verifyKey *rsa.PublicKey = nil
 	verifyBytes, err := os.ReadFile(publickey)
@@ -264,23 +264,6 @@ func newLocalValidationService(publickey string, db *sql.DB) *token.ValidationSe
 	if err != nil {
 		log.Fatal().Err(err).Msg("Unable to parse public auth key.")
 	}
-
-	/*
-
-		allAPIKeys, err := database.GetAllAPIKeys(db)
-		if err != nil {
-			log.Fatal().Err(err).Msg("Failed to load API keys from database.")
-		}
-		apiKeys := getAPIKeyValues(allAPIKeys)
-
-			allServiceKeys, err := database.GetAllServiceKeys(db)
-			if err != nil {
-				log.Fatal().Err(err).Msg("Failed to load servive keys from database.")
-			}
-			serviceKeys := getServiceKeyValues(allServiceKeys)
-
-			return &token.ValidationService{Key: verifyKey, APIKeys: &apiKeys, ServiceKeys: &serviceKeys, Client: nil, Endpoint: ""}
-	*/
 
 	return &token.ValidationService{Key: verifyKey, APIKeys: nil, ServiceKeys: nil, Client: nil, Endpoint: ""}
 }
