@@ -6,9 +6,9 @@ toolchain go1.21.6
 
 require (
 	github.com/Festivals-App/festivals-pki v0.0.4
-	github.com/Festivals-App/festivals-server-tools v0.0.3
+	github.com/Festivals-App/festivals-server-tools v0.0.4
 	github.com/go-chi/chi/v5 v5.0.12
-	github.com/go-sql-driver/mysql v1.8.0
+	github.com/go-sql-driver/mysql v1.8.1
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/pelletier/go-toml v1.9.5
 	github.com/rs/zerolog v1.32.0
