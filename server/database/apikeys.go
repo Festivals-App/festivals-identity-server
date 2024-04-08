@@ -41,7 +41,7 @@ func AddAPIKey(db *sql.DB, key token.APIKey) error {
 		return err
 	}
 	if insertID == 0 {
-		return errors.New("Failed to insert new API key without mysql error.")
+		return errors.New("failed to insert new API key without mysql error")
 	}
 	return nil
 }
@@ -60,7 +60,7 @@ func UpdateAPIKey(db *sql.DB, key token.APIKey) error {
 		return err
 	}
 	if numOfAffectedRows != 1 {
-		return errors.New("Failed to update API key without mysql error.")
+		return errors.New("failed to update API key without mysql error")
 	}
 	return nil
 }
@@ -79,7 +79,7 @@ func RemoveAPIKey(db *sql.DB, keyID string) error {
 		return err
 	}
 	if numOfAffectedRows != 1 {
-		return errors.New("Failed to remove API key without mysql error.")
+		return errors.New("failed to remove API key without mysql error")
 	}
 	return nil
 }

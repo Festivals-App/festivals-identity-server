@@ -41,7 +41,7 @@ func AddServiceKey(db *sql.DB, key token.ServiceKey) error {
 		return err
 	}
 	if insertID == 0 {
-		return errors.New("Failed to insert new service key without mysql error.")
+		return errors.New("failed to insert new service key without mysql error")
 	}
 
 	return nil
@@ -61,7 +61,7 @@ func UpdateServiceKey(db *sql.DB, key token.ServiceKey) error {
 		return err
 	}
 	if numOfAffectedRows != 1 {
-		return errors.New("Failed to update service key without mysql error.")
+		return errors.New("failed to update service key without mysql error")
 	}
 	return nil
 }
@@ -80,7 +80,7 @@ func RemoveServiceKey(db *sql.DB, keyID string) error {
 		return err
 	}
 	if numOfAffectedRows != 1 {
-		return errors.New("Failed to delete service key without mysql error.")
+		return errors.New("failed to delete service key without mysql error")
 	}
 	return nil
 }
