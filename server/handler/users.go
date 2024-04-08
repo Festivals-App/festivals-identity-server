@@ -136,9 +136,11 @@ func ChangePassword(auth *token.AuthService, claims *token.UserClaims, db *sql.D
 
 	userID, err := objectID(r)
 	if err != nil {
+		log.Error().Err(err).Msg("User did not provide a user id")
 		servertools.RespondError(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
 		return
 	}
+
 	if claims.UserID == userID {
 
 		body, err := io.ReadAll(r.Body)
@@ -159,7 +161,7 @@ func ChangePassword(auth *token.AuthService, claims *token.UserClaims, db *sql.D
 		oldpassword := passwordChangeVars["old-password"]
 		newpassword := passwordChangeVars["new-password"]
 
-		if oldpassword != newpassword && validPassword(newpassword) && validPassword(oldpassword) {
+		if validPassword(newpassword) && newpassword != oldpassword {
 
 			// retrieve user for the given username
 			requestedUser, err := database.GetUserByID(db, userID)
@@ -192,10 +194,13 @@ func ChangePassword(auth *token.AuthService, claims *token.UserClaims, db *sql.D
 
 			servertools.RespondCode(w, http.StatusOK)
 			return
+		} else {
+			log.Error().Err(err).Msg("User did not provide new or valid password when trying to change the password.")
 		}
+	} else {
+		log.Error().Err(err).Msg("User did not provide correct user id. Provided '" + userID + "' but expected '" + claims.UserID + "'.")
 	}
 
-	log.Error().Msg("User is not authorized to change password for user.")
 	servertools.UnauthorizedResponse(w)
 }
 
