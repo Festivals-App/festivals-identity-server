@@ -11,21 +11,19 @@ import (
 )
 
 type Config struct {
-	ServiceBindAddress         string
-	ServiceBindHost            string
-	ServicePort                int
-	ServiceKey                 string
-	TLSRootCert                string
-	TLSCert                    string
-	TLSKey                     string
-	LoversEar                  string
-	Interval                   int
-	JwtExpiration              int
-	AccessTokenPrivateKeyPath  string
-	AccessTokenPublicKeyPath   string
-	RefreshTokenPrivateKeyPath string
-	RefreshTokenPublicKeyPath  string
-	DB                         *DBConfig
+	ServiceBindAddress        string
+	ServiceBindHost           string
+	ServicePort               int
+	ServiceKey                string
+	TLSRootCert               string
+	TLSCert                   string
+	TLSKey                    string
+	LoversEar                 string
+	Interval                  int
+	JwtExpiration             int
+	AccessTokenPrivateKeyPath string
+	AccessTokenPublicKeyPath  string
+	DB                        *DBConfig
 }
 
 type DBConfig struct {
@@ -80,26 +78,22 @@ func ParseConfig(cfgFile string) *Config {
 	jwtExpiration := content.Get("jwt.expiration").(int64)
 	accessTokenPrivateKeyPath := content.Get("jwt.accessprivatekeypath").(string)
 	accessTokenPublicKeyPath := content.Get("jwt.accesspublickeypath").(string)
-	refreshTokenPrivateKeyPath := content.Get("jwt.refreshprivatekeypath").(string)
-	refreshTokenPublicKeyPath := content.Get("jwt.refreshpublickeypath").(string)
 
 	dbPassword := content.Get("database.password").(string)
 
 	return &Config{
-		ServiceBindAddress:         serviceBindAdress,
-		ServiceBindHost:            serviceBindHost,
-		ServicePort:                int(servicePort),
-		ServiceKey:                 serviceKey,
-		TLSRootCert:                tlsrootcert,
-		TLSCert:                    tlscert,
-		TLSKey:                     tlskey,
-		LoversEar:                  loversear,
-		Interval:                   int(interval),
-		JwtExpiration:              int(jwtExpiration),
-		AccessTokenPublicKeyPath:   accessTokenPublicKeyPath,
-		AccessTokenPrivateKeyPath:  accessTokenPrivateKeyPath,
-		RefreshTokenPrivateKeyPath: refreshTokenPrivateKeyPath,
-		RefreshTokenPublicKeyPath:  refreshTokenPublicKeyPath,
+		ServiceBindAddress:        serviceBindAdress,
+		ServiceBindHost:           serviceBindHost,
+		ServicePort:               int(servicePort),
+		ServiceKey:                serviceKey,
+		TLSRootCert:               tlsrootcert,
+		TLSCert:                   tlscert,
+		TLSKey:                    tlskey,
+		LoversEar:                 loversear,
+		Interval:                  int(interval),
+		JwtExpiration:             int(jwtExpiration),
+		AccessTokenPublicKeyPath:  accessTokenPublicKeyPath,
+		AccessTokenPrivateKeyPath: accessTokenPrivateKeyPath,
 		DB: &DBConfig{
 			Dialect:  "mysql",
 			Host:     "localhost",
