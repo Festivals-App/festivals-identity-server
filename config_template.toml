@@ -23,5 +23,3 @@ interval = 6
 expiration = 180
 accessprivatekeypath = "./access-private.pem"
 accesspublickeypath = "./access-public.pem"
-refreshprivatekeypath = "./access-private.pem"
-refreshpublickeypath = "./access-private.pem"
