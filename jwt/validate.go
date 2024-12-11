@@ -41,7 +41,7 @@ func NewValidationService(endpoint string, clientCert string, clientKey string, 
 
 	vaidationKey, err := loadValidationKey(endpoint, serviceKey, client)
 	if err != nil {
-		log.Fatal().Err(err).Msg("Failed to load API keys from identity service.")
+		log.Fatal().Err(err).Msg("Failed to load JWT validation key from identity service.")
 	}
 
 	if loadingServiceKeys {
