@@ -120,6 +120,7 @@ func (s *Server) setRoutes() {
 
 	s.Router.Post("/users/signup", s.handleAPIRequest(handler.Signup))
 	s.Router.Get("/users/login", s.handleAPIRequest(handler.Login))
+	s.Router.Get("/users/refresh", s.handleRequest(handler.Refresh))
 	s.Router.Get("/users", s.handleRequest(handler.GetUsers))
 	s.Router.Post("/users/{objectID}/change-password", s.handleRequest(handler.ChangePassword))
 	s.Router.Post("/users/{objectID}/suspend", s.handleRequest(handler.SuspendUser))
