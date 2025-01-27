@@ -6,7 +6,7 @@
 # configures it to be used as the database server for the FestivalsIdentityServer and setup
 # the backup routines.
 #
-# (c)2020-2023 Simon Gaus
+# (c)2020-2025 Simon Gaus
 #
 
 # Check if all passwords are supplied
@@ -192,7 +192,8 @@ fi
 #
 if command -v ufw > /dev/null; then
 
-  ufw allow 22580/tcp >/dev/null
+  mv ufw_app_profile /etc/ufw/applications.d/festivals-identity-server
+  ufw allow festivals-identity-server >/dev/null
   echo "Added festivals-identity-server to ufw using port 22580."
   sleep 1
 

@@ -1,0 +1,4 @@
+[festivals-identity-server]
+title=festivals-identity-server
+description=Exposing the FestivalsIdentityAPI providing authorization and authentication functions to the the FestivalsApp project. 
+ports=22580/tcp
