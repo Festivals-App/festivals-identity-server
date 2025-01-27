@@ -18,7 +18,6 @@ A lightweight go server app providing a RESTful API, called FestivalsIdentityAPI
 <p align="center">
   <a href="#development">Development</a> •
   <a href="#deployment">Deployment</a> •
-  <a href="#festivalsidentityapi">FestivalsIdentityAPI</a> •
   <a href="#architecture">Architecture</a> •
   <a href="#engage">Engage</a>
 </p>
@@ -33,8 +32,8 @@ A lightweight go server app providing a RESTful API, called FestivalsIdentityAPI
 
 ### Requirements
 
-- [Golang](https://go.dev/) Version 1.23.0+
-- [Visual Studio Code](https://code.visualstudio.com/download) 1.92.2+
+- [Golang](https://go.dev/) Version 1.23.5+
+- [Visual Studio Code](https://code.visualstudio.com/download) 1.96.4+
   - Plugin recommendations are managed via [workspace recommendations](https://code.visualstudio.com/docs/editor/extension-marketplace#_recommended-extensions).
 - [Bash script](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) friendly environment
 
@@ -81,10 +80,6 @@ make run
 # Default API Endpoint : http://localhost:22580
 ```
 
-### FestivalsIdentityAPI
-
-The FestivalsIdentityAPI is documented in detail [here](./DOCUMENTATION.md).
-
 ## Architecture
 
 There are a three diffrent security mechanisms to secure the festivalsapp backend, at first every party needs a valid client certificate from the FestivalsApp Root CA to communicate with other partys via mTLS, for more information [see the festivals-pki repository](https://github.com/Festivals-App/festivals-pki). After secure communication is established, clients need either an API key for the read-only parts of the FestivalsAPI or an JSON Web Token ([JWT](https://de.wikipedia.org/wiki/JSON_Web_Token)) for everything else. The JWT is used to implement a role-based access control ([RBAC](https://de.wikipedia.org/wiki/Role_Based_Access_Control)) to decide whether the user is authorized to access the given function.
@@ -105,4 +100,4 @@ The following channels are available for discussions, feedback, and support requ
 
 #### Licensing
 
-Copyright (c) 2020-2024 Simon Gaus. Licensed under the [**GNU Lesser General Public License v3.0**](./LICENSE)
+Copyright (c) 2020-2025 Simon Gaus. Licensed under the [**GNU Lesser General Public License v3.0**](./LICENSE)
