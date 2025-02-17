@@ -24,10 +24,6 @@ A lightweight go server app providing a RESTful API, called FestivalsIdentityAPI
 
 ## Development
 
-There are a three diffrent security mechanisms to secure the festivalsapp backend, at first every party needs a valid client certificate from the FestivalsApp Root CA to communicate with other partys via mTLS,
-for more information see the [festivals-pki repository](https://github.com/Festivals-App/festivals-pki). After secure communication is established, clients need either an API key for the read-only parts of the FestivalsAPI or an JSON Web Token ([JWT](https://de.wikipedia.org/wiki/JSON_Web_Token)) for everything else.
-The JWT is used to implement a role-based access control ([RBAC](https://de.wikipedia.org/wiki/Role_Based_Access_Control)) to decide whether the user is authorized to access the given function.
-
 The FestivalsApp backend is secured using three different mechanisms to ensure both secure communication and controlled access:  
 
 1. **Mutual TLS (mTLS)** – Every party must have a valid client certificate issued by the FestivalsApp Root CA to establish secure communication with other services. This prevents unauthorized access at the transport layer. For more details, refer to the [festivals-pki repository](https://github.com/Festivals-App/festivals-pki).  
