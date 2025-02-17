@@ -18,7 +18,6 @@ A lightweight go server app providing a RESTful API, called FestivalsIdentityAPI
 <p align="center">
   <a href="#development">Development</a> •
   <a href="#deployment">Deployment</a> •
-  <a href="#architecture">Architecture</a> •
   <a href="#engage">Engage</a>
 </p>
 <hr/>
@@ -26,8 +25,16 @@ A lightweight go server app providing a RESTful API, called FestivalsIdentityAPI
 ## Development
 
 There are a three diffrent security mechanisms to secure the festivalsapp backend, at first every party needs a valid client certificate from the FestivalsApp Root CA to communicate with other partys via mTLS,
-for more information [see the festivals-pki repository](https://github.com/Festivals-App/festivals-pki). After secure communication is established, clients need either an API key for the read-only parts of the FestivalsAPI or an JSON Web Token ([JWT](https://de.wikipedia.org/wiki/JSON_Web_Token)) for everything else.
+for more information see the [festivals-pki repository](https://github.com/Festivals-App/festivals-pki). After secure communication is established, clients need either an API key for the read-only parts of the FestivalsAPI or an JSON Web Token ([JWT](https://de.wikipedia.org/wiki/JSON_Web_Token)) for everything else.
 The JWT is used to implement a role-based access control ([RBAC](https://de.wikipedia.org/wiki/Role_Based_Access_Control)) to decide whether the user is authorized to access the given function.
+
+The FestivalsApp backend is secured using three different mechanisms to ensure both secure communication and controlled access:  
+
+1. **Mutual TLS (mTLS)** – Every party must have a valid client certificate issued by the FestivalsApp Root CA to establish secure communication with other services. This prevents unauthorized access at the transport layer. For more details, refer to the [festivals-pki repository](https://github.com/Festivals-App/festivals-pki).  
+2. **API Keys** – Required for accessing read-only parts of the FestivalsAPI. These keys provide a simple way to authenticate services and users that do not require full access.
+3. **JSON Web Tokens (JWTs)** – Used for all other interactions. JWTs enable role-based access control (RBAC), ensuring users are authorized to access specific functions based on their assigned roles. The system verifies JWTs on every request to enforce access restrictions dynamically.
+
+In addition to these mechanisms, the backend enforces strict firewall rules and network segmentation to minimize exposure to unauthorized access. Regular certificate rotation and API key expiration policies further enhance security.
 
 ### Requirements
 
