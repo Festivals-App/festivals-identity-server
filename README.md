@@ -42,7 +42,8 @@ In addition to these mechanisms, the backend enforces strict firewall rules and 
 ## Deployment
 
 The Go binaries are able to run without system dependencies so there are not many requirements for the system to run the festivals-identity-server binary.
-The config file needs to be placed at `/etc/festivals-identity-server.conf` or the template config file needs to be present in the directory the binary runs in.
+
+  > The config file is placed at `/etc/festivals-identity-server.conf`.
 
 You also need to provide certificates in the right format and location:
 
