@@ -176,7 +176,7 @@ sleep 1
 #
 echo
 echo "Downloading newest festivals-identity-server binary release..."
-curl -L "$file_url" -o festivals-identity-server.tar.gz
+curl --progress-bar -L "$file_url" -o festivals-identity-server.tar.gz
 tar -xf festivals-identity-server.tar.gz
 mv festivals-identity-server /usr/local/bin/festivals-identity-server || { echo "Failed to install festivals-identity-server binary. Exiting." ; exit 1; }
 echo
@@ -196,20 +196,22 @@ mkdir -p /var/log/festivals-identity-server || { echo "Failed to create log dire
 echo
 echo "Created log directory at '/var/log/festivals-identity-server'."
 
-## Prepare update workflow
+## Prepare remote update workflow
 #
+echo 
+echo "Prepare remote update workflow"
+sleep 1
 mv update.sh /usr/local/festivals-identity-server/update.sh
 chmod +x /usr/local/festivals-identity-server/update.sh
 cp /etc/sudoers /tmp/sudoers.bak
-echo "$WEB_USER ALL = (ALL) NOPASSWD: /usr/local/festivals-identity-server/update.sh" >> /tmp/sudoers.bak
-# Check syntax of the backup file to make sure it is correct.
-visudo -cf /tmp/sudoers.bak
-if [ $? -eq 0 ]; then
-  # Replace the sudoers file with the new only if syntax is correct.
+echo "$WEB_USER ALL = (ALL) NOPASSWD: /usr/local/festivals-identity-server/update.sh" >> /tmp/sudoers.bak 
+# Validate and replace sudoers file if syntax is correct
+if visudo -cf /tmp/sudoers.bak &>/dev/null; then
   sudo cp /tmp/sudoers.bak /etc/sudoers
 else
   echo
-  echo "Could not modify /etc/sudoers file. Please do this manually." ; exit 1;
+  echo "Error: Could not modify /etc/sudoers file. Please do this manually." >&2
+  exit 1
 fi
 
 # Enable and configure the firewall.
