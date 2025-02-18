@@ -1,6 +1,5 @@
 #!/bin/bash
 #
-# install.sh 1.0.1
 #
 # Enables the firewall, installs the newest mysql, starts it as a service,
 # configures it to be used as the database server for the FestivalsIdentityServer and setup
@@ -21,6 +20,7 @@ fi
 root_password=$1
 backup_password=$2
 read_write_password=$3
+echo
 echo "All necessary passwords are provided and valid."
 sleep 1
 
@@ -31,6 +31,7 @@ id -u "$WEB_USER" &>/dev/null;
 if [ $? -ne 0 ]; then
   WEB_USER="www"
   if [ $? -ne 0 ]; then
+    echo
     echo "Failed to find user to run web server. Exiting."
     exit 1
   fi
@@ -40,12 +41,14 @@ fi
 #
 mkdir -p /usr/local/festivals-identity-server/install || { echo "Failed to create working directory. Exiting." ; exit 1; }
 cd /usr/local/festivals-identity-server/install || { echo "Failed to access working directory. Exiting." ; exit 1; }
+echo
 echo "Installing festivals-identity-server using port 22580."
 sleep 1
 
 
 # Install mysql if needed.
 #
+echo
 echo "Installing mysql-server..."
 apt-get install mysql-server -y > /dev/null;
 
@@ -53,20 +56,23 @@ apt-get install mysql-server -y > /dev/null;
 # Supported firewalls: ufw and firewalld
 # This step is skipped under macOS.
 #
-ufw allow mysql
-echo "Added mysql service to ufw rules"
+echo
+echo "Adding mysql service to ufw rules"
 sleep 1
+ufw allow mysql > /dev/null
 
 # Launch mysql on startup
 #
-systemctl enable mysql > /dev/null
-systemctl start mysql > /dev/null
-echo "Enabled and started mysql systemd service."
+echo
+echo "Enabling and starting mysql service."
 sleep 1
+systemctl enable mysql &>/dev/null || { echo "Failed to enable mysql service. Exiting." ; exit 1; }
+systemctl start mysql > /dev/null
 
 # Install mysql credential file
 #
-echo "Installing mysql credential file"
+echo
+echo "Installing mysql credential file to `/usr/local/festivals-identity-server/mysql.conf`"
 credentialsFile=/usr/local/festivals-identity-server/mysql.conf
 cat << EOF > $credentialsFile
 # festivals-identity-server configuration file v1.0
@@ -81,14 +87,20 @@ sleep 1
 
 # Download and run mysql secure script
 #
+echo
 echo "Downloading database security script"
 curl --progress-bar -L -o secure-mysql.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/master/operation/secure-mysql.sh
 chmod +x secure-mysql.sh
+
+echo
+echo "Executing database security script"
 ./secure-mysql.sh "$root_password"
+sleep 1
 
 # Download database creation script
 #
-echo "Downloading database creation script..."
+echo
+echo "Downloading database creation script"
 curl --progress-bar -L -o create_database.sql https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/master/database/create_database.sql
 
 # Run database creation script and configure users
