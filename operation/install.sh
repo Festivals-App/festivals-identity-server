@@ -107,7 +107,7 @@ curl --progress-bar -L -o create_database.sql https://raw.githubusercontent.com/
 #
 echo "Configuring mysql"
 sleep 1
-mysql -e "source /usr/local/festivals-identity-server/create_database.sql"
+mysql -e "source /usr/local/festivals-identity-server/install/create_database.sql"
 echo "Creating local backup user..."
 mysql -e "CREATE USER 'festivals.identity.backup'@'localhost' IDENTIFIED BY '$backup_password';"
 mysql -e "GRANT ALL PRIVILEGES ON festivals_identity_database.* TO 'festivals.identity.backup'@'localhost';"
