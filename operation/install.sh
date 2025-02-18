@@ -110,14 +110,14 @@ echo "Configuring mysql"
 sleep 1
 mysql -e "source /usr/local/festivals-identity-server/install/create_database.sql"
 echo
+echo "Creating local database user..."
+mysql -e "CREATE USER 'festivals.identity.writer'@'localhost' IDENTIFIED BY '$read_write_password';"
+mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE ON festivals_identity_database.* TO 'festivals.identity.writer'@'localhost';"
+sleep 1
+echo
 echo "Creating local backup user..."
 mysql -e "CREATE USER 'festivals.identity.backup'@'localhost' IDENTIFIED BY '$backup_password';"
 mysql -e "GRANT ALL PRIVILEGES ON festivals_identity_database.* TO 'festivals.identity.backup'@'localhost';"
-sleep 1
-echo
-echo "Creating local read/write user..."
-mysql -e "CREATE USER 'festivals.identity.writer'@'localhost' IDENTIFIED BY '$read_write_password';"
-mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE ON festivals_identity_database.* TO 'festivals.identity.writer'@'localhost';"
 sleep 1
 mysql -e "FLUSH PRIVILEGES;"
 
@@ -141,7 +141,7 @@ chmod +x /srv/festivals-identity-server/backups/backup.sh
 echo
 echo "Installing a cronjob to periodically run a backup"
 sleep 1
-echo "0 3 * * * $WEB_USER /srv/festivals-identity-server/backups/backup.sh" | sudo tee -a /etc/cron.d/festivals_identity_server_backup
+echo "0 3 * * * www-data /srv/festivals-identity-server/backups/backup.sh" | sudo tee -a /etc/cron.d/festivals_identity_server_backup > /dev/null
 
 # Get system os
 #
