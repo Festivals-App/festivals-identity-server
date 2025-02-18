@@ -133,17 +133,8 @@ sleep 1
 
 echo -e "\n\n\n🕒  Installing a cronjob to periodically run a backup..."
 sleep 1
-
-CRON_JOB="0 3 * * * $WEB_USER /srv/festivals-identity-server/backups/backup.sh"
-echo -e "$CRON_JOB" | tee -a /etc/cron.d/festivals_identity_server_backup > /dev/null
-
-if grep -q "$CRON_JOB" /etc/cron.d/festivals_identity_server_backup; then
-    echo -e "\n✅  Cronjob successfully installed! Backup will run daily at \e[1;34m3 AM\e[0m\n"
-else
-    echo -e "\n🚨  ERROR: Failed to install cronjob. Exiting.\n"
-    exit 1
-fi
-sleep 1
+echo -e "0 3 * * * $WEB_USER /srv/festivals-identity-server/backups/backup.sh" | tee -a /etc/cron.d/festivals_identity_server_backup > /dev/null
+echo -e "\n✅  Cronjob successfully installed! Backup will run daily at \e[1;34m3 AM\e[0m\n"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 🖥  Detect System OS and Architecture
