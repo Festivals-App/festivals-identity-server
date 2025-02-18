@@ -46,7 +46,7 @@ echo "Installing festivals-identity-server using port 22580."
 sleep 1
 
 
-# Install mysql if needed.
+# Install mysql server
 #
 echo
 echo "Installing mysql-server..."
@@ -72,7 +72,7 @@ systemctl start mysql > /dev/null
 # Install mysql credential file
 #
 echo
-echo "Installing mysql credential file to `/usr/local/festivals-identity-server/mysql.conf`"
+echo "Installing mysql credential file to project directory"
 credentialsFile=/usr/local/festivals-identity-server/mysql.conf
 cat << EOF > $credentialsFile
 # festivals-identity-server configuration file v1.0
@@ -105,13 +105,16 @@ curl --progress-bar -L -o create_database.sql https://raw.githubusercontent.com/
 
 # Run database creation script and configure users
 #
+echo
 echo "Configuring mysql"
 sleep 1
 mysql -e "source /usr/local/festivals-identity-server/install/create_database.sql"
+echo
 echo "Creating local backup user..."
 mysql -e "CREATE USER 'festivals.identity.backup'@'localhost' IDENTIFIED BY '$backup_password';"
 mysql -e "GRANT ALL PRIVILEGES ON festivals_identity_database.* TO 'festivals.identity.backup'@'localhost';"
 sleep 1
+echo
 echo "Creating local read/write user..."
 mysql -e "CREATE USER 'festivals.identity.writer'@'localhost' IDENTIFIED BY '$read_write_password';"
 mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE ON festivals_identity_database.* TO 'festivals.identity.writer'@'localhost';"
@@ -120,12 +123,14 @@ mysql -e "FLUSH PRIVILEGES;"
 
 # Create the backup directory
 #
+echo
 echo "Create backup directory"
 sleep 1
 mkdir -p /srv/festivals-identity-server/backups || { echo "Failed to create backup directory. Exiting." ; exit 1; }
 
 # Download the backup script
 #
+echo
 echo "Downloading database backup script"
 curl --progress-bar -L -o backup.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/main/operation/backup.sh
 mv backup.sh /srv/festivals-identity-server/backups/backup.sh || { echo "Failed to install festivals-identity-server backup script. Exiting." ; exit 1; }
@@ -133,6 +138,7 @@ chmod +x /srv/festivals-identity-server/backups/backup.sh
 
 # Installing a cronjob to run the backup every day at 3 pm.
 #
+echo
 echo "Installing a cronjob to periodically run a backup"
 sleep 1
 echo "0 3 * * * $WEB_USER /srv/festivals-identity-server/backups/backup.sh" | sudo tee -a /etc/cron.d/festivals_identity_server_backup
@@ -162,27 +168,32 @@ fi
 # Build url to latest binary for the given system
 #
 file_url="https://github.com/Festivals-App/festivals-identity-server/releases/latest/download/festivals-identity-server-$os-$arch.tar.gz"
+echo
 echo "The system is $os on $arch."
 sleep 1
 
 # Install festivals-identity-server to /usr/local/bin/festivals-identity-server. TODO: Maybe just link to /usr/local/bin?
 #
+echo
 echo "Downloading newest festivals-identity-server binary release..."
 curl -L "$file_url" -o festivals-identity-server.tar.gz
 tar -xf festivals-identity-server.tar.gz
 mv festivals-identity-server /usr/local/bin/festivals-identity-server || { echo "Failed to install festivals-identity-server binary. Exiting." ; exit 1; }
+echo
 echo "Installed the festivals-identity-server binary to '/usr/local/bin/festivals-identity-server'."
 sleep 1
 
 ## Install server config file
 #
 mv config_template.toml /etc/festivals-identity-server.conf
+echo
 echo "Moved default festivals-identity-server config to '/etc/festivals-identity-server.conf'."
 sleep 1
 
 ## Prepare log directory
 #
 mkdir -p /var/log/festivals-identity-server || { echo "Failed to create log directory. Exiting." ; exit 1; }
+echo
 echo "Created log directory at '/var/log/festivals-identity-server'."
 
 ## Prepare update workflow
@@ -197,6 +208,7 @@ if [ $? -eq 0 ]; then
   # Replace the sudoers file with the new only if syntax is correct.
   sudo cp /tmp/sudoers.bak /etc/sudoers
 else
+  echo
   echo "Could not modify /etc/sudoers file. Please do this manually." ; exit 1;
 fi
 
@@ -206,6 +218,7 @@ if command -v ufw > /dev/null; then
 
   mv ufw_app_profile /etc/ufw/applications.d/festivals-identity-server
   ufw allow festivals-identity-server >/dev/null
+  echo
   echo "Added festivals-identity-server to ufw using port 22580."
   sleep 1
 
@@ -220,11 +233,13 @@ if command -v service > /dev/null; then
 
   if ! [ -f "/etc/systemd/system/festivals-identity-server.service" ]; then
     mv service_template.service /etc/systemd/system/festivals-identity-server.service
+    echo
     echo "Created systemd service."
     sleep 1
   fi
 
   systemctl enable festivals-identity-server > /dev/null
+  echo
   echo "Enabled systemd service."
   sleep 1
 
@@ -242,13 +257,16 @@ chown "$WEB_USER":"$WEB_USER" /etc/festivals-identity-server.conf
 
 # Cleanup
 #
+echo
 echo "Cleanup..."
 cd /usr/local/festivals-identity-server || exit
 rm -R /usr/local/festivals-identity-server/install
 sleep 1
 
+echo
 echo "Done!"
 sleep 1
 
+echo
 echo "You can start the server manually by running 'sudo systemctl start festivals-identity-server' after you updated the configuration file at '/etc/festivals-identity-server.conf'"
 sleep 1
