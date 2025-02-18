@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# install.sh - FestivalsApp Identity Server Installer Scrip
+# install.sh - FestivalsApp Identity Server Installer Script
 #
 # Enables the firewall, installs the latest version of MySQL, starts it as a service, 
 # configures it as the database server for FestivalsApp Identity Server, and sets up backup routines.
