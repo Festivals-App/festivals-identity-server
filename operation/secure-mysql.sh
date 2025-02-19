@@ -2,7 +2,7 @@
 #
 # Author: Bert Van Vreckem <bert.vanvreckem@gmail.com>
 #
-# https://raw.githubusercontent.com/bertvv/scripts/master/src/secure-mysql.sh (6. November 2020)
+# https://github.com/bertvv/scripts/blob/master/src/secure-mysql.sh (7. Februar 2025)
 #
 # A non-interactive replacement for mysql_secure_installation
 #
@@ -23,6 +23,12 @@ Usage: ${0} "ROOT PASSWORD"
 
 Use quotes if your password contains spaces or other special characters.
 _EOF_
+}
+
+# Predicate that returns exit status 0 if the database service is running,
+# a nonzero exit status otherwise.
+is_service_available() {
+	service mysql status > /dev/null 2>&1
 }
 
 # Predicate that returns exit status 0 if the database root password
@@ -57,6 +63,12 @@ if ! is_mysql_command_available; then
   echo "The MySQL/MariaDB client mysql(1) is not installed."
   exit 1
 fi
+
+if ! is_service_available; then
+  echo "The MySQL/MariaDB service is not running. Please use 'service mysql start' to start it."
+  exit 1
+fi
+
 
 if is_mysql_root_password_set; then
   echo "Database root password already set"
