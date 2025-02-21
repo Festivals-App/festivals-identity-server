@@ -16,10 +16,10 @@ key = "/usr/local/festivals-identity-server/server.key"
 password = "we4711"
 
 [heartbeat]
-endpoint = "localhost"
+endpoint = "https://discovery.festivalsapp.home/loversear"
 interval = 6
 
 [jwt]
 expiration = 180
-accessprivatekeypath = "/usr/local/festivals-identity-server/authentication.pem"
-accesspublickeypath = "/usr/local/festivals-identity-server/authentication-key.pem"
+accesspublickeypath = "/usr/local/festivals-identity-server/authentication.publickey.pem"
+accessprivatekeypath = "/usr/local/festivals-identity-server/authentication.privatekey.pem"
