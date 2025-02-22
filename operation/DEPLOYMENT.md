@@ -141,7 +141,7 @@ If you have not already set up the Festivals Gateway with its discovery service,
 ERR Failed to send heartbeat
 ```
 
-**🚀 However, the identity service should now be running successfully. 🚀**
+## **🚀 However, the identity service should now be running successfully. 🚀**
 
 ## Testing
 
