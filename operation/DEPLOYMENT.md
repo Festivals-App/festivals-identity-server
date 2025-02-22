@@ -34,7 +34,7 @@ Copy the server mTLS certificates from your development machine to the VM:
 ```bash
 scp /opt/homebrew/etc/pki/ca.crt <user>@<ip-address>:.
 scp /opt/homebrew/etc/pki/issued/server.crt <user>@<ip-address>:.
-scp /opt/homebrew/etc/pki/issued/server.key <user>@<ip-address>:.
+scp /opt/homebrew/etc/pki/private/server.key <user>@<ip-address>:.
 ```
 
 Once copied, SSH into the VM and move them to the correct location:
