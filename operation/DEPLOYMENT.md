@@ -160,5 +160,5 @@ This should return a JWT Token `<Header.<Payload>.<Signatur>`
 Use this to make authorized calls to the FestivalsIdentityAPI:
 
 ```bash
-curl -H "Api-Key: TEST_API_KEY_001" -H "Authorization: <JWT>" --cert /opt/homebrew/etc/pki/issued/api-client.crt --key /opt/homebrew/etc/pki/private/api-client.key --cacert /opt/homebrew/etc/pki/ca.crt https://identity-0.festivalsapp.home:22580/info
+curl -H "Api-Key: TEST_API_KEY_001" -H "Authorization: Bearer <JWT>" --cert /opt/homebrew/etc/pki/issued/api-client.crt --key /opt/homebrew/etc/pki/private/api-client.key --cacert /opt/homebrew/etc/pki/ca.crt https://identity-0.festivalsapp.home:22580/info
 ```
