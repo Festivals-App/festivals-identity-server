@@ -16,7 +16,7 @@ key = "/usr/local/festivals-identity-server/server.key"
 password = "we4711"
 
 [heartbeat]
-endpoint = "https://discovery.festivalsapp.home/loversear"
+endpoint = "localhost"
 interval = 6
 
 [jwt]
