@@ -5,7 +5,7 @@
 bind-address = "localhost"
 bind-host = "localhost"
 port = 22580
-key = "TEST_API_KEY_001"
+key = "TEST_SERVICE_KEY_001"
 
 [tls]
 festivaslapp-root-ca = "/usr/local/festivals-identity-server/ca.crt"
