@@ -111,7 +111,7 @@ Open the configuration file:
 sudo nano /etc/festivals-identity-server.conf
 ```
 
-Set the IP servername and heartbeat endpoint:
+Set the servername and heartbeat endpoint:
 
 ```ini
 [service]
