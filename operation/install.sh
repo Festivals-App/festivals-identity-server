@@ -43,13 +43,13 @@ fi
 WORK_DIR="/usr/local/festivals-identity-server/install"
 mkdir -p "$WORK_DIR" && cd "$WORK_DIR" || { echo -e "\n\033[1;31m❌  ERROR: Failed to create/access working directory!\033[0m\n"; exit 1; }
 
-echo -e "📂  Working directory set to \e[1;34m$WORK_DIR\e[0m"
+echo -e "\n📂  Working directory set to \e[1;34m$WORK_DIR\e[0m"
 sleep 1
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 📦 Install & Enable & Start MySQL Server
 # ─────────────────────────────────────────────────────────────────────────────
-echo -e "\n🚀  Installing MySQL server..."
+echo -e "\n🗂️  Installing MySQL server..."
 apt-get install mysql-server -y > /dev/null 2>&1
 systemctl enable mysql &>/dev/null && systemctl start mysql &>/dev/null
 
@@ -59,9 +59,6 @@ sleep 1
 # ─────────────────────────────────────────────────────────────────────────────
 # 🔐 Install MySQL Backup Credential File
 # ─────────────────────────────────────────────────────────────────────────────
-
-echo -e "\n📂  Installing MySQL backup credential file..."
-sleep 1
 
 credentialsFile=/usr/local/festivals-identity-server/mysql.conf
 cat << EOF > $credentialsFile
@@ -85,18 +82,14 @@ sleep 1
 # ─────────────────────────────────────────────────────────────────────────────
 # 🔑 Secure MySQL
 # ─────────────────────────────────────────────────────────────────────────────
-echo -e "\n🔐  Securing MySQL..."
-curl --progress-bar -L -o secure-mysql.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/master/operation/secure-mysql.sh
 chmod +x secure-mysql.sh
 ./secure-mysql.sh "$root_password"
-echo -e "✅  MySQL secured."
+echo -e "✅  MySQL security script executed."
 sleep 1
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 🗄️  Setup Database & Users
 # ─────────────────────────────────────────────────────────────────────────────
-echo -e "\n📊  Creating database and users..."
-curl --progress-bar -L -o create_database.sql https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/master/database/create_database.sql
 mysql -e "source $WORK_DIR/create_database.sql"
 mysql -e "CREATE USER 'festivals.identity.writer'@'localhost' IDENTIFIED BY '$read_write_password';"
 mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE ON festivals_identity_database.* TO 'festivals.identity.writer'@'localhost';"
@@ -111,7 +104,7 @@ sleep 1
 # ─────────────────────────────────────────────────────────────────────────────
 echo -e "💾  Setting up database backup directory..."
 mkdir -p /srv/festivals-identity-server/backups
-curl --progress-bar -L -o /srv/festivals-identity-server/backups/backup.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/main/operation/backup.sh
+mv backup.sh /srv/festivals-identity-server/backups/backup.sh
 chmod +x /srv/festivals-identity-server/backups/backup.sh
 echo -e "✅ Database backup directory and script configured."
 sleep 1
@@ -120,10 +113,8 @@ sleep 1
 # ⏳ Install Cronjob for Daily Backup at 3 AM
 # ─────────────────────────────────────────────────────────────────────────────
 
-echo -e "🕒  Installing a cronjob to periodically run a backup..."
-sleep 1
 echo -e "0 3 * * * $WEB_USER /srv/festivals-identity-server/backups/backup.sh" | tee -a /etc/cron.d/festivals_identity_server_backup > /dev/null
-echo -e "✅  Cronjob successfully installed! Backup will run daily at \e[1;34m3 AM\e[0m"
+echo -e "✅  Cronjob installed! Backup will run daily at \e[1;34m3 AM\e[0m"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 🖥  Detect System OS and Architecture
@@ -149,9 +140,6 @@ else
     exit 1
 fi
 
-echo -e "\n✅  Detected OS: \e[1;34m$os\e[0m, Architecture: \e[1;34m$arch\e[0m."
-sleep 1
-
 # ─────────────────────────────────────────────────────────────────────────────
 # 📦 Install FestivalsApp Identity Server
 # ─────────────────────────────────────────────────────────────────────────────
@@ -176,7 +164,6 @@ sleep 1
 # 🛠  Install Server Configuration File
 # ─────────────────────────────────────────────────────────────────────────────
 
-echo -e "\n📂  Moving default configuration file..."
 mv config_template.toml /etc/festivals-identity-server.conf
 
 if [ -f "/etc/festivals-identity-server.conf" ]; then
@@ -191,7 +178,6 @@ sleep 1
 # 📂  Prepare Log Directory
 # ─────────────────────────────────────────────────────────────────────────────
 
-echo -e "\n📁  Creating log directory..."
 mkdir -p /var/log/festivals-identity-server || {
     echo -e "\n🚨  ERROR: Failed to create log directory. Exiting.\n"
     exit 1
@@ -203,9 +189,6 @@ sleep 1
 # ─────────────────────────────────────────────────────────────────────────────
 # 🔄 Prepare Remote Update Workflow
 # ─────────────────────────────────────────────────────────────────────────────
-
-echo -e "\n⚙️  Preparing remote update workflow..."
-sleep 1
 
 mv update.sh /usr/local/festivals-identity-server/update.sh
 chmod +x /usr/local/festivals-identity-server/update.sh
