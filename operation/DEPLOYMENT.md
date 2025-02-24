@@ -126,6 +126,12 @@ endpoint = "<discovery endpoint>"
 #For example: endpoint = "https://discovery.festivalsapp.home/loversear"
 ```
 
+And now let's start the service:
+
+```bash
+sudo systemctl start festivals-identity-server
+```
+
 ## **🚀 The identity service should now be running successfully. 🚀**
 
   > You might encounter an `ERR Failed to send heartbeat` error if the discovery service is not yet available. However, the service should function correctly.
@@ -147,10 +153,12 @@ Add the following entries:
 ```ini
 <IP address> <server name>  
 <Gateway IP address> <discovery endpoint>  
+# ...
 
 # Example:  
-# 192.168.8.185 identity-0.festivalsapp.home  
-# 192.168.8.186 discovery.festivalsapp.home  
+# 192.168.8.185 identity-0.festivalsapp.home
+# 192.168.8.186 discovery.festivalsapp.home
+# ...
 ```
 
 **Keep in mind that you will need to update each machine’s `hosts` file whenever you add a new VM or if any IP addresses change.**
