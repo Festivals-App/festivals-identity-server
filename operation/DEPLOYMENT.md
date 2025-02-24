@@ -1,5 +1,7 @@
 # Development Deployment
 
+This deployment guide explains how to deploy the FestivalsApp Identity Server using certificates intended for development purposes.
+
 ## Prerequisites
 
 This guide assumes you have already created a Virtual Machine (VM) by following the [VM deployment guide](https://github.com/Festivals-App/festivals-documentation/tree/main/deployment/vm-deployment).
