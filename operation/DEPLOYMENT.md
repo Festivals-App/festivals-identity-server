@@ -15,9 +15,9 @@ I use the development wildcard server certificate (`CN=*festivalsapp.home`) for 
 
   > **DON'T USE THIS IN PRODUCTION, SEE [festivals-pki](https://github.com/Festivals-App/festivals-pki) FOR SECURITY BEST PRACTICES FOR PRODUCTION**
 
-## Installing the FestivalsApp Identity Server
+## 1. Installing the FestivalsApp Identity Server
 
-Run the following commands to download and install the FestivalsApp Identity Server:
+Run the following commands to install the FestivalsApp Identity Server:
 
 ```bash
 curl -o install.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/master/operation/install.sh
@@ -25,7 +25,7 @@ chmod +x install.sh
 sudo ./install.sh <mysql_root_pw> <mysql_backup_pw> <read_write_pw>
 ```
 
-The config file is placed at:
+The config file is located at:
 
   > `/etc/festivals-identity-server.conf`.
 
@@ -41,7 +41,7 @@ Where the root CA certificate is required to validate incoming requests, the ser
 and the authentication certificate and key is required to create and validate JSON Web Token ([JWT](https://de.wikipedia.org/wiki/JSON_Web_Token)) for the authentication API.
 For instructions on how to manage and create the certificates see the [festivals-pki](https://github.com/Festivals-App/festivals-pki) repository.
 
-## Copying mTLS Certificates to the VM
+## 2. Copying mTLS Certificates to the VM
 
 Copy the server mTLS certificates from your development machine to the VM:
 
@@ -72,7 +72,7 @@ sudo chmod 640 /usr/local/festivals-identity-server/server.crt
 sudo chmod 600 /usr/local/festivals-identity-server/server.key
 ```
 
-## Configuring JWT Signing Keys
+## 3. Configuring the  JWT Signing Keys
 
 Convert the mTLS server certificate to use it as the authentication key:
 
@@ -94,7 +94,7 @@ sudo chmod 640 /usr/local/festivals-identity-server/authentication.publickey.pem
 sudo chmod 600 /usr/local/festivals-identity-server/authentication.privatekey.pem
 ```
 
-## Configuring Root CA
+## 4. Configuring the Root CA
 
 Lets add the Festivals Development Root CA certificate to the system CA's:
 
@@ -103,7 +103,7 @@ sudo cp /usr/local/festivals-identity-server/ca.crt /usr/local/share/ca-certific
 sudo update-ca-certificates
 ```
 
-## Configuring the Festivals Identity Server
+## 5. Configuring the Festivals Identity Server
 
 Open the configuration file:
 
@@ -124,28 +124,34 @@ endpoint = "<discovery endpoint>"
 #For example: endpoint = "https://discovery.festivalsapp.home/loversear"
 ```
 
-## Setting Up DNS Resolution
+**🚀 The identity service should now be running successfully. 🚀**
 
-For the services in the FestivalsApp backend to work correctly, proper DNS resolution is required. If you don’t have a DNS server, manually add the necessary entries to `/etc/hosts`:
+You might encounter an `ERR Failed to send heartbeat` error if the discovery service is not yet available. However, the service should function correctly.
+
+## Optional: Setting Up DNS Resolution  
+
+For the services in the FestivalsApp backend to function correctly, proper DNS resolution is required.
+This is because mTLS is configured to validate the client’s certificate identity based on its DNS hostname.  
+
+If you don’t have a DNS server to manage DNS for your development VMs, you can manually configure DNS resolution
+by adding the necessary entries to each server’s `/etc/hosts` file:  
 
 ```bash
 sudo nano /etc/hosts
 ```
 
-Add the following entries:
+Add the following entries:  
 
 ```ini
-<ip address> <server name>
-<gateway ip address> <discovery endpoint>
+<IP address> <server name>  
+<Gateway IP address> <discovery endpoint>  
 
-# For example: 
-# 192.168.8.185 identity-0.festivalsapp.home
-# 192.168.8.186 discovery.festivalsapp.home
+# Example:  
+# 192.168.8.185 identity-0.festivalsapp.home  
+# 192.168.8.186 discovery.festivalsapp.home  
 ```
 
-## **🚀 The identity service should now be running successfully. 🚀**
-
-You may see an error like `ERR Failed to send heartbeat` if the discovery service isn't available yet.
+**Keep in mind that you will need to update each machine’s `hosts` file whenever you add a new VM or if any IP addresses change.**
 
 ## Testing
 
