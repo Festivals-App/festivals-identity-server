@@ -259,16 +259,16 @@ echo -e "\033[1;32m════════════════════�
 
 echo -e "\n📂 \033[1;34mBefore starting, you need to:\033[0m"
 
-echo -e "\n📂 \033[1;34m1. Configure the mTLS certificates.\033[0m"
+echo -e "\n   \033[1;34m1. Configure the mTLS certificates.\033[0m"
 
-echo -e "\n📂 \033[1;34m2. Configure the JWT signing keys.\033[0m"
+echo -e "   \033[1;34m2. Configure the JWT signing keys.\033[0m"
 
-echo -e "\n📂 \033[1;34m3. Configuring the FestivlasApp Root CA.\033[0m"
+echo -e "   \033[1;34m3. Configuring the FestivlasApp Root CA.\033[0m"
 
-echo -e "\n📂 \033[1;34m4. Update the configuration file at:\033[0m"
+echo -e "   \033[1;34m4. Update the configuration file at:\033[0m"
 echo -e "\n   \033[1;32m    /etc/festivals-identity-server.conf\033[0m"
 
-echo -e "\n🔹 \033[1;34mNow start the server manually:\033[0m"
+echo -e "\n🔹 \033[1;34mThen start the server manually:\033[0m"
 echo -e "\n   \033[1;32m    sudo systemctl start festivals-identity-server\033[0m"
 
 echo -e "\n\033[1;32m══════════════════════════════════════════════════════════════════════════\033[0m\n"
