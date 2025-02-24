@@ -103,11 +103,9 @@ Set the IP address, servername and heartbeat endpoint:
 
 ```ini
 [service]
-bind-address = "<ip address>"
-bin-host = "<servername>"
+bind-host = "<servername>"
 # For example: 
-# bind-address = "192.168.8.185"
-# bind-address = "identity-0.festivalsapp.home"
+# bind-host = "identity-0.festivalsapp.home"
 
 [heartbeat]
 endpoint = "<discovery endpoint>"
