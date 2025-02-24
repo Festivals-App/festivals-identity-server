@@ -9,7 +9,7 @@ Before starting the installation, ensure you have:
 - Created and configured your VM
 - SSH access secured and logged in as the admin user
 - Your server's IP address (use `ip a` to check)
-- A server name matching the Common Name (CN) for your server certificate (e.g., `identity-0.festivalsapp.home` for a hostname `identity-0`).
+- A server name matching the Common Name (CN) for your mTLS certificate (e.g., `identity-0.festivalsapp.home` for a hostname `identity-0`).
 
 I use the development wildcard server certificate (`CN=*festivalsapp.home`) for this guide.
 
@@ -111,7 +111,7 @@ Open the configuration file:
 sudo nano /etc/festivals-identity-server.conf
 ```
 
-Set the IP address, servername and heartbeat endpoint:
+Set the IP servername and heartbeat endpoint:
 
 ```ini
 [service]
@@ -126,7 +126,7 @@ endpoint = "<discovery endpoint>"
 
 **🚀 The identity service should now be running successfully. 🚀**
 
-You might encounter an `ERR Failed to send heartbeat` error if the discovery service is not yet available. However, the service should function correctly.
+  > You might encounter an `ERR Failed to send heartbeat` error if the discovery service is not yet available. However, the service should function correctly.
 
 ## Optional: Setting Up DNS Resolution  
 
