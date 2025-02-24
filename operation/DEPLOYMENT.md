@@ -9,7 +9,7 @@ This guide assumes you have already created a Virtual Machine (VM) by following 
 Before starting the installation, ensure you have:
 
 - Created and configured your VM
-- SSH access secured and logged in as the new admin user
+- SSH access secured and logged in as the admin user
 - Your server's IP address (use `ip a` to check)
 - A server name matching the Common Name (CN) for your server certificate (e.g., `identity-0.festivalsapp.home` for a hostname `identity-0`).
 
