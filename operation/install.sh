@@ -42,16 +42,12 @@ fi
 # ─────────────────────────────────────────────────────────────────────────────
 WORK_DIR="/usr/local/festivals-identity-server/install"
 mkdir -p "$WORK_DIR" && cd "$WORK_DIR" || { echo -e "\n\033[1;31m❌  ERROR: Failed to create/access working directory!\033[0m\n"; exit 1; }
-
 echo -e "\n📂  Working directory set to \e[1;34m$WORK_DIR\e[0m"
 sleep 1
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 🖥  Detect System OS and Architecture
 # ─────────────────────────────────────────────────────────────────────────────
-
-sleep 1
-
 if [ "$(uname -s)" = "Darwin" ]; then
     os="darwin"
 elif [ "$(uname -s)" = "Linux" ]; then
@@ -60,7 +56,6 @@ else
     echo -e "\n🚨  ERROR: Unsupported OS. Exiting.\n"
     exit 1
 fi
-
 if [ "$(uname -m)" = "x86_64" ]; then
     arch="amd64"
 elif [ "$(uname -m)" = "arm64" ]; then
@@ -73,12 +68,9 @@ fi
 # ─────────────────────────────────────────────────────────────────────────────
 # 📦 Download latest release
 # ─────────────────────────────────────────────────────────────────────────────
-
 file_url="https://github.com/Festivals-App/festivals-identity-server/releases/latest/download/festivals-identity-server-$os-$arch.tar.gz"
-
 echo -e "\n📥  Downloading latest FestivalsApp Identity Server release..."
 curl --progress-bar -L "$file_url" -o festivals-identity-server.tar.gz
-
 echo -e "📦  Extracting archive..."
 tar -xf festivals-identity-server.tar.gz
 
@@ -88,14 +80,12 @@ tar -xf festivals-identity-server.tar.gz
 echo -e "\n🗂️  Installing MySQL server..."
 apt-get install mysql-server -y > /dev/null 2>&1
 systemctl enable mysql &>/dev/null && systemctl start mysql &>/dev/null
-
 echo -e "✅  MySQL service is up and running."
 sleep 1
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 🔐 Install MySQL Backup Credential File
 # ─────────────────────────────────────────────────────────────────────────────
-
 credentialsFile=/usr/local/festivals-identity-server/mysql.conf
 cat << EOF > $credentialsFile
 # festivals-identity-server configuration file v1.0
@@ -106,7 +96,6 @@ user = 'festivals.identity.backup'
 password = '$backup_password'
 host = 'localhost'
 EOF
-
 if [ -f "$credentialsFile" ]; then
     echo -e "✅  MySQL backup credential file successfully created at \e[1;34m$credentialsFile\e[0m"
 else
@@ -257,20 +246,13 @@ sleep 1
 echo -e "\n\033[1;32m══════════════════════════════════════════════════════════════════════════\033[0m"
 echo -e "\033[1;32m✅  INSTALLATION COMPLETE! 🚀\033[0m"
 echo -e "\033[1;32m══════════════════════════════════════════════════════════════════════════\033[0m"
-
 echo -e "\n📂 \033[1;34mBefore starting, you need to:\033[0m"
-
 echo -e "\n   \033[1;34m1. Configure the mTLS certificates.\033[0m"
-
 echo -e "   \033[1;34m2. Configure the JWT signing keys.\033[0m"
-
 echo -e "   \033[1;34m3. Configuring the FestivlasApp Root CA.\033[0m"
-
 echo -e "   \033[1;34m4. Update the configuration file at:\033[0m"
 echo -e "\n   \033[1;32m    /etc/festivals-identity-server.conf\033[0m"
-
 echo -e "\n🔹 \033[1;34mThen start the server manually:\033[0m"
 echo -e "\n   \033[1;32m    sudo systemctl start festivals-identity-server\033[0m"
-
 echo -e "\n\033[1;32m══════════════════════════════════════════════════════════════════════════\033[0m\n"
 sleep 1
