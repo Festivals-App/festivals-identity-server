@@ -113,11 +113,11 @@ Open the configuration file:
 sudo nano /etc/festivals-identity-server.conf
 ```
 
-Set the servername and heartbeat endpoint:
+Set the server name and heartbeat endpoint:
 
 ```ini
 [service]
-bind-host = "<servername>"
+bind-host = "<server name>"
 # For example: 
 # bind-host = "identity-0.festivalsapp.home"
 
