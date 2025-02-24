@@ -1,6 +1,4 @@
-# Development Deployment on Proxmox
-
-![Proxmox](https://img.shields.io/badge/proxmox-proxmox?style=for-the-badge&logo=proxmox&logoColor=%23E57000&labelColor=%232b2a33&color=%232b2a33)
+# Development Deployment on ![Proxmox](https://img.shields.io/badge/proxmox-proxmox?style=for-the-badge&logo=proxmox&logoColor=%23E57000&labelColor=%232b2a33&color=%232b2a33)
 
 ## Prerequisites
 
@@ -27,6 +25,22 @@ chmod +x install.sh
 sudo ./install.sh <mysql_root_pw> <mysql_backup_pw> <read_write_pw>
 ```
 
+The config file is placed at:
+
+  > `/etc/festivals-identity-server.conf`.
+
+You also need to provide certificates in the right format and location:
+
+  > Root CA certificate           `/usr/local/festivals-identity-server/ca.crt`  
+  > Server certificate            `/usr/local/festivals-identity-server/server.crt`  
+  > Server key                    `/usr/local/festivals-identity-server/server.key`  
+  > Authentication certificate    `/usr/local/festivals-identity-server/authentication.pem`  
+  > Authentication key            `/usr/local/festivals-identity-server/authentication-key.pem`  
+
+Where the root CA certificate is required to validate incoming requests, the server certificate and key is required to make outgoing connections via mTLS
+and the authentication certificate and key is required to create and validate JSON Web Token ([JWT](https://de.wikipedia.org/wiki/JSON_Web_Token)) for the authentication API.
+For instructions on how to manage and create the certificates see the [festivals-pki](https://github.com/Festivals-App/festivals-pki) repository.
+
 ## Copying mTLS Certificates to the VM
 
 Copy the server mTLS certificates from your development machine to the VM:
@@ -52,7 +66,6 @@ Set the correct permissions:
 sudo chown www-data /usr/local/festivals-identity-server/ca.crt
 sudo chown www-data /usr/local/festivals-identity-server/server.crt
 sudo chown www-data /usr/local/festivals-identity-server/server.key
-
 # Set secure permissions
 sudo chmod 640 /usr/local/festivals-identity-server/ca.crt
 sudo chmod 640 /usr/local/festivals-identity-server/server.crt
@@ -76,7 +89,6 @@ Set the correct permissions:
 # Change owner to web user
 sudo chown www-data /usr/local/festivals-identity-server/authentication.publickey.pem
 sudo chown www-data /usr/local/festivals-identity-server/authentication.privatekey.pem
-
 # Set secure permissions
 sudo chmod 640 /usr/local/festivals-identity-server/authentication.publickey.pem
 sudo chmod 600 /usr/local/festivals-identity-server/authentication.privatekey.pem
@@ -84,7 +96,7 @@ sudo chmod 600 /usr/local/festivals-identity-server/authentication.privatekey.pe
 
 ## Configuring Root CA
 
-Lets add the Festivals Development Root CA certificate to the system CA's.
+Lets add the Festivals Development Root CA certificate to the system CA's:
 
 ```bash
 sudo cp /usr/local/festivals-identity-server/ca.crt /usr/local/share/ca-certificates/festivals-dev-ca.crt
@@ -131,15 +143,9 @@ Add the following entries:
 # 192.168.8.186 discovery.festivalsapp.home
 ```
 
-## Final Steps
+## **🚀 The identity service should now be running successfully. 🚀**
 
-If you have not already set up the Festivals Gateway with its discovery service, you may see an error like:
-
-```log
-ERR Failed to send heartbeat
-```
-
-## **🚀 However, the identity service should now be running successfully. 🚀**
+You may see an error like `ERR Failed to send heartbeat` if the discovery service isn't available yet.
 
 ## Testing
 

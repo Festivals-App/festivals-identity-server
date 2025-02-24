@@ -41,47 +41,8 @@ In addition to these mechanisms, the backend enforces strict firewall rules and 
 
 ## Deployment
 
-The Go binaries are able to run without system dependencies so there are not many requirements for the system to run the festivals-identity-server binary.
-
-  > The config file is placed at `/etc/festivals-identity-server.conf`.
-
-You also need to provide certificates in the right format and location:
-
-  > Root CA certificate           `/usr/local/festivals-identity-server/ca.crt`  
-  > Server certificate            `/usr/local/festivals-identity-server/server.crt`  
-  > Server key                    `/usr/local/festivals-identity-server/server.key`  
-  > Authentication certificate    `/usr/local/festivals-identity-server/authentication.pem`  
-  > Authentication key            `/usr/local/festivals-identity-server/authentication-key.pem`  
-
-Where the root CA certificate is required to validate incoming requests, the server certificate and key is required to make outgoing connections
-and the authentication certificate and key is required to create and validate JSON Web Token ([JWT](https://de.wikipedia.org/wiki/JSON_Web_Token)) for the authentication API.
-For instructions on how to manage and create the certificates see the [festivals-pki](https://github.com/Festivals-App/festivals-pki) repository.
-
-### VM
-
-```bash
-#Installing
-curl -o install.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/master/operation/install.sh
-chmod +x install.sh
-sudo ./install.sh <mysql_root_pw> <mysql_backup_pw> <read_write_pw>
-sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf          // edit bind-address=<private-ip>
-
-#Updating
-curl -o update.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/master/operation/update.sh
-chmod +x update.sh
-sudo ./update.sh
-
-#To see if the server is running use:
-sudo systemctl status festivals-identity-server
-```
-
-#### Build and run using make
-
-```bash
-make build
-make run
-# Default API Endpoint : http://localhost:22580
-```
+The Go binaries are able to run without system dependencies so there are not many requirements for the system to run the festivals-identity-server binary,
+just follow the [**deployment guide**](./operation/DEPLOYMENT.md).
 
 ## Engage
 
