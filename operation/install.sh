@@ -47,6 +47,42 @@ echo -e "\n📂  Working directory set to \e[1;34m$WORK_DIR\e[0m"
 sleep 1
 
 # ─────────────────────────────────────────────────────────────────────────────
+# 🖥  Detect System OS and Architecture
+# ─────────────────────────────────────────────────────────────────────────────
+
+sleep 1
+
+if [ "$(uname -s)" = "Darwin" ]; then
+    os="darwin"
+elif [ "$(uname -s)" = "Linux" ]; then
+    os="linux"
+else
+    echo -e "\n🚨  ERROR: Unsupported OS. Exiting.\n"
+    exit 1
+fi
+
+if [ "$(uname -m)" = "x86_64" ]; then
+    arch="amd64"
+elif [ "$(uname -m)" = "arm64" ]; then
+    arch="arm64"
+else
+    echo -e "\n🚨  ERROR: Unsupported CPU architecture. Exiting.\n"
+    exit 1
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 📦 Download latest release
+# ─────────────────────────────────────────────────────────────────────────────
+
+file_url="https://github.com/Festivals-App/festivals-identity-server/releases/latest/download/festivals-identity-server-$os-$arch.tar.gz"
+
+echo -e "📥  Downloading latest FestivalsApp Identity Server release..."
+curl --progress-bar -L "$file_url" -o festivals-identity-server.tar.gz
+
+echo -e "📦  Extracting binary..."
+tar -xf festivals-identity-server.tar.gz
+
+# ─────────────────────────────────────────────────────────────────────────────
 # 📦 Install & Enable & Start MySQL Server
 # ─────────────────────────────────────────────────────────────────────────────
 echo -e "\n🗂️  Installing MySQL server..."
@@ -117,41 +153,10 @@ echo -e "0 3 * * * $WEB_USER /srv/festivals-identity-server/backups/backup.sh" |
 echo -e "✅  Cronjob installed! Backup will run daily at \e[1;34m3 AM\e[0m"
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 🖥  Detect System OS and Architecture
-# ─────────────────────────────────────────────────────────────────────────────
-
-sleep 1
-
-if [ "$(uname -s)" = "Darwin" ]; then
-    os="darwin"
-elif [ "$(uname -s)" = "Linux" ]; then
-    os="linux"
-else
-    echo -e "\n🚨  ERROR: Unsupported OS. Exiting.\n"
-    exit 1
-fi
-
-if [ "$(uname -m)" = "x86_64" ]; then
-    arch="amd64"
-elif [ "$(uname -m)" = "arm64" ]; then
-    arch="arm64"
-else
-    echo -e "\n🚨  ERROR: Unsupported CPU architecture. Exiting.\n"
-    exit 1
-fi
-
-# ─────────────────────────────────────────────────────────────────────────────
 # 📦 Install FestivalsApp Identity Server
 # ─────────────────────────────────────────────────────────────────────────────
 
-file_url="https://github.com/Festivals-App/festivals-identity-server/releases/latest/download/festivals-identity-server-$os-$arch.tar.gz"
-
-echo -e "📥  Downloading latest FestivalsApp Identity Server binary..."
-curl --progress-bar -L "$file_url" -o festivals-identity-server.tar.gz
-
-echo -e "📦  Extracting binary..."
-tar -xf festivals-identity-server.tar.gz
-
+echo -e "\n📥  Installing latest FestivalsApp Identity Server binary..."
 mv festivals-identity-server /usr/local/bin/festivals-identity-server || {
     echo -e "\n🚨  ERROR: Failed to install Festivals Identity Server binary. Exiting.\n"
     exit 1
