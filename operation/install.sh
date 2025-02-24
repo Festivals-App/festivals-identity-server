@@ -13,9 +13,8 @@
 # ─────────────────────────────────────────────────────────────────────────────
 if [ $# -ne 3 ]; then
     echo -e "\n\033[1;31m🚨  ERROR: Missing parameters!\033[0m"
-    echo -e "\n\033[1;34m🔹  USAGE:\033[0m sudo ./install.sh \033[1;32m<mysql_root_pw> <mysql_backup_pw> <read_write_pw>\033[0m"
-    echo -e "\n\033[1;34m⚠️  REQUIREMENTS:\033[0m Run as \033[1;33mroot\033[0m or with \033[1;33msudo\033[0m."
-    echo -e "\n\033[1;31m❌  Exiting.\033[0m\n"
+    echo -e "\033[1;34m🔹  USAGE:\033[0m sudo ./install.sh \033[1;32m<mysql_root_pw> <mysql_backup_pw> <read_write_pw>\033[0m"
+    echo -e "\033[1;31m❌  Exiting.\033[0m\n"
     exit 1
 fi
 
@@ -38,40 +37,30 @@ if ! id -u "$WEB_USER" &>/dev/null; then
     fi
 fi
 
-echo -e "\n👤  Web server user detected: \e[1;34m$WEB_USER\e[0m"
-sleep 1
-
 # ─────────────────────────────────────────────────────────────────────────────
 # 📁 Setup Working Directory
 # ─────────────────────────────────────────────────────────────────────────────
 WORK_DIR="/usr/local/festivals-identity-server/install"
 mkdir -p "$WORK_DIR" && cd "$WORK_DIR" || { echo -e "\n\033[1;31m❌  ERROR: Failed to create/access working directory!\033[0m\n"; exit 1; }
 
-echo -e "\n📂  Working directory set to \e[1;34m$WORK_DIR\e[0m\n"
+echo -e "📂  Working directory set to \e[1;34m$WORK_DIR\e[0m"
 sleep 1
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 📦 Install MySQL Server
+# 📦 Install & Enable & Start MySQL Server
 # ─────────────────────────────────────────────────────────────────────────────
-echo -e "\n\n\n🚀  Installing MySQL server..."
+echo -e "\n🚀  Installing MySQL server..."
 apt-get install mysql-server -y > /dev/null 2>&1
-echo -e "\n✅  MySQL server installed.\n"
-sleep 1
-
-# ─────────────────────────────────────────────────────────────────────────────
-# 🔄 Enable & Start MySQL Service
-# ─────────────────────────────────────────────────────────────────────────────
-echo -e "\n\n\n▶️  Enabling and starting MySQL service..."
 systemctl enable mysql &>/dev/null && systemctl start mysql &>/dev/null
 
-echo -e "\n✅  MySQL service is up and running.\n"
+echo -e "✅  MySQL service is up and running."
 sleep 1
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 🔐 Install MySQL Credential File
+# 🔐 Install MySQL Backup Credential File
 # ─────────────────────────────────────────────────────────────────────────────
 
-echo -e "\n\n\n📂  Installing MySQL credential file to project directory..."
+echo -e "\n📂  Installing MySQL backup credential file..."
 sleep 1
 
 credentialsFile=/usr/local/festivals-identity-server/mysql.conf
@@ -86,9 +75,9 @@ host = 'localhost'
 EOF
 
 if [ -f "$credentialsFile" ]; then
-    echo -e "\n✅  MySQL credential file successfully created at \e[1;34m$credentialsFile\e[0m\n"
+    echo -e "✅  MySQL backup credential file successfully created at \e[1;34m$credentialsFile\e[0m"
 else
-    echo -e "\n🚨  ERROR: Failed to create MySQL credential file. Exiting.\n"
+    echo -e "🚨  ERROR: Failed to create MySQL credential file. Exiting.\n"
     exit 1
 fi
 sleep 1
@@ -96,17 +85,17 @@ sleep 1
 # ─────────────────────────────────────────────────────────────────────────────
 # 🔑 Secure MySQL
 # ─────────────────────────────────────────────────────────────────────────────
-echo -e "\n\n\n🔐  Securing MySQL..."
+echo -e "\n🔐  Securing MySQL..."
 curl --progress-bar -L -o secure-mysql.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/master/operation/secure-mysql.sh
 chmod +x secure-mysql.sh
 ./secure-mysql.sh "$root_password"
-echo -e "\n✅  MySQL secured.\n"
+echo -e "✅  MySQL secured."
 sleep 1
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 🗄️  Setup Database & Users
 # ─────────────────────────────────────────────────────────────────────────────
-echo -e "\n\n\n📊  Creating database and users..."
+echo -e "\n📊  Creating database and users..."
 curl --progress-bar -L -o create_database.sql https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/master/database/create_database.sql
 mysql -e "source $WORK_DIR/create_database.sql"
 mysql -e "CREATE USER 'festivals.identity.writer'@'localhost' IDENTIFIED BY '$read_write_password';"
@@ -114,33 +103,32 @@ mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE ON festivals_identity_database.* 
 mysql -e "CREATE USER 'festivals.identity.backup'@'localhost' IDENTIFIED BY '$backup_password';"
 mysql -e "GRANT ALL PRIVILEGES ON festivals_identity_database.* TO 'festivals.identity.backup'@'localhost';"
 mysql -e "FLUSH PRIVILEGES;"
-echo -e "\n✅  Database and users created.\n"
+echo -e "✅  Database and users created."
 sleep 1
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 📂 Setup Backup Directory
+# 📂 Setup Database Backup Directory
 # ─────────────────────────────────────────────────────────────────────────────
-echo -e "\n\n\n💾  Setting up backup directory..."
+echo -e "💾  Setting up database backup directory..."
 mkdir -p /srv/festivals-identity-server/backups
 curl --progress-bar -L -o /srv/festivals-identity-server/backups/backup.sh https://raw.githubusercontent.com/Festivals-App/festivals-identity-server/main/operation/backup.sh
 chmod +x /srv/festivals-identity-server/backups/backup.sh
-echo -e "\n✅  Backup directory and script configured.\n"
+echo -e "✅ Database backup directory and script configured."
 sleep 1
 
 # ─────────────────────────────────────────────────────────────────────────────
 # ⏳ Install Cronjob for Daily Backup at 3 AM
 # ─────────────────────────────────────────────────────────────────────────────
 
-echo -e "\n\n\n🕒  Installing a cronjob to periodically run a backup..."
+echo -e "🕒  Installing a cronjob to periodically run a backup..."
 sleep 1
 echo -e "0 3 * * * $WEB_USER /srv/festivals-identity-server/backups/backup.sh" | tee -a /etc/cron.d/festivals_identity_server_backup > /dev/null
-echo -e "\n✅  Cronjob successfully installed! Backup will run daily at \e[1;34m3 AM\e[0m\n"
+echo -e "✅  Cronjob successfully installed! Backup will run daily at \e[1;34m3 AM\e[0m"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 🖥  Detect System OS and Architecture
 # ─────────────────────────────────────────────────────────────────────────────
 
-echo -e "\n\n\n🔍  Detecting system OS and architecture..."
 sleep 1
 
 if [ "$(uname -s)" = "Darwin" ]; then
@@ -170,10 +158,10 @@ sleep 1
 
 file_url="https://github.com/Festivals-App/festivals-identity-server/releases/latest/download/festivals-identity-server-$os-$arch.tar.gz"
 
-echo -e "\n📥  Downloading latest FestivalsApp Identity Server binary..."
+echo -e "📥  Downloading latest FestivalsApp Identity Server binary..."
 curl --progress-bar -L "$file_url" -o festivals-identity-server.tar.gz
 
-echo -e "\n📦  Extracting binary..."
+echo -e "📦  Extracting binary..."
 tar -xf festivals-identity-server.tar.gz
 
 mv festivals-identity-server /usr/local/bin/festivals-identity-server || {
@@ -181,18 +169,18 @@ mv festivals-identity-server /usr/local/bin/festivals-identity-server || {
     exit 1
 }
 
-echo -e "\n✅  Installed FestivalsApp Identity Server to \e[1;34m/usr/local/bin/festivals-identity-server\e[0m.\n"
+echo -e "✅  Installed FestivalsApp Identity Server to \e[1;34m/usr/local/bin/festivals-identity-server\e[0m."
 sleep 1
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 🛠  Install Server Configuration File
 # ─────────────────────────────────────────────────────────────────────────────
 
-echo -e "\n\n\n📂  Moving default configuration file..."
+echo -e "\n📂  Moving default configuration file..."
 mv config_template.toml /etc/festivals-identity-server.conf
 
 if [ -f "/etc/festivals-identity-server.conf" ]; then
-    echo -e "\n✅  Configuration file moved to \e[1;34m/etc/festivals-identity-server.conf\e[0m.\n"
+    echo -e "✅  Configuration file moved to \e[1;34m/etc/festivals-identity-server.conf\e[0m."
 else
     echo -e "\n🚨  ERROR: Failed to move configuration file. Exiting.\n"
     exit 1
@@ -203,20 +191,20 @@ sleep 1
 # 📂  Prepare Log Directory
 # ─────────────────────────────────────────────────────────────────────────────
 
-echo -e "\n\n\n📁  Creating log directory..."
+echo -e "\n📁  Creating log directory..."
 mkdir -p /var/log/festivals-identity-server || {
     echo -e "\n🚨  ERROR: Failed to create log directory. Exiting.\n"
     exit 1
 }
 
-echo -e "\n✅  Log directory created at \e[1;34m/var/log/festivals-identity-server\e[0m.\n"
+echo -e "✅  Log directory created at \e[1;34m/var/log/festivals-identity-server\e[0m."
 sleep 1
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 🔄 Prepare Remote Update Workflow
 # ─────────────────────────────────────────────────────────────────────────────
 
-echo -e "\n\n\n⚙️  Preparing remote update workflow..."
+echo -e "\n⚙️  Preparing remote update workflow..."
 sleep 1
 
 mv update.sh /usr/local/festivals-identity-server/update.sh
@@ -228,7 +216,7 @@ echo "$WEB_USER ALL = (ALL) NOPASSWD: /usr/local/festivals-identity-server/updat
 # Validate and replace sudoers file if syntax is correct
 if visudo -cf /tmp/sudoers.bak &>/dev/null; then
     sudo cp /tmp/sudoers.bak /etc/sudoers
-    echo -e "\n✅  Updated sudoers file successfully."
+    echo -e "✅  Prepared remote update workflow."
 else
     echo -e "\n🚨  ERROR: Could not modify /etc/sudoers file. Please do this manually. Exiting.\n"
     exit 1
@@ -240,10 +228,10 @@ sleep 1
 # ─────────────────────────────────────────────────────────────────────────────
 
 if command -v ufw > /dev/null; then
-    echo -e "\n\n\n🚀  Configuring UFW firewall..."
+    echo -e "\n🔥  Configuring UFW firewall..."
     mv ufw_app_profile /etc/ufw/applications.d/festivals-identity-server
     ufw allow festivals-identity-server > /dev/null
-    echo -e "\n✅  Added festivals-identity-server to UFW with port 22580."
+    echo -e "✅  Added festivals-identity-server to UFW with port 22580."
     sleep 1
 elif ! [ "$(uname -s)" = "Darwin" ]; then
     echo -e "\n🚨  ERROR: No firewall detected and not on macOS. Exiting.\n"
@@ -255,14 +243,14 @@ fi
 # ─────────────────────────────────────────────────────────────────────────────
 
 if command -v service > /dev/null; then
-    echo -e "\n\n\n🚀  Configuring systemd service..."
+    echo -e "\n🚀  Configuring systemd service..."
     if ! [ -f "/etc/systemd/system/festivals-identity-server.service" ]; then
         mv service_template.service /etc/systemd/system/festivals-identity-server.service
-        echo -e "\n✅  Created systemd service configuration."
+        echo -e "✅  Created systemd service configuration."
         sleep 1
     fi
     systemctl enable festivals-identity-server > /dev/null
-    echo -e "\n✅  Enabled systemd service for Festivals Identity Server."
+    echo -e "✅  Enabled systemd service for Festivals Identity Server."
     sleep 1
 elif ! [ "$(uname -s)" = "Darwin" ]; then
     echo -e "\n🚨  ERROR: Systemd is missing and not on macOS. Exiting.\n"
@@ -273,22 +261,19 @@ fi
 # 🔑 Set Appropriate Permissions
 # ─────────────────────────────────────────────────────────────────────────────
 
-echo -e "\n\n\n🔑  Setting appropriate permissions..."
-sleep 1
-
 chown -R "$WEB_USER":"$WEB_USER" /usr/local/festivals-identity-server
 chown -R "$WEB_USER":"$WEB_USER" /var/log/festivals-identity-server
 chown -R "$WEB_USER":"$WEB_USER" /srv/festivals-identity-server
 chown "$WEB_USER":"$WEB_USER" /etc/festivals-identity-server.conf
 
-echo -e "\n✅  Set Appropriate Permissions.\n"
+echo -e "\n✅  Set Appropriate Permissions."
 sleep 1
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 🧹 Cleanup Installation Files
 # ─────────────────────────────────────────────────────────────────────────────
 
-echo -e "\n🧹  Cleaning up installation files..."
+echo -e "🧹  Cleaning up installation files..."
 cd /usr/local/festivals-identity-server || exit
 rm -rf /usr/local/festivals-identity-server/install
 sleep 1
