@@ -124,11 +124,11 @@ endpoint = "<discovery endpoint>"
 #For example: endpoint = "https://discovery.festivalsapp.home/loversear"
 ```
 
-**🚀 The identity service should now be running successfully. 🚀**
+## **🚀 The identity service should now be running successfully. 🚀**
 
   > You might encounter an `ERR Failed to send heartbeat` error if the discovery service is not yet available. However, the service should function correctly.
 
-## Optional: Setting Up DNS Resolution  
+### Optional: Setting Up DNS Resolution  
 
 For the services in the FestivalsApp backend to function correctly, proper DNS resolution is required.
 This is because mTLS is configured to validate the client’s certificate identity based on its DNS hostname.  
@@ -153,7 +153,7 @@ Add the following entries:
 
 **Keep in mind that you will need to update each machine’s `hosts` file whenever you add a new VM or if any IP addresses change.**
 
-## Testing
+### Testing
 
 Lets login as the default admin user and get the server info:
 
