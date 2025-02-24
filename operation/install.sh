@@ -240,7 +240,7 @@ chown -R "$WEB_USER":"$WEB_USER" /usr/local/festivals-identity-server
 chown -R "$WEB_USER":"$WEB_USER" /var/log/festivals-identity-server
 chown -R "$WEB_USER":"$WEB_USER" /srv/festivals-identity-server
 chown "$WEB_USER":"$WEB_USER" /etc/festivals-identity-server.conf
-echo -e "\n✅  Set Appropriate Permissions."
+echo -e "\n🔐  Set Appropriate Permissions."
 sleep 1
 
 # ─────────────────────────────────────────────────────────────────────────────
