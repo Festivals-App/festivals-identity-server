@@ -1,0 +1,28 @@
+# festivals-identity-server configuration file v1.0
+# TOML 1.0.0-rc.2+
+
+[service]
+bind-host = "identity.festivalsapp.dev"
+port = 22580
+key = "TEST_SERVICE_KEY_001"
+
+[tls]
+festivaslapp-root-ca = "~/Library/Containers/org.festivalsapp.project/usr/local/festivals-identity-server/ca.crt"
+cert = "~/Library/Containers/org.festivalsapp.project/usr/local/festivals-identity-server/server.crt"
+key = "~/Library/Containers/org.festivalsapp.project/usr/local/festivals-identity-server/server.key"
+
+[database]
+password = "we4711"
+
+[heartbeat]
+endpoint = "https://discovery.festivalsapp.dev/loversear"
+interval = 6
+
+[jwt]
+expiration = 180
+accesspublickeypath = "~/Library/Containers/org.festivalsapp.project/usr/local/festivals-identity-server/authentication.publickey.pem"
+accessprivatekeypath = "~/Library/Containers/org.festivalsapp.project/usr/local/festivals-identity-server/authentication.privatekey.pem"
+
+[log]
+info = "~/Library/Containers/org.festivalsapp.project/var/log/festivals-identity-server/info.log"
+trace = "~/Library/Containers/org.festivalsapp.project/var/log/festivals-identity-server/trace.log"
