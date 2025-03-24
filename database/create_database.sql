@@ -163,8 +163,8 @@ FOREIGN 	KEY (`associated_user`)                 REFERENCES users (user_id)
 Insert default users (default password: we4711), api key and service key.
 */
 
-INSERT INTO  `users`(`user_id`, `user_email`, `user_password`, `user_role`) VALUES (0, 'admin@email.com', '$2a$12$YbAhewILx82tGkLtEZWiKOfYzBt85RSQtGXhxlQX2hV7qiP51xPES', 42);
-INSERT INTO  `users`(`user_id`, `user_email`, `user_password`, `user_role`) VALUES (0, 'user@email.com', '$2a$12$YbAhewILx82tGkLtEZWiKOfYzBt85RSQtGXhxlQX2hV7qiP51xPES', 1);
-INSERT INTO  `users`(`user_id`, `user_email`, `user_password`, `user_role`) VALUES (0, 'coordinator@email.com', '$2a$12$YbAhewILx82tGkLtEZWiKOfYzBt85RSQtGXhxlQX2hV7qiP51xPES',2);
-INSERT INTO api_keys(`api_key`, `api_key_comment`) VALUES ('TEST_API_KEY_001', "DEVELOPMENT API KEY");
-INSERT INTO service_keys(`service_key`, `service_key_comment`) VALUES ('TEST_SERVICE_KEY_001', "DEVELOPMENT SERVICE KEY");
+INSERT INTO `users`(`user_id`, `user_email`, `user_password`, `user_role`) VALUES (0, 'admin@email.com', '$2a$12$YbAhewILx82tGkLtEZWiKOfYzBt85RSQtGXhxlQX2hV7qiP51xPES', 42);
+INSERT INTO `users`(`user_id`, `user_email`, `user_password`, `user_role`) VALUES (0, 'user@email.com', '$2a$12$YbAhewILx82tGkLtEZWiKOfYzBt85RSQtGXhxlQX2hV7qiP51xPES', 1);
+INSERT INTO `users`(`user_id`, `user_email`, `user_password`, `user_role`) VALUES (0, 'coordinator@email.com', '$2a$12$YbAhewILx82tGkLtEZWiKOfYzBt85RSQtGXhxlQX2hV7qiP51xPES',2);
+INSERT INTO `api_keys`(`api_key`, `api_key_comment`)                       VALUES ('TEST_API_KEY_001', "DEVELOPMENT API KEY");
+INSERT INTO `service_keys`(`service_key`, `service_key_comment`)           VALUES ('TEST_SERVICE_KEY_001', "DEVELOPMENT SERVICE KEY");
