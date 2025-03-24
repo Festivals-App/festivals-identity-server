@@ -1,9 +1,8 @@
 package config
 
 import (
-	"errors"
-	"io/fs"
 	"os"
+	"strings"
 
 	"github.com/pelletier/go-toml"
 
@@ -22,6 +21,8 @@ type Config struct {
 	JwtExpiration             int
 	AccessTokenPrivateKeyPath string
 	AccessTokenPublicKeyPath  string
+	InfoLog                   string
+	TraceLog                  string
 	DB                        *DBConfig
 }
 
@@ -33,26 +34,6 @@ type DBConfig struct {
 	Password string
 	Name     string
 	Charset  string
-}
-
-func DefaultConfig() *Config {
-
-	// first we try to parse the config at the global configuration path
-	if fileExists("/etc/festivals-identity-server.conf") {
-		config := ParseConfig("/etc/festivals-identity-server.conf")
-		if config != nil {
-			return config
-		}
-	}
-
-	// if there is no global configuration check the current folder for the template config file
-	// this is mostly so the application will run in development environment
-	path, err := os.Getwd()
-	if err != nil {
-		log.Fatal().Msg("server initialize: could not read default config file with error:" + err.Error())
-	}
-	path = path + "/config_template.toml"
-	return ParseConfig(path)
 }
 
 func ParseConfig(cfgFile string) *Config {
@@ -77,7 +58,18 @@ func ParseConfig(cfgFile string) *Config {
 	accessTokenPrivateKeyPath := content.Get("jwt.accessprivatekeypath").(string)
 	accessTokenPublicKeyPath := content.Get("jwt.accesspublickeypath").(string)
 
+	infoLogPath := content.Get("log.info").(string)
+	traceLogPath := content.Get("log.trace").(string)
+
 	dbPassword := content.Get("database.password").(string)
+
+	tlsrootcert = expandTilde(tlsrootcert)
+	tlscert = expandTilde(tlscert)
+	tlskey = expandTilde(tlskey)
+	accessTokenPublicKeyPath = expandTilde(accessTokenPublicKeyPath)
+	accessTokenPrivateKeyPath = expandTilde(accessTokenPrivateKeyPath)
+	infoLogPath = expandTilde(infoLogPath)
+	traceLogPath = expandTilde(traceLogPath)
 
 	return &Config{
 		ServiceBindHost:           serviceBindHost,
@@ -91,6 +83,8 @@ func ParseConfig(cfgFile string) *Config {
 		JwtExpiration:             int(jwtExpiration),
 		AccessTokenPublicKeyPath:  accessTokenPublicKeyPath,
 		AccessTokenPrivateKeyPath: accessTokenPrivateKeyPath,
+		InfoLog:                   infoLogPath,
+		TraceLog:                  traceLogPath,
 		DB: &DBConfig{
 			Dialect:  "mysql",
 			Host:     "localhost",
@@ -103,13 +97,12 @@ func ParseConfig(cfgFile string) *Config {
 	}
 }
 
-// fileExists checks if a file exists and is not a directory before we
-// try using it to prevent further errors.
-// see: https://golangcode.com/check-if-a-file-exists/
-func fileExists(filename string) bool {
-	info, err := os.Stat(filename)
-	if errors.Is(err, fs.ErrNotExist) {
-		return false
+// ExpandTilde expands a leading tilde (~) to the user's home directory
+func expandTilde(path string) string {
+	if strings.HasPrefix(path, "~") {
+		if home, err := os.UserHomeDir(); err == nil {
+			return strings.Replace(path, "~", home, 1)
+		}
 	}
-	return !info.IsDir()
+	return path
 }
