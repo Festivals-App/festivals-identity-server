@@ -22,3 +22,7 @@ interval = 6
 expiration = 180
 accesspublickeypath = "/usr/local/festivals-identity-server/authentication.publickey.pem"
 accessprivatekeypath = "/usr/local/festivals-identity-server/authentication.privatekey.pem"
+
+[log]
+info = "/var/log/festivals-identity-server/info.log"
+trace = "/var/log/festivals-identity-server/trace.log"
