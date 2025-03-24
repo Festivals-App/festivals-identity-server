@@ -14,7 +14,7 @@ import (
 func GetLog(auth *token.AuthService, claims *token.UserClaims, db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	if claims.UserRole != token.ADMIN {
-		log.Error().Msg("User is not authorized to get log file.")
+		log.Error().Msg("User is not authorized to get log file")
 		servertools.UnauthorizedResponse(w)
 		return
 	}
@@ -31,7 +31,7 @@ func GetLog(auth *token.AuthService, claims *token.UserClaims, db *sql.DB, w htt
 func GetTraceLog(auth *token.AuthService, claims *token.UserClaims, db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	if claims.UserRole != token.ADMIN {
-		log.Error().Msg("User is not authorized to get trace log file.")
+		log.Error().Msg("User is not authorized to get trace log file")
 		servertools.UnauthorizedResponse(w)
 		return
 	}
