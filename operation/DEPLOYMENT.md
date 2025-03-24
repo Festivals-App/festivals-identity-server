@@ -36,8 +36,8 @@ You also need to provide certificates in the right format and location:
   > Root CA certificate           `/usr/local/festivals-identity-server/ca.crt`  
   > Server certificate            `/usr/local/festivals-identity-server/server.crt`  
   > Server key                    `/usr/local/festivals-identity-server/server.key`  
-  > Authentication certificate    `/usr/local/festivals-identity-server/authentication.pem`  
-  > Authentication key            `/usr/local/festivals-identity-server/authentication-key.pem`  
+  > Authentication certificate    `/usr/local/festivals-identity-server/authentication.publickey.pem`  
+  > Authentication key            `/usr/local/festivals-identity-server/authentication.privatekey.pem`  
 
 Where the root CA certificate is required to validate incoming requests, the server certificate and key is required to make outgoing connections via mTLS
 and the authentication certificate and key is required to create and validate JSON Web Token ([JWT](https://de.wikipedia.org/wiki/JSON_Web_Token)) for the authentication API.
