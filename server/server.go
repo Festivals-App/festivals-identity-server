@@ -101,7 +101,7 @@ func (s *Server) setMiddleware() {
 	// tell the router which middleware to use
 	s.Router.Use(
 		// used to log the request to the console
-		servertools.Middleware(servertools.TraceLogger("/var/log/festivals-identity-server/trace.log")),
+		servertools.Middleware(servertools.TraceLogger(s.Config.TraceLog)),
 		// tries to recover after panics (?)
 		middleware.Recoverer,
 	)
@@ -196,7 +196,7 @@ func (s *Server) handleAPIRequest(requestHandler APIKeyAuthenticatedHandlerFunct
 		apikey := token.GetAPIToken(r)
 		allAPIKeys, err := database.GetAllAPIKeys(s.DB)
 		if err != nil {
-			log.Error().Msg("failed to load API keys from database.")
+			log.Error().Msg("failed to load API keys from database")
 			servertools.RespondError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 			return
 		}
@@ -226,7 +226,7 @@ func (s *Server) handleServiceRequest(requestHandler ServiceKeyAuthenticatedHand
 		}
 		allServiceKeys, err := database.GetAllServiceKeys(s.DB)
 		if err != nil {
-			log.Error().Msg("failed to load servive keys from database.")
+			log.Error().Msg("failed to load servive keys from database")
 			servertools.RespondError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 			return
 		}

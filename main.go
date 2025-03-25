@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"strings"
 	"time"
 
 	"github.com/Festivals-App/festivals-identity-server/server"
@@ -12,14 +13,16 @@ import (
 
 func main() {
 
-	servertools.InitializeGlobalLogger("/var/log/festivals-identity-server/info.log", true)
 	log.Info().Msg("Server startup.")
 
-	conf := config.DefaultConfig()
-	if len(os.Args) > 1 {
-		conf = config.ParseConfig(os.Args[1])
-	}
+	root := containerPathArgument()
+	configFilePath := root + "/etc/festivals-identity-server.conf"
+
+	conf := config.ParseConfig(configFilePath)
 	log.Info().Msg("Server configuration was initialized.")
+
+	servertools.InitializeGlobalLogger(conf.InfoLog, true)
+	log.Info().Msg("Logger initialized.")
 
 	server := server.NewServer(conf)
 	go server.Run(conf)
@@ -54,4 +57,21 @@ func sendHeartbeat(conf *config.Config) {
 			log.Error().Err(err).Msg("Failed to send heartbeat")
 		}
 	}
+}
+
+func containerPathArgument() string {
+
+	args := os.Args[1:]
+	for i := range args {
+		arg := args[i]
+		values := strings.Split(arg, "=")
+		if len(values) == 2 {
+			cmd := values[0]
+			value := values[1]
+			if cmd == "--container" {
+				return value
+			}
+		}
+	}
+	return ""
 }
