@@ -15,7 +15,7 @@ key = "~/Library/Containers/org.festivalsapp.project/usr/local/festivals-identit
 password = "we4711"
 
 [heartbeat]
-endpoint = "https://discovery.festivalsapp.dev/loversear"
+endpoint = "https://discovery.festivalsapp.dev:8443/loversear"
 interval = 6
 
 [jwt]
