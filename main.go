@@ -1,8 +1,6 @@
 package main
 
 import (
-	"os"
-	"strings"
 	"time"
 
 	"github.com/Festivals-App/festivals-identity-server/server"
@@ -15,7 +13,7 @@ func main() {
 
 	log.Info().Msg("Server startup.")
 
-	root := containerPathArgument()
+	root := servertools.ContainerPathArgument()
 	configFilePath := root + "/etc/festivals-identity-server.conf"
 
 	conf := config.ParseConfig(configFilePath)
@@ -57,21 +55,4 @@ func sendHeartbeat(conf *config.Config) {
 			log.Error().Err(err).Msg("Failed to send heartbeat")
 		}
 	}
-}
-
-func containerPathArgument() string {
-
-	args := os.Args[1:]
-	for i := range args {
-		arg := args[i]
-		values := strings.Split(arg, "=")
-		if len(values) == 2 {
-			cmd := values[0]
-			value := values[1]
-			if cmd == "--container" {
-				return value
-			}
-		}
-	}
-	return ""
 }
