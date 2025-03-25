@@ -17,17 +17,17 @@ func main() {
 	configFilePath := root + "/etc/festivals-identity-server.conf"
 
 	conf := config.ParseConfig(configFilePath)
-	log.Info().Msg("Server configuration was initialized.")
+	log.Info().Msg("Server configuration was initialized")
 
 	servertools.InitializeGlobalLogger(conf.InfoLog, true)
-	log.Info().Msg("Logger initialized.")
+	log.Info().Msg("Logger initialized")
 
 	server := server.NewServer(conf)
 	go server.Run(conf)
-	log.Info().Msg("Server did start.")
+	log.Info().Msg("Server did start")
 
 	go sendHeartbeat(conf)
-	log.Info().Msg("Heartbeat routine was started.")
+	log.Info().Msg("Heartbeat routine was started")
 
 	// wait forever
 	// https://stackoverflow.com/questions/36419054/go-projects-main-goroutine-sleep-forever
