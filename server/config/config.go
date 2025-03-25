@@ -1,9 +1,7 @@
 package config
 
 import (
-	"os"
-	"strings"
-
+	servertools "github.com/Festivals-App/festivals-server-tools"
 	"github.com/pelletier/go-toml"
 
 	"github.com/rs/zerolog/log"
@@ -63,13 +61,13 @@ func ParseConfig(cfgFile string) *Config {
 
 	dbPassword := content.Get("database.password").(string)
 
-	tlsrootcert = expandTilde(tlsrootcert)
-	tlscert = expandTilde(tlscert)
-	tlskey = expandTilde(tlskey)
-	accessTokenPublicKeyPath = expandTilde(accessTokenPublicKeyPath)
-	accessTokenPrivateKeyPath = expandTilde(accessTokenPrivateKeyPath)
-	infoLogPath = expandTilde(infoLogPath)
-	traceLogPath = expandTilde(traceLogPath)
+	tlsrootcert = servertools.ExpandTilde(tlsrootcert)
+	tlscert = servertools.ExpandTilde(tlscert)
+	tlskey = servertools.ExpandTilde(tlskey)
+	accessTokenPublicKeyPath = servertools.ExpandTilde(accessTokenPublicKeyPath)
+	accessTokenPrivateKeyPath = servertools.ExpandTilde(accessTokenPrivateKeyPath)
+	infoLogPath = servertools.ExpandTilde(infoLogPath)
+	traceLogPath = servertools.ExpandTilde(traceLogPath)
 
 	return &Config{
 		ServiceBindHost:           serviceBindHost,
@@ -95,14 +93,4 @@ func ParseConfig(cfgFile string) *Config {
 			Charset:  "utf8",
 		},
 	}
-}
-
-// ExpandTilde expands a leading tilde (~) to the user's home directory
-func expandTilde(path string) string {
-	if strings.HasPrefix(path, "~") {
-		if home, err := os.UserHomeDir(); err == nil {
-			return strings.Replace(path, "~", home, 1)
-		}
-	}
-	return path
 }
