@@ -1,6 +1,6 @@
 # Database deployment
 
-The database contains all users that have access to the FestivalsApp backend or parts of the FestivalApp bakend. The default user is called administrator with the password set to 'we4711'. It also contains all service keys and API keys.
+The database contains all users that have access to the FestivalsApp backend or parts of the FestivalApp backend. The default user is called administrator with the password set to 'we4711'. It also contains all service keys and API keys.
 
 ## Local development macOS
 
