@@ -29,21 +29,21 @@ func NewAuthService(privatekey string, publickey string, tokenLifetime int, issu
 	var signKey *rsa.PrivateKey = nil
 	signBytes, err := os.ReadFile(privatekey)
 	if err != nil {
-		log.Fatal().Err(err).Msg("Unable to read privat auth key.")
+		log.Fatal().Err(err).Msg("unable to read private auth key")
 	}
 	signKey, err = jwt.ParseRSAPrivateKeyFromPEM(signBytes)
 	if err != nil {
-		log.Fatal().Err(err).Msg("Unable to parse private auth key.")
+		log.Fatal().Err(err).Msg("unable to parse private auth key")
 	}
 
 	var verifyKey *rsa.PublicKey = nil
 	verifyBytes, err := os.ReadFile(publickey)
 	if err != nil {
-		log.Fatal().Err(err).Msg("Unable to read public auth key.")
+		log.Fatal().Err(err).Msg("unable to read public auth key")
 	}
 	verifyKey, err = jwt.ParseRSAPublicKeyFromPEM(verifyBytes)
 	if err != nil {
-		log.Fatal().Err(err).Msg("Unable to parse public auth key.")
+		log.Fatal().Err(err).Msg("unable to parse public auth key")
 	}
 
 	return &AuthService{SigningKey: signKey, ValidationKey: verifyKey, ValidationKeyFile: publickey, TokenLifetime: time.Minute * time.Duration(tokenLifetime), Issuer: issuer}
