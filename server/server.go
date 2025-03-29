@@ -46,25 +46,25 @@ func (s *Server) initialize(config *config.Config) {
 	s.Config = config
 	s.Router = chi.NewRouter()
 
-	s.setDatabase(config)
-	s.setTLSHandling(config)
-	s.setIdentityService(config)
+	s.setDatabase()
+	s.setTLSHandling()
+	s.setIdentityService()
 	s.setMiddleware()
 	s.setRoutes()
 }
 
-func (s *Server) setDatabase(config *config.Config) {
+func (s *Server) setDatabase() {
 
 	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True",
-		config.DB.Username,
-		config.DB.Password,
-		config.DB.Host,
-		config.DB.Port,
-		config.DB.Name,
-		config.DB.Charset,
+		s.Config.DB.Username,
+		s.Config.DB.Password,
+		s.Config.DB.Host,
+		s.Config.DB.Port,
+		s.Config.DB.Name,
+		s.Config.DB.Charset,
 	)
 
-	db, err := sql.Open(config.DB.Dialect, dbURI)
+	db, err := sql.Open(s.Config.DB.Dialect, dbURI)
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to open database handle.")
@@ -81,19 +81,19 @@ func (s *Server) setDatabase(config *config.Config) {
 	s.DB = db
 }
 
-func (s *Server) setTLSHandling(config *config.Config) {
+func (s *Server) setTLSHandling() {
 
-	tlsConfig := &tls.Config{
-		ClientAuth:     tls.RequireAndVerifyClientCert,
-		GetCertificate: festivalspki.LoadServerCertificateHandler(config.TLSCert, config.TLSKey, config.TLSRootCert),
+	tlsConfig, err := festivalspki.NewServerTLSConfig(s.Config.TLSCert, s.Config.TLSKey, s.Config.TLSRootCert)
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to set TLS handling")
 	}
 	s.TLSConfig = tlsConfig
 }
 
-func (s *Server) setIdentityService(config *config.Config) {
+func (s *Server) setIdentityService() {
 
-	s.Auth = token.NewAuthService(config.AccessTokenPrivateKeyPath, config.AccessTokenPublicKeyPath, config.JwtExpiration, config.ServiceBindHost)
-	s.Validator = newLocalValidationService(config.AccessTokenPublicKeyPath)
+	s.Auth = token.NewAuthService(s.Config.AccessTokenPrivateKeyPath, s.Config.AccessTokenPublicKeyPath, s.Config.JwtExpiration, s.Config.ServiceBindHost)
+	s.Validator = newLocalValidationService(s.Config.AccessTokenPublicKeyPath)
 }
 
 func (s *Server) setMiddleware() {
