@@ -102,7 +102,7 @@ func (s *Server) setMiddleware() {
 	s.Router.Use(
 		// used to log the request to the console
 		servertools.Middleware(servertools.TraceLogger(s.Config.TraceLog)),
-		// tries to recover after panics (?)
+		// tries to recover after panics
 		middleware.Recoverer,
 	)
 }
