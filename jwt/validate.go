@@ -3,11 +3,13 @@ package token
 import (
 	"crypto/rsa"
 	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
 	"errors"
 	"io"
 	"net"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -27,9 +29,9 @@ type ValidationService struct {
 	Endpoint    string
 }
 
-func NewValidationService(endpoint string, clientCert string, clientKey string, serviceKey string, loadingServiceKeys bool) *ValidationService {
+func NewValidationService(endpoint string, clientCert string, clientKey string, serverCA string, serviceKey string, loadingServiceKeys bool) *ValidationService {
 
-	client, err := validationClient(clientCert, clientKey)
+	client, err := validationClient(clientCert, clientKey, serverCA)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Unable to create validation client.")
 	}
@@ -79,16 +81,27 @@ func (validator *ValidationService) ValidateAccessToken(tokenString string) (*Us
 	return claims, nil
 }
 
-func validationClient(clientCert string, clientKey string) (*http.Client, error) {
+func validationClient(clientCert string, clientKey string, serverCA string) (*http.Client, error) {
 
 	cert, err := tls.LoadX509KeyPair(clientCert, clientKey)
 	if err != nil {
 		return nil, err
 	}
+
+	certContent, err := os.ReadFile(serverCA)
+	if err != nil {
+		return nil, err
+	}
+	rootCertPool := x509.NewCertPool()
+	if ok := rootCertPool.AppendCertsFromPEM(certContent); !ok {
+		return nil, errors.New("failed to append certificate to certificate pool")
+	}
+
 	client := &http.Client{
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
 				Certificates: []tls.Certificate{cert},
+				RootCAs:      rootCertPool,
 			},
 			Dial: (&net.Dialer{
 				Timeout:   30 * time.Second,
