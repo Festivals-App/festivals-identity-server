@@ -10,7 +10,7 @@
   <br/><br/>
 </h1>
 
-A lightweight go server app providing a RESTful API, called FestivalsIdentityAPI. The FestivalsIdentityAPI exposes all authorization and authentication functions needed by the FestivalsApp components.
+A lightweight Go server application providing the [FestivalsIdentityAPI](DOCUMENTATION.md), a RESTful API that handles all authentication and authorization needs for FestivalsApp components.
 
 ![Figure 1: Architecture Overview Highlighted](https://github.com/Festivals-App/festivals-documentation/blob/main/images/architecture/export/architecture_overview_identity.svg "Figure 1: Architecture Overview Highlighted")
 
@@ -22,8 +22,6 @@ A lightweight go server app providing a RESTful API, called FestivalsIdentityAPI
 </p>
 <hr/>
 
-## Development
-
 The FestivalsApp backend is secured using three different mechanisms to ensure both secure communication and controlled access:  
 
 1. **Mutual TLS (mTLS)** – Every party must have a valid client certificate issued by the FestivalsApp Root CA to establish secure communication with other services. This prevents unauthorized access at the transport layer. For more details, refer to the [festivals-pki](https://github.com/Festivals-App/festivals-pki) repository.  
@@ -31,6 +29,10 @@ The FestivalsApp backend is secured using three different mechanisms to ensure b
 3. **JSON Web Tokens (JWTs)** – Used for all other interactions. JWTs enable role-based access control (RBAC), ensuring users are authorized to access specific functions based on their assigned roles. The system verifies JWTs on every request to enforce access restrictions dynamically.
 
 In addition to these mechanisms, the backend enforces strict firewall rules and network segmentation to minimize exposure to unauthorized access.
+
+## Development
+
+The FestivalsApp Identity Server follows a modular structure for clarity and maintainability. The `database` directory for managing the database, while `auth` handles core authentication logic, `server` manages API routes and middleware and `operation` documents deployment and environment. GitHub Actions are in `.github`, and `.vscode` provides recommended settings. The entry point is main.go, with dependencies in go.mod and go.sum. Refer to [FestivalsIdentityAPI Documentation](DOCUMENTATION.md) for details on available endpoints.
 
 ### Requirements
 
@@ -42,7 +44,7 @@ In addition to these mechanisms, the backend enforces strict firewall rules and 
 ## Deployment
 
 The Go binaries are able to run without system dependencies so there are not many requirements for the system to run the festivals-identity-server binary,
-just follow the [**deployment guide**](./operation/DEPLOYMENT.md) for deploying it inside a virtual machine or the [**local deployment guide**](./operation/local/README.md) to runnig it on your macOS developer machine.
+just follow the [**deployment guide**](./operation/DEPLOYMENT.md) for deploying it inside a virtual machine or the [**local deployment guide**](./operation/local/README.md) to running it on your macOS developer machine.
 
 ## Engage
 
