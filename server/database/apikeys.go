@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 
-	token "github.com/Festivals-App/festivals-identity-server/jwt"
+	token "github.com/Festivals-App/festivals-identity-server/auth"
 )
 
 func GetAllAPIKeys(db *sql.DB) ([]token.APIKey, error) {

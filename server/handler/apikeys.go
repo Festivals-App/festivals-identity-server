@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	token "github.com/Festivals-App/festivals-identity-server/jwt"
+	token "github.com/Festivals-App/festivals-identity-server/auth"
 	"github.com/Festivals-App/festivals-identity-server/server/database"
 	servertools "github.com/Festivals-App/festivals-server-tools"
 	"github.com/rs/zerolog/log"

@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 
-	token "github.com/Festivals-App/festivals-identity-server/jwt"
+	token "github.com/Festivals-App/festivals-identity-server/auth"
 	"github.com/Festivals-App/festivals-identity-server/server/status"
 	servertools "github.com/Festivals-App/festivals-server-tools"
 	"github.com/rs/zerolog/log"

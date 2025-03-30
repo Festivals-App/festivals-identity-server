@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"time"
 
-	token "github.com/Festivals-App/festivals-identity-server/jwt"
+	token "github.com/Festivals-App/festivals-identity-server/auth"
 	"github.com/Festivals-App/festivals-identity-server/server/config"
 	"github.com/Festivals-App/festivals-identity-server/server/database"
 	"github.com/Festivals-App/festivals-identity-server/server/handler"

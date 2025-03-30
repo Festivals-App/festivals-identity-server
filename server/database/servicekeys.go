@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 
-	token "github.com/Festivals-App/festivals-identity-server/jwt"
+	token "github.com/Festivals-App/festivals-identity-server/auth"
 )
 
 func GetAllServiceKeys(db *sql.DB) ([]token.ServiceKey, error) {

@@ -3,7 +3,7 @@ package database
 import (
 	"database/sql"
 
-	token "github.com/Festivals-App/festivals-identity-server/jwt"
+	token "github.com/Festivals-App/festivals-identity-server/auth"
 )
 
 func GetAllUsers(db *sql.DB) ([]*token.User, error) {
