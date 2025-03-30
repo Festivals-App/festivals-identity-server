@@ -51,7 +51,7 @@ This project uses Make to streamline local setup and execution. The Makefile inc
     make install
     ```
 
-3. Now you can run the binary by issuing the `run` command. This will run the binary with the `--container="~/Library/Containers/org.festivalsapp.project"` option, telling the binary that the config file will be located at `~/Library/Containers/org.festivalsapp.project/usr/local/festivals-website-node` instead of the default `/usr/local/festivals-website-node`.
+3. Now you can run the binary by issuing the `run` command. This will run the binary with the `--container="~/Library/Containers/org.festivalsapp.project"` option, telling the binary that the config file will be located at `~/Library/Containers/org.festivalsapp.project/etc/festivals-identity-server.conf` instead of the default `/etc/festivals-identity-server.conf`.
 
     ```bash
     make run
