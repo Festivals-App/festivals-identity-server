@@ -27,19 +27,12 @@ install:
 
 run:
 	./festivals-identity-server --container="$(DEV_PATH_MAC)"
-
-update:
-	systemctl stop festivals-identity-server
-	cp festivals-identity-server /usr/local/bin/festivals-identity-server
-	systemctl start festivals-identity-server
-
-uninstall:
-	rm /usr/local/bin/festivals-identity-server
-	rm /etc/festivals-identity-server.conf
-	rm /etc/systemd/system/festivals-identity-server.service
 	
-stop: 
-	killall festivals-identity-server
+run-env:
+	$(DEV_PATH_MAC)/usr/local/bin/festivals-gateway --container="$(DEV_PATH_MAC)" &
+
+stop-env:
+	killall festivals-gateway
 
 clean:
 	rm -r festivals-identity-server
