@@ -36,7 +36,7 @@ func main() {
 
 func sendHeartbeat(conf *config.Config) {
 
-	heartbeatClient, err := servertools.HeartbeatClient(conf.TLSCert, conf.TLSKey)
+	heartbeatClient, err := servertools.HeartbeatClient(conf.TLSCert, conf.TLSKey, conf.TLSRootCert)
 	if err != nil {
 		log.Fatal().Err(err).Str("type", "server").Msg("Failed to create heartbeat client")
 	}
