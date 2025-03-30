@@ -42,7 +42,7 @@ In addition to these mechanisms, the backend enforces strict firewall rules and 
 ## Deployment
 
 The Go binaries are able to run without system dependencies so there are not many requirements for the system to run the festivals-identity-server binary,
-just follow the [**deployment guide**](./operation/DEPLOYMENT.md).
+just follow the [**deployment guide**](./operation/DEPLOYMENT.md) for deploying it inside a virtual machine or the [**local deployment guide**](./operation/local/README.md) to runnig it on your macOS developer machine.
 
 ## Engage
 
