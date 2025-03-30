@@ -26,16 +26,16 @@ A lightweight go server app providing a RESTful API, called FestivalsIdentityAPI
 
 The FestivalsApp backend is secured using three different mechanisms to ensure both secure communication and controlled access:  
 
-1. **Mutual TLS (mTLS)** – Every party must have a valid client certificate issued by the FestivalsApp Root CA to establish secure communication with other services. This prevents unauthorized access at the transport layer. For more details, refer to the [festivals-pki repository](https://github.com/Festivals-App/festivals-pki).  
+1. **Mutual TLS (mTLS)** – Every party must have a valid client certificate issued by the FestivalsApp Root CA to establish secure communication with other services. This prevents unauthorized access at the transport layer. For more details, refer to the [festivals-pki](https://github.com/Festivals-App/festivals-pki) repository.  
 2. **API Keys** – Required for accessing read-only parts of the FestivalsAPI. These keys provide a simple way to authenticate services and users that do not require full access.
 3. **JSON Web Tokens (JWTs)** – Used for all other interactions. JWTs enable role-based access control (RBAC), ensuring users are authorized to access specific functions based on their assigned roles. The system verifies JWTs on every request to enforce access restrictions dynamically.
 
-In addition to these mechanisms, the backend enforces strict firewall rules and network segmentation to minimize exposure to unauthorized access. Regular certificate rotation and API key expiration policies further enhance security.
+In addition to these mechanisms, the backend enforces strict firewall rules and network segmentation to minimize exposure to unauthorized access.
 
 ### Requirements
 
-- [Golang](https://go.dev/) Version 1.23.5+
-- [Visual Studio Code](https://code.visualstudio.com/download) 1.96.4+
+- [Golang](https://go.dev/) Version 1.24.1+
+- [Visual Studio Code](https://code.visualstudio.com/download) 1.98.2+
   - Plugin recommendations are managed via [workspace recommendations](https://code.visualstudio.com/docs/editor/extension-marketplace#_recommended-extensions).
 - [Bash script](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) friendly environment
 
