@@ -44,7 +44,7 @@ The FestivalsApp Identity Server follows a modular structure for clarity and mai
 ## Deployment
 
 The Go binaries are able to run without system dependencies so there are not many requirements for the system to run the festivals-identity-server binary,
-just follow the [**deployment guide**](./operation/DEPLOYMENT.md) for deploying it inside a virtual machine or the [**local deployment guide**](./operation/local/README.md) to running it on your macOS developer machine.
+just follow the [**deployment guide**](./operation/DEPLOYMENT.md) for deploying it inside a virtual machine or the [**local deployment guide**](./operation/local/README.md) for running it on your macOS developer machine.
 
 ## Engage
 
