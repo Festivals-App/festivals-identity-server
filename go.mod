@@ -4,7 +4,7 @@ go 1.24.1
 
 require (
 	github.com/Festivals-App/festivals-pki v0.1.1
-	github.com/Festivals-App/festivals-server-tools v0.0.8
+	github.com/Festivals-App/festivals-server-tools v0.0.9
 	github.com/go-chi/chi/v5 v5.2.1
 	github.com/go-sql-driver/mysql v1.9.1
 	github.com/golang-jwt/jwt/v5 v5.2.2
