@@ -14,15 +14,17 @@ As all festivalsapp services communicate based on DNS names you need to add some
 127.0.0.1       discovery.festivalsapp.dev
 ```
 
-The identity server stores data inside a database. At the moment that database needs to be running on the same host and be reachable at `localhost:3306`.
-Let's use [homebrew](https://brew.sh/) to install mysql and start it.
+## Preparing the database
+
+The identity server stores it's data inside a database. At the moment that database needs to be running on the same host and be reachable at `localhost:3306`, let's use [homebrew](https://brew.sh/) to install mysql and start it.
 
 ```bash
 brew install mysql
 brew services start mysql
+mysqladmin -u root password 'we4711'
 ```
 
-Now we can create the database and the database users. The creation script will automatically create a default admin user, service key and API key and those we will use those throughout local development.
+Now we can create the database and the database users. The creation script will automatically create a default festivalsapp admin user, service key and API key and we will use those throughout local development.
 
 ```bash
 mysql -e "source <path/to/project/folder/festivals-identity-server/database/create_database.sql>"
@@ -82,3 +84,4 @@ Use this token to make authorized calls to the identity server:
 
 ```bash
 curl -H "Authorization: Bearer <JWT>" --cert /opt/homebrew/etc/pki/issued/client.crt --key /opt/homebrew/etc/pki/private/client.key --cacert /opt/homebrew/etc/pki/ca.crt https://identity.festivalsapp.dev:22580/info
+```
