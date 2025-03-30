@@ -26,7 +26,7 @@ The FestivalsApp backend is secured using three different mechanisms to ensure b
 
 1. **Mutual TLS (mTLS)** – Every party must have a valid client certificate issued by the FestivalsApp Root CA to establish secure communication with other services. This prevents unauthorized access at the transport layer. For more details, refer to the [festivals-pki](https://github.com/Festivals-App/festivals-pki) repository.  
 2. **API Keys** – Required for accessing read-only parts of the FestivalsAPI. These keys provide a simple way to authenticate services and users that do not require full access.
-3. **JSON Web Tokens (JWTs)** – Used for all other interactions. JWTs enable role-based access control (RBAC), ensuring users are authorized to access specific functions based on their assigned roles. The system verifies JWTs on every request to enforce access restrictions dynamically.
+3. **JSON Web Tokens (JWTs)** – Used for all other interactions. JWTs enable role-based access control (RBAC), ensuring users are authorized to access specific functions based on their assigned roles and also implement resource access based on user identity. The system verifies JWTs on every request to enforce access restrictions dynamically.
 
 In addition to these mechanisms, the backend enforces strict firewall rules and network segmentation to minimize exposure to unauthorized access.
 
