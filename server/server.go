@@ -67,12 +67,12 @@ func (s *Server) setDatabase() {
 	db, err := sql.Open(s.Config.DB.Dialect, dbURI)
 
 	if err != nil {
-		log.Fatal().Err(err).Msg("Failed to open database handle.")
+		log.Fatal().Err(err).Msg("failed to open database handle")
 	}
 
 	err = db.Ping()
 	if err != nil {
-		log.Fatal().Err(err).Msg("Failed to connect to database.")
+		log.Fatal().Err(err).Msg("failed to connect to database")
 	}
 
 	db.SetConnMaxIdleTime(time.Minute * 1)
