@@ -13,21 +13,21 @@ mysql_secure_installation
 
 Staring and logging into mysql
 
-```mysql
+```bash
 brew services start mysql
 mysql -uroot -p
 ```
 
 Logout and stopping mysql
 
-```mysql
+```bash
 exit;
 brew services stop mysql
 ```
 
 ## Server deployment
 
-The install script will install and secure the database.
+The [install script](../operation/install.sh) will install and secure the database.
 
 ### MYSQL cheatsheet
 
