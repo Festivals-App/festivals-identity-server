@@ -1,7 +1,7 @@
 <p align="center">
-   <a href="https://github.com/festivals-app/festivals-identity-server/commits/" title="Last Commit"><img src="https://img.shields.io/github/last-commit/festivals-app/festivals-identity-server?style=flat"></a>
-   <a href="https://github.com/festivals-app/festivals-identity-server/issues" title="Open Issues"><img src="https://img.shields.io/github/issues/festivals-app/festivals-identity-server?style=flat"></a>
-   <a href="./LICENSE" title="License"><img src="https://img.shields.io/github/license/festivals-app/festivals-identity-server.svg"></a>
+   <a href="https://github.com/festivals-app/festivals-identity-server/commits/" title="Last Commit"><img src="https://img.shields.io/github/last-commit/festivals-app/festivals-identity-server?style=flat" alt="Commits Shield"></a>
+   <a href="https://github.com/festivals-app/festivals-identity-server/issues" title="Open Issues"><img src="https://img.shields.io/github/issues/festivals-app/festivals-identity-server?style=flat" alt="Issues Shield"></a>
+   <a href="./LICENSE" title="License"><img src="https://img.shields.io/github/license/festivals-app/festivals-identity-server.svg" alt="License Shield"></a>
 </p>
 
 <h1 align="center">
@@ -10,7 +10,8 @@
   <br/><br/>
 </h1>
 
-A lightweight Go server application providing the [FestivalsIdentityAPI](DOCUMENTATION.md), a RESTful API that handles all authentication and authorization needs for FestivalsApp components.
+A lightweight Go server application providing the [FestivalsIdentityAPI](DOCUMENTATION.md), a RESTful API that handles
+all authentication and authorization needs for FestivalsApp components.
 
 ![Figure 1: Architecture Overview Highlighted](https://github.com/Festivals-App/festivals-documentation/blob/main/images/architecture/export/architecture_overview_identity.svg "Figure 1: Architecture Overview Highlighted")
 
@@ -22,13 +23,19 @@ A lightweight Go server application providing the [FestivalsIdentityAPI](DOCUMEN
 </p>
 <hr/>
 
-The FestivalsApp backend is secured using three different mechanisms to ensure both secure communication and controlled access:  
+The FestivalsApp backend is secured using three different mechanisms to ensure both secure communication and controlled access:
 
-1. **Mutual TLS (mTLS)** – Every party must have a valid client certificate issued by the FestivalsApp Root CA to establish secure communication with other services. This prevents unauthorized access at the transport layer. For more details, refer to the [festivals-pki](https://github.com/Festivals-App/festivals-pki) repository.  
-2. **API Keys** – Required for accessing read-only parts of the FestivalsAPI. These keys provide a simple way to authenticate services and users that do not require full access.
-3. **JSON Web Tokens (JWTs)** – Used for all other interactions. JWTs enable role-based access control (RBAC), ensuring users are authorized to access specific functions based on their assigned roles and also implement resource access based on user identity. The system verifies JWTs on every request to enforce access restrictions dynamically.
+1. **Mutual TLS (mTLS)** – Every party must have a valid client certificate issued by the FestivalsApp Root CA
+  to establish secure communication with other services. This prevents unauthorized access at the transport layer.
+  For more details, refer to the [festivals-pki](https://github.com/Festivals-App/festivals-pki) repository.  
+2. **API Keys** – Required for accessing read-only parts of the FestivalsAPI. These keys provide a simple way
+  to authenticate services and users that do not require full access.
+3. **JSON Web Tokens (JWTs)** – Used for all other interactions. JWTs enable role-based access control (RBAC),
+  ensuring users are authorized to access specific functions based on their assigned roles and also implement
+  resource access based on user identity. The system verifies JWTs on every request to enforce access restrictions dynamically.
 
-In addition to these mechanisms, the backend enforces strict firewall rules and network segmentation to minimize exposure to unauthorized access.
+In addition to these mechanisms, the backend enforces strict firewall rules and network segmentation
+to minimize exposure to unauthorized access.
 
 ## Development
 
