@@ -1,7 +1,10 @@
 <p align="center">
-   <a href="https://github.com/festivals-app/festivals-identity-server/commits/" title="Last Commit"><img src="https://img.shields.io/github/last-commit/festivals-app/festivals-identity-server?style=flat" alt="Commits Shield"></a>
-   <a href="https://github.com/festivals-app/festivals-identity-server/issues" title="Open Issues"><img src="https://img.shields.io/github/issues/festivals-app/festivals-identity-server?style=flat" alt="Issues Shield"></a>
-   <a href="./LICENSE" title="License"><img src="https://img.shields.io/github/license/festivals-app/festivals-identity-server.svg" alt="License Shield"></a>
+   <a href="https://github.com/festivals-app/festivals-identity-server/commits/" title="Last Commit">
+   <img src="https://img.shields.io/github/last-commit/festivals-app/festivals-identity-server?style=flat" alt="Commits Shield"></a>
+   <a href="https://github.com/festivals-app/festivals-identity-server/issues" title="Open Issues">
+   <img src="https://img.shields.io/github/issues/festivals-app/festivals-identity-server?style=flat" alt="Issues Shield"></a>
+   <a href="./LICENSE" title="License">
+   <img src="https://img.shields.io/github/license/festivals-app/festivals-identity-server.svg" alt="License Shield"></a>
 </p>
 
 <h1 align="center">
@@ -70,8 +73,8 @@ The following channels are available for discussions, feedback, and support requ
 
 | Type                     | Channel                                                |
 | ------------------------ | ------------------------------------------------------ |
-| **General Discussion**   | <a href="https://github.com/festivals-app/festivals-documentation/issues/new/choose" title="General Discussion"><img src="https://img.shields.io/github/issues/festivals-app/festivals-documentation/question.svg?style=flat-square"></a> </a>   |
-| **Other Requests**    | <a href="mailto:simon@festivalsapp.org" title="Email me"><img src="https://img.shields.io/badge/email-Simon-green?logo=mail.ru&style=flat-square&logoColor=white"></a>   |
+| **General Discussion**   | <a href="https://github.com/festivals-app/festivals-documentation/issues/new/choose" title="General Discussion"><img src="https://img.shields.io/github/issues/festivals-app/festivals-documentation/question.svg?style=flat-square" alt="General Discussion Shield"></a> </a>   |
+| **Other Requests**    | <a href="mailto:simon@festivalsapp.org" title="Email me"><img src="https://img.shields.io/badge/email-Simon-green?logo=mail.ru&style=flat-square&logoColor=white" alt="Other Requests Shield"></a>   |
 
 ### Licensing
 

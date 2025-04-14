@@ -19,15 +19,17 @@
 
 ### Authentication & Authorization
 
-To use the API you need to provide an API or service key via a custom header or a JWT
-with your requests authorization header, for login you need to use basic authentication:
+To authenticate to the `FestivalsIdentityAPI` you need to either provide an API/service key via a custom header or a JWT
+with your requests authorization header, for login you need to use basic authentication alsongside an API key.
 
-```ini
-Api-Key: <api-key>
-Service-Key: <service-key>
-Authorization: Bearer <jwt>
-Authorization: Basic <encodedcredentials>
+```text
+Api-Key: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+Service-Key: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+Authorization: Bearer <Header>.<Payload>.<Signatur>
+Authorization: Basic <base64 encoded user:password>
 ```
+
+If you have the authorization to call the given endpoint is determined by your [user role](./auth/user.go).
 
 ### Requests
 
@@ -87,25 +89,25 @@ otherwise an `error` field is returned and will always contain a string with the
 
 ## Server Status
 
-The `server-info` object is providing build time, version, service and git ref of the binary that is running.
-In production builds the
-
-* `BuildTime` field will have the format `Sun Apr 13 13:55:44 UTC 2025`
-* `GitRef` field will have the format `refs/tags/v2.2.0`, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
-* `Service` field will reference a [Service](https://github.com/Festivals-App/festivals-server-tools/blob/main/heartbeattools.go)) type
-* `Version` field will have the format `v2.2.0`
+The `server-info` object is providing build time, git ref, service and version of the binary that is running.
 
 ```json
-// server-info
 {
-   "BuildTime":  string,
-   "GitRef":     string,
-   "Service":    string,
-   "Version":    string
+   "BuildTime":  "string",
+   "GitRef":     "string",
+   "Service":    "string",
+   "Version":    "string"
 }
 ```
 
-**GET `/info`**
+In production builds the
+
+* `BuildTime` field will have the format `Sun Apr 13 13:55:44 UTC 2025`.
+* `GitRef` field will have the format `refs/tags/v2.2.0`, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation.
+* `Service` field will reference a [Service](https://github.com/Festivals-App/festivals-server-tools/blob/main/heartbeattools.go) type.
+* `Version` field will have the format `v2.2.0`.
+
+#### GET `/info`
 
 This path will return a `server-info` object or an error.
 
@@ -138,7 +140,7 @@ Returns:
 
 Tries to update to the newest release on github and then restart the service.
 
-Authorization: `JWT`
+>Authorization: `JWT` with user role set to `ADMIN`
 
 Returns:
 
@@ -148,9 +150,9 @@ Returns:
 
 ------------------------------------------------------------------------------------
 
-**GET `/health`**
+#### GET `/health`
 
-Authorization: `JWT`
+>Authorization: `JWT` with user role set to `ADMIN`
 
 Returns:
 
@@ -160,11 +162,11 @@ Returns:
 
 ------------------------------------------------------------------------------------
 
-**GET `/log`**
+#### GET `/log`
 
-Returns the service log.
+Returns the info log as a string. The log format is defined [here](https://github.com/Festivals-App/festivals-server-tools/blob/main/DOCUMENTATION.md#loggertools).
 
-Authorization: `JWT`
+>Authorization: `JWT` with user role set to `ADMIN`
 
 Returns:
 
@@ -174,15 +176,15 @@ Returns:
 
 ------------------------------------------------------------------------------------
 
-**GET `/log/trace`**
+#### GET `/log/trace`
 
-Returns the service trace log.
+Returns the trace log as a string. The log format is defined [here](https://github.com/Festivals-App/festivals-server-tools/blob/main/DOCUMENTATION.md#loggertools).
 
-Authorization: JWT
+>Authorization: `JWT` with user role set to `ADMIN`
 
 Returns:
 
-* Returns a string
+* Returns a `string`
 * Codes `200`/`40x`/`50x`
 * empty or `text/plain`
 
@@ -192,7 +194,7 @@ Returns:
 
 Signup to the festivalsapp backend.
 
-Authorization: API Token
+>Authorization: `API Token`
 
 Example:  
       `POST https://localhost:22580/users/signup`  
@@ -210,7 +212,7 @@ Returns:
 
 Login to the festivalsapp backend.
 
-Authorization: API Token & Basic Auth
+>Authorization: `API Token` & `Basic Auth`
 
 Examples:  
     `GET https://localhost:22580/users/login`
@@ -227,7 +229,7 @@ Returns:
 
 Refresh the JWT to the festivalsapp backend. This will only refresh the users claims but not the expiration date. 
 
-Authorization: JWT
+>Authorization: `JWT` with any user role
 
 Examples:  
     `GET https://localhost:22580/users/refresh`
@@ -244,7 +246,7 @@ Returns:
 
 Retruns all registered users.
 
-Authorization: JWT
+>Authorization: `JWT` with user role set to `ADMIN`
 
 Examples:  
     `GET https://localhost:22580/users`
@@ -261,7 +263,7 @@ Returns:
 
 Change the password of the given user.
 
-Authorization: JWT
+>Authorization: `JWT` with any user role
 
 Examples:  
    `POST https://localhost:22580/users/3/change-password`
@@ -279,7 +281,7 @@ Returns:
 
 Suspends the given user.
 
-Authorization: JWT
+>Authorization: `JWT` with user role set to `ADMIN`
 
 Examples:  
     `POST https://localhost:22580/users/3/suspend`
@@ -296,7 +298,7 @@ Returns:
 
 Sets the given user role for the given user. See [here](jwt/user.go) for possible values.
 
-Authorization: JWT
+>Authorization: `JWT` with user role set to `ADMIN`
 
 Examples:  
     `POST https://localhost:22580/users/3/role/42`
@@ -313,7 +315,7 @@ Returns:
 
 Associates the given user with the specified festival, artist or location.
 
-Authorization: JWT or service key
+>Authorization: `JWT` with user role set to `ADMIN` or `service key`
 
 Examples:  
     `POST https://localhost:22580/users/3/artist/134`
@@ -330,7 +332,7 @@ Returns:
 
 Removes the association between the given user and the specified festival, artist or location.
 
-Authorization: JWT or service key
+>Authorization: `JWT` with user role set to `ADMIN` or `service key`
 
 Examples:  
     `DELETE https://localhost:22580/users/3/festival/26`
@@ -351,7 +353,7 @@ Returns:
 
 Returns the public key used to sign the jwt's issued by this identity service.
 
-Authorization: JWT or service key
+>Authorization: `JWT` with user role set to `ADMIN` or `service key`
 
 Examples:  
     `GET https://localhost:22580/validation-keys`
@@ -372,7 +374,7 @@ Returns:
 
 Returns all registered service keys.
 
-Authorization: JWT or service key
+>Authorization: `JWT` with user role set to `ADMIN` or `service key`
 
 Examples:  
     `GET https://localhost:22580/service-keys`
@@ -389,7 +391,7 @@ Returns:
 
 Registers a new service key.
 
-Authorization: JWT
+>Authorization: `JWT` with user role set to `ADMIN` or `service key`
   
 Examples:  
     `POST https://localhost:22580/service-keys`
@@ -407,7 +409,7 @@ Returns:
 
 Updates the given service key.
 
-Authorization: JWT
+>Authorization: `JWT` with user role set to `ADMIN`
   
 Examples:  
     `POST https://localhost:22580/service-keys/23`
@@ -425,7 +427,7 @@ Returns:
 
 Deletes the given service key.
 
-Authorization: JWT
+>Authorization: `JWT` with user role set to `ADMIN`
 
 Examples:  
     `DELETE https://localhost:22580/service-keys/23`
@@ -446,7 +448,7 @@ Returns:
 
 Returns all registered API keys.
 
-Authorization: JWT or service key
+>Authorization: `JWT` with user role set to `ADMIN` or `service key`
 
 Examples:  
     `GET https://localhost:22580/api-keys`
@@ -463,7 +465,7 @@ Returns:
 
 Registers a new API key.
 
-Authorization: JWT
+>Authorization: `JWT` with user role set to `ADMIN`
   
 Examples:  
     `POST https://localhost:22580/api-keys`
@@ -481,7 +483,7 @@ Returns:
 
 Updates the given API key.
 
-Authorization: JWT
+>Authorization: `JWT` with user role set to `ADMIN`
   
 Examples:  
     `POST https://localhost:22580/api-keys/23`
@@ -499,8 +501,7 @@ Returns:
 
 Deletes the given api key.
 
-Authorization: JWT
-
+>Authorization: `JWT` with user role set to `ADMIN`
 Examples:  
     `DELETE https://localhost:22580/api-keys/23`
 
