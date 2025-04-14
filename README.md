@@ -39,7 +39,11 @@ to minimize exposure to unauthorized access.
 
 ## Development
 
-The FestivalsApp Identity Server follows a modular structure for clarity and maintainability. The `database` directory for managing the database, while `auth` handles core authentication logic, `server` manages API routes and middleware and `operation` documents deployment and environment. GitHub Actions are in `.github`, and `.vscode` provides recommended settings. The entry point is main.go, with dependencies in go.mod and go.sum. Refer to [FestivalsIdentityAPI Documentation](DOCUMENTATION.md) for details on available endpoints.
+The FestivalsApp Identity Server follows a modular structure for clarity and maintainability. The `database` directory
+for managing the database, while `auth` handles core authentication logic, `server` manages API routes and middleware
+and `operation` documents deployment and environment. GitHub Actions are in `.github`, and `.vscode` provides recommended
+settings. The entry point is main.go, with dependencies in go.mod and go.sum.
+Refer to [FestivalsIdentityAPI Documentation](DOCUMENTATION.md) for details on available endpoints.
 
 ### Requirements
 
@@ -50,13 +54,17 @@ The FestivalsApp Identity Server follows a modular structure for clarity and mai
 
 ## Deployment
 
-The Go binaries are able to run without system dependencies so there are not many requirements for the system to run the festivals-identity-server binary,
-just follow the [**deployment guide**](./operation/DEPLOYMENT.md) for deploying it inside a virtual machine or the [**local deployment guide**](./operation/local/README.md) for running it on your macOS developer machine.
+The Go binaries are able to run without system dependencies so there are not many requirements for the system
+to run the festivals-identity-server binary, just follow the [**deployment guide**](./operation/DEPLOYMENT.md) for
+deploying it inside a virtual machine or the [**local deployment guide**](./operation/local/README.md) for
+running it on your macOS developer machine.
 
 ## Engage
 
-I welcome every contribution, whether it is a pull request or a fixed typo. The best place to discuss questions and suggestions regarding the festivals-identity-server is the [issues](https://github.com/festivals-app/festivals-identity-server/issues/) section.
-More general information and a good starting point if you want to get involved is the [festival-documentation](https://github.com/Festivals-App/festivals-documentation) repository.
+I welcome every contribution, whether it is a pull request or a fixed typo. The best place to discuss questions
+and suggestions regarding the festivals-identity-server is the [issues](https://github.com/festivals-app/festivals-identity-server/issues/) section.
+More general information and a good starting point if you want to get involved is
+the [festival-documentation](https://github.com/Festivals-App/festivals-documentation) repository.
 
 The following channels are available for discussions, feedback, and support requests:
 

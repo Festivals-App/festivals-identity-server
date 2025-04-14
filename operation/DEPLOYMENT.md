@@ -1,6 +1,7 @@
 # Development Deployment
 
-This deployment guide explains how to deploy the FestivalsApp Identity Server using certificates intended for development purposes.
+This deployment guide explains how to deploy the FestivalsApp Identity Server 
+using certificates intended for development purposes.
 
 ## Prerequisites
 
@@ -11,7 +12,8 @@ Before starting the installation, ensure you have:
 - Created and configured your VM
 - SSH access secured and logged in as the admin user
 - Your server's IP address (use `ip a` to check)
-- A server name matching the Common Name (CN) for your mTLS certificate (e.g., `identity-0.festivalsapp.home` for a hostname `identity-0`).
+- A server name matching the Common Name (CN) for your mTLS certificate
+  (e.g., `identity-0.festivalsapp.home` for a hostname `identity-0`).
 
 I use the development wildcard server certificate (`CN=*festivalsapp.home`) for this guide.
 
@@ -39,8 +41,9 @@ You also need to provide certificates in the right format and location:
   > Authentication certificate    `/usr/local/festivals-identity-server/authentication.publickey.pem`  
   > Authentication key            `/usr/local/festivals-identity-server/authentication.privatekey.pem`  
 
-Where the root CA certificate is required to validate incoming requests, the server certificate and key is required to make outgoing connections via mTLS
-and the authentication certificate and key is required to create and validate JSON Web Token ([JWT](https://de.wikipedia.org/wiki/JSON_Web_Token)) for the authentication API.
+Where the root CA certificate is required to validate incoming requests, the server certificate and key
+is required to make outgoing connections via mTLS and the authentication certificate and key is required
+to create and validate JSON Web Token ([JWT](https://de.wikipedia.org/wiki/JSON_Web_Token)) for the authentication API.
 For instructions on how to manage and create the certificates see the [festivals-pki](https://github.com/Festivals-App/festivals-pki) repository.
 
 ## 2. Copying mTLS Certificates to the VM
@@ -146,7 +149,8 @@ sudo systemctl start festivals-identity-server
 
 ## **🚀 The identity service should now be running successfully. 🚀**
 
-  > You might encounter an `ERR Failed to send heartbeat` error if the discovery service is not yet available. However, the service should function correctly.
+  > You might encounter an `ERR Failed to send heartbeat` error if the discovery service is not yet available. 
+    However, the service should function correctly.
 
 ### Optional: Setting Up DNS Resolution  
 
@@ -183,13 +187,7 @@ Lets login as the default admin user and get the server info:
 curl -H "Api-Key: TEST_API_KEY_001" -u "admin@email.com:we4711" --cert /opt/homebrew/etc/pki/issued/api-client.crt --key /opt/homebrew/etc/pki/private/api-client.key --cacert /opt/homebrew/etc/pki/ca.crt https://identity-0.festivalsapp.home:22580/users/login
 ```
 
-This should return a JWT Token `<Header.<Payload>.<Signatur>`
-
-  > eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.
-  > eyJVc2VySUQiOiIxIiwiVXNlclJvbGUiOjQyLCJVc2VyRmVzdGl2YWxzIjpbXSwiVXNlckFydGlzdHMiOltdLCJVc2VyTG9jYXRpb25zIjpbXSwiVXNlckV2ZW50cyI6W10sIlVzZXJMaW5rcyI6W10sIlVzZXJQbGFjZXMiOltdLCJVc2VySW1hZ2VzIjpbXSwiVXNlclRhZ3MiOltdLCJpc3MiOiJpZGVudGl0eS0wLmZlc3RpdmFsc2FwcC5ob21lIiwiZXhwIjoxNzQwMjMxMTQ4fQ.
-  > geBq1pxEvqwjnKA5YTHQ8IjJc9mwkpsQIRy1kGc63oNXzyAhPrPJsepICXxr2yVmB0E8oDECXLn4Cy5V_p4UAduWXnc0r8S05ijV8NCfmsEcJg-RRO8POkGykiC2mrn-XR8Nf8OF0fLp7Mhsb0_aqBoTOLdtB9V7IV49-JjWwX5gHl3HuXGOOhe4n_epumc8w8yDxYakWeaBFtEtaRmhFXK_yttexYOLP6Z1BBTL005hBGhO58qVW0cfgf_t5VWBpUnz3zqdC-GFegItqJQbKZ2pmfmXNz_AoJf2JmPtCzpJ4lG6QeSslvdFuwaCdYpDQPOvnMSIORwrAq_FL2m7qw
-
-Use this to make authorized calls to the FestivalsIdentityAPI:
+This should return a JWT Token `<Header.<Payload>.<Signatur>`, use this to make authorized calls to the FestivalsIdentityAPI:
 
 ```bash
 curl -H "Api-Key: TEST_API_KEY_001" -H "Authorization: Bearer <JWT>" --cert /opt/homebrew/etc/pki/issued/api-client.crt --key /opt/homebrew/etc/pki/private/api-client.key --cacert /opt/homebrew/etc/pki/ca.crt https://identity-0.festivalsapp.home:22580/info
