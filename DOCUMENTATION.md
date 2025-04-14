@@ -85,11 +85,7 @@ otherwise an `error` field is returned and will always contain a string with the
 * PATCH            `/api-keys`
 * DELETE           `/api-keys`
 
-------------------------------------------------------------------------------------
-
 ## Server Status
-
-------------------------------------------------------------------------------------
 
 The `server-info` object is providing build time, version, service and git ref of the binary that is running.
 In production builds the
@@ -109,9 +105,7 @@ In production builds the
 }
 ```
 
-------------------------------------------------------------------------------------
-
-### GET `/info`
+**GET `/info`**
 
 This path will return a `server-info` object or an error.
 
@@ -125,7 +119,7 @@ Returns
 
 ------------------------------------------------------------------------------------
 
-### GET `/version`
+**GET `/version`**
 
 Returns the release version of the server running. In production builds this will have the format `v1.0.2` but
 for manual builds this will may be `development`.
@@ -140,7 +134,7 @@ Returns:
 
 ------------------------------------------------------------------------------------
 
-### POST `/update`
+**POST `/update`**
 
 Tries to update to the newest release on github and then restart the service.
 
@@ -154,7 +148,7 @@ Returns:
 
 ------------------------------------------------------------------------------------
 
-### GET `/health`
+**GET `/health`**
 
 Authorization: `JWT`
 
@@ -166,7 +160,7 @@ Returns:
 
 ------------------------------------------------------------------------------------
 
-### GET `/log`
+**GET `/log`**
 
 Returns the service log.
 
@@ -180,7 +174,7 @@ Returns:
 
 ------------------------------------------------------------------------------------
 
-### GET `/log/trace`
+**GET `/log/trace`**
 
 Returns the service trace log.
 
@@ -192,11 +186,7 @@ Returns:
 * Codes `200`/`40x`/`50x`
 * empty or `text/plain`
 
-------------------------------------------------------------------------------------
-
 ## Users
-
-------------------------------------------------------------------------------------
 
 ### POST `/users/signup`
 
