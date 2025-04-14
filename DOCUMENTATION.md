@@ -119,7 +119,7 @@ Returns
 
 ------------------------------------------------------------------------------------
 
-**GET `/version`**
+#### GET `/version`
 
 Returns the release version of the server running. In production builds this will have the format `v1.0.2` but
 for manual builds this will may be `development`.
@@ -134,7 +134,7 @@ Returns:
 
 ------------------------------------------------------------------------------------
 
-**POST `/update`**
+#### POST `/update`
 
 Tries to update to the newest release on github and then restart the service.
 
