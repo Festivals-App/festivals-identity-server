@@ -1,5 +1,3 @@
-<!--suppress ALL -->
-
 <h1 align="center">
     FestivalsIdentityAPI Documentation
 </h1>
@@ -21,10 +19,12 @@
 
 ### Authentication & Authorization
 
-To use the API you need to provide an API or service key via a custom header or a JWT with your requests authorization header, for login you need to use basic authentication:
-```
-Api-Key:<api-key>
-Service-Key:<service-key>
+To use the API you need to provide an API or service key via a custom header or a JWT
+with your requests authorization header, for login you need to use basic authentication:
+
+```ini
+Api-Key: <api-key>
+Service-Key: <service-key>
 Authorization: Bearer <jwt>
 Authorization: Basic <encodedcredentials>
 ```
@@ -37,7 +37,8 @@ The FestivalsIdentityAPI supports the HTTP `GET`, `POST`, `PATCH` and `DELETE` m
 
 Get requests that are handled gracefully by the server will always return the requested ressource directly,
 otherwise an `error` field is returned and will always contain a string with the error message.
-```
+
+```json
 {
     "error": "An error occured"
 }
@@ -46,6 +47,7 @@ otherwise an `error` field is returned and will always contain a string with the
 ## Overview
 
 [Server-Status](#server-status)
+
 * GET              `/info`
 * GET              `/version`
 * POST             `/update`
@@ -54,6 +56,7 @@ otherwise an `error` field is returned and will always contain a string with the
 * GET              `/log/trace`
 
 [Users](#users)
+
 * POST             `/users/signup`
 * GET              `/users/login`
 * GET              `/users/refresh`
@@ -65,24 +68,30 @@ otherwise an `error` field is returned and will always contain a string with the
 * DELETE           `/users/{objectID}/{festival|artist|location}/{resourceID}`
 
 [Validation-Key](#validation-key)
+
 * GET              `/validation-key`
 
 [Service-Keys](#service-keys)
+
 * GET              `/service-keys`
 * POST             `/service-keys`
 * DELETE           `/service-keys`
 
 [API-Keys](#api-keys)
+
 * GET              `/api-keys`
 * POST             `/api-keys`
 * DELETE           `/api-keys`
 
 ------------------------------------------------------------------------------------
+
 ## Server Status
+
 Determine the state of the server.
 
 Info object
-```
+
+```json
 {
     "BuildTime":      string,
     "GitRef":         string,
@@ -91,7 +100,8 @@ Info object
 ```
 
 ------------------------------------------------------------------------------------
-#### GET `/info`
+
+### GET `/info`
 
  * Authorization: JWT
  
