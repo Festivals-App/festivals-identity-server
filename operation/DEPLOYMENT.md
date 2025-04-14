@@ -81,8 +81,8 @@ Convert the mTLS server certificate to use it as the authentication key:
   > **DON'T USE THIS IN PRODUCTION, SEE [festivals-pki](https://github.com/Festivals-App/festivals-pki) FOR SECURITY BEST PRACTICES FOR PRODUCTION**
 
 ```bash
-openssl x509 -in /usr/local/festivals-identity-server/server.crt -out /usr/local/festivals-identity-server/authentication.publickey.pem -outform PEM
-openssl rsa -in /usr/local/festivals-identity-server/server.key -text | sudo tee /usr/local/festivals-identity-server/authentication.privatekey.pem
+sudo openssl x509 -in /usr/local/festivals-identity-server/server.crt -out /usr/local/festivals-identity-server/authentication.publickey.pem -outform PEM
+sudo openssl rsa -in /usr/local/festivals-identity-server/server.key -text | sudo tee /usr/local/festivals-identity-server/authentication.privatekey.pem
 ```
 
 Set the correct permissions:
@@ -96,16 +96,7 @@ sudo chmod 640 /usr/local/festivals-identity-server/authentication.publickey.pem
 sudo chmod 600 /usr/local/festivals-identity-server/authentication.privatekey.pem
 ```
 
-## 4. Configuring the Root CA
-
-Lets add the Festivals Development Root CA certificate to the system CA's:
-
-```bash
-sudo cp /usr/local/festivals-identity-server/ca.crt /usr/local/share/ca-certificates/festivals-dev-ca.crt
-sudo update-ca-certificates
-```
-
-## 5. Configuring the Festivals Identity Server
+## 4. Configuring the Festivals Identity Server
 
 Open the configuration file:
 
@@ -121,9 +112,30 @@ bind-host = "<server name>"
 # For example: 
 # bind-host = "identity-0.festivalsapp.home"
 
+[database]
+password = "<festivals.identity.writer password>"
+# For example: 
+# password = "we4711"
+
 [heartbeat]
 endpoint = "<discovery endpoint>"
 #For example: endpoint = "https://discovery.festivalsapp.home/loversear"
+```
+
+## Optional: Restore database backup
+
+Copy the backup from the old server and copy to the new one
+
+```bash
+scp <user>@<host>:/srv/festivals-identity-server/backups/<date>/festivals_identity_database-<datetime>.gz ~/Desktop
+scp ~/Desktop/festivals_identity_database-<datetime>.gz <user>@<host>:.
+```
+
+Now decompress and import the backuped database into mysql
+
+```bash
+gzip -d festivals_identity_database-<datetime>.gz
+sudo mysql -uroot -p < festivals_identity_database-<datetime>
 ```
 
 And now let's start the service:
