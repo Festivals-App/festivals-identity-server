@@ -51,7 +51,7 @@ Refer to [FestivalsIdentityAPI Documentation](DOCUMENTATION.md) for details on a
 ### Requirements
 
 - [Golang](https://go.dev/) Version 1.24.1+
-- [Visual Studio Code](https://code.visualstudio.com/download) 1.98.2+
+- [Visual Studio Code](https://code.visualstudio.com/download) 1.99.2+
   - Plugin recommendations are managed via [workspace recommendations](https://code.visualstudio.com/docs/editor/extension-marketplace#_recommended-extensions).
 - [Bash script](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) friendly environment
 
