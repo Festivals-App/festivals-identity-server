@@ -1,6 +1,6 @@
 # Development Deployment
 
-This deployment guide explains how to deploy the FestivalsApp Identity Server 
+This deployment guide explains how to deploy the FestivalsApp Identity Server
 using certificates intended for development purposes.
 
 ## Prerequisites
@@ -149,7 +149,7 @@ sudo systemctl start festivals-identity-server
 
 ## **🚀 The identity service should now be running successfully. 🚀**
 
-  > You might encounter an `ERR Failed to send heartbeat` error if the discovery service is not yet available. 
+  > You might encounter an `ERR Failed to send heartbeat` error if the discovery service is not yet available.
     However, the service should function correctly.
 
 ### Optional: Setting Up DNS Resolution  
