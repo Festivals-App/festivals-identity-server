@@ -71,21 +71,15 @@ otherwise an `error` field is returned and will always contain a string with the
 
 [Validation-Key](#validation-key)
 
-* GET              `/validation-key`
+* GET                         `/validation-key`
 
 [Service-Keys](#service-keys)
 
-* GET              `/service-keys`
-* POST             `/service-keys`
-* PATCH            `/service-keys`
-* DELETE           `/service-keys`
+* GET, POST, PATCH, DELETE    `/service-keys`
 
 [API-Keys](#api-keys)
 
-* GET              `/api-keys`
-* POST             `/api-keys`
-* PATCH            `/api-keys`
-* DELETE           `/api-keys`
+* GET, POST, PATCH, DELETE    `/api-keys`
 
 ## Server Status
 
