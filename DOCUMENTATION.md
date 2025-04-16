@@ -123,8 +123,8 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 **Response**
 
-* Codes `200`/`40x`/`50x`
 * `data` or `error` field
+* Codes `200`/`40x`/`50x`
 
 ------------------------------------------------------------------------------------
 
@@ -177,7 +177,7 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 **Response**
 
-* Always returns HTTP status code 200 and an empty response body.
+* Always returns `200 OK`
 
 ------------------------------------------------------------------------------------
 
@@ -257,7 +257,7 @@ Requires a valid `API-Key`.
 
 **Response**
 
-* Returns nothing but a 201 status code on success or `error` field on failure.
+* Returns `201 CREATED` on success or `error` field on failure.
 * Codes `201`/`40x`/`50x`
 
 ------------------------------------------------------------------------------------
@@ -274,7 +274,7 @@ Requires a valid `API-Key` and correct `Basic Auth` credentials.
 
 **Response**
 
-* Returns the raw`JWT` on success or `error` field on failure.
+* Returns the raw `JWT` on success or `error` field on failure.
 * Codes `200`/`40x`/`50x`
 
 ------------------------------------------------------------------------------------
@@ -298,7 +298,7 @@ Requires a valid `JWT` token with any user role.
 
 ### GET `/users`
 
-Retruns all registered users.
+Retruns all registered users as a list of `user`s.
 
 Examples:  
     `GET https://identity-0.festivalsapp.home:22580/users`
@@ -308,9 +308,8 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 **Response**
 
-* Returns the users on success.
-* Codes `200`/`40x`/`50x`
 * `data` or `error` field
+* Codes `200`/`40x`/`50x`
 
 ------------------------------------------------------------------------------------
 
@@ -325,11 +324,10 @@ Examples:
 **Authorization**
 Requires a valid `JWT` token with any user role.
 
-Returns:
+**Response**
 
-* Returns nothing on success but a 200 status code.
+* Returns `200 OK` on success and `error` on failure.
 * Codes `200`/`40x`/`50x`
-* Nothing or `error` field
   
 ------------------------------------------------------------------------------------
 
@@ -343,11 +341,10 @@ Examples:
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
 
-Returns:
+**Response**
 
-* Returns nothing on success but a 200 status code.
+* Returns `200 OK` on success and `error` on failure.
 * Codes `200`/`40x`/`50x`
-* Nothing or `error` field
 
 ------------------------------------------------------------------------------------
 
@@ -361,11 +358,10 @@ Examples:
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
 
-Returns:
+**Response**
 
-* Returns nothing on success but a 200 status code.
+* Returns `200 OK` on success and `error` on failure.
 * Codes `200`/`40x`/`50x`
-* Nothing or `error` field
 
 ------------------------------------------------------------------------------------
 
@@ -379,11 +375,10 @@ Examples:
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN` or valid `service key`.
 
-Returns:
+**Response**
 
-* Returns nothing on success but a 200 status code.
+* Returns `200 OK` on success and `error` on failure.
 * Codes `200`/`40x`/`50x`
-* Nothing or `error` field
 
 ------------------------------------------------------------------------------------
 
@@ -397,21 +392,23 @@ Examples:
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN` or valid `service key`.
 
-Returns:
+**Response**
 
-* Returns nothing on success but a 200 status code.
+* Returns `200 OK` on success and `error` on failure.
 * Codes `200`/`40x`/`50x`
-* Nothing or `error` field
 
 ------------------------------------------------------------------------------------
 
 ## Validation-Key
 
+The **validation-key route** provides the public key used to sign `JWT`'s issued by this identity service
+in order for other services to validate those `JWT`s.
+
 ------------------------------------------------------------------------------------
 
 ### GET `/validation-key`
 
-Returns the public key used to sign the jwt's issued by this identity service.
+Returns the public key used to sign the `JWT`'s issued by this identity service.
 
 Examples:  
     `GET https://identity-0.festivalsapp.home:22580/validation-keys`
@@ -419,21 +416,39 @@ Examples:
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN` or valid `service key`.
 
-Returns:
+**Response**
 
-* Returns the validation key on success.
+* Returns the raw validation key as `text/plain` on success or `error` on failure.
 * Codes `200`/`40x`/`50x`
-* raw file or `error` field
 
 ------------------------------------------------------------------------------------
 
 ## Service-Keys
 
+The **service-key routes** serve service-key related endpoints including retrieving, creating and deleting service-keys.
+This route uses a `service-key` object containing metadata about a service-key.
+
+**`service-key`** object
+
+```json
+{
+  "service_key_id": "int",
+  "service_key": "string",
+  "service_key_comment": "string"
+}
+```
+
+| Field                 | Description                                                        |
+|-----------------------|--------------------------------------------------------------------|
+| `service_key_id`      | The ID of the service key.                                         |
+| `service_key`         | The service key.                                                   |
+| `service_key_comment` | The comment for the service key                                    |
+
 ------------------------------------------------------------------------------------
 
 ### GET `/service-keys`
 
-Returns all registered service keys.
+Returns all registered service keys as a list of `service-key`s.
 
 Examples:  
     `GET https://identity-0.festivalsapp.home:22580/service-keys`
@@ -441,11 +456,10 @@ Examples:
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN` or valid `service key`.
 
-Returns:
+**Response**
 
-* Returns the service keys on success.
-* Codes `200`/`40x`/`50x`
 * `data` or `error` field
+* Codes `200`/`40x`/`50x`
 
 ------------------------------------------------------------------------------------
 
@@ -460,11 +474,10 @@ Examples:
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
 
-Returns:
+**Response**
 
-* Returns nothing on success but a 201 status code.
+* Returns `201 Created` on success and `error` on failure.
 * Codes `201`/`40x`/`50x`
-* Nothing or `error` field
 
 ------------------------------------------------------------------------------------
 
@@ -479,11 +492,10 @@ Examples:
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
 
-Returns:
+**Response**
 
-* Returns nothing on success but a 200 status code.
+* Returns `200 OK` on success and `error` on failure.
 * Codes `200`/`40x`/`50x`
-* Nothing or `error` field
 
 ------------------------------------------------------------------------------------
 
@@ -497,21 +509,39 @@ Examples:
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
 
-Returns:
+**Response**
 
-* Returns nothing on success but a 200 status code.
+* Returns `200 OK` on success and `error` on failure.
 * Codes `200`/`40x`/`50x`
-* Nothing or `error` field
 
 ------------------------------------------------------------------------------------
 
 ## API-Keys
 
+The **api-key routes** serve api-key related endpoints including retrieving, creating and deleting api-keys.
+This route uses a `api-key` object containing metadata about a api-key.
+
+**`api-key`** object
+
+```json
+{
+  "api_key_id": "int",
+  "api_key": "string",
+  "api_key_comment": "string"
+}
+```
+
+| Field                 | Description                                                    |
+|-----------------------|----------------------------------------------------------------|
+| `api_key_id`          | The ID of the api key.                                         |
+| `api_key`             | The api key.                                                   |
+| `api_key_comment`     | The comment for the api key                                    |
+
 ------------------------------------------------------------------------------------
 
 ### GET `/api-keys`
 
-Returns all registered API keys.
+Returns all registered API keys as a list of `api-key`s.
 
 Examples:  
     `GET https://identity-0.festivalsapp.home:22580/api-keys`
@@ -519,11 +549,10 @@ Examples:
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN` or valid `service key`.
 
-Returns:
+**Response**
 
-* Returns the API keys on success.
-* Codes `200`/`40x`/`50x`
 * `data` or `error` field
+* Codes `200`/`40x`/`50x`
 
 ------------------------------------------------------------------------------------
 
@@ -538,11 +567,10 @@ Examples:
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
 
-Returns:
+**Response**
 
-* Returns nothing on success but a 201 status code.
+* Returns `201 Created` on success and `error` on failure.
 * Codes `201`/`40x`/`50x`
-* Nothing or `error` field
 
 ------------------------------------------------------------------------------------
 
@@ -557,11 +585,10 @@ Examples:
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
 
-Returns:
+**Response**
 
-* Returns nothing on success but a 200 status code.
+* Returns `200 OK` on success and `error` on failure.
 * Codes `200`/`40x`/`50x`
-* Nothing or `error` field
 
 ------------------------------------------------------------------------------------
 
@@ -575,10 +602,9 @@ Examples:
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
 
-Returns:
+**Response**
 
-* Returns nothing on success but a 200 status code.
+* Returns `200 OK` on success and `error` on failure.
 * Codes `200`/`40x`/`50x`
-* Nothing or `error` field
 
 ------------------------------------------------------------------------------------
