@@ -25,15 +25,17 @@ with your requests authorization header, for login you need to use basic authent
 ```text
 Api-Key: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 Service-Key: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-Authorization: Bearer <Header>.<Payload>.<Signatur>
+Authorization: Bearer <JWT>
 Authorization: Basic <base64 encoded user:password>
 ```
 
 If you have the authorization to call the given endpoint is determined by your [user role](./auth/user.go).
 
-### Requests
+#### Making a request with curl
 
-The FestivalsIdentityAPI supports the HTTP `GET`, `POST`, `PATCH` and `DELETE` methods.
+```bash
+curl -H "X-Request-ID: <uuid>" -H "Authorization: Bearer <JWT>" --cacert ca.crt --cert client.crt --key client.key https://identity-0.festivalsapp.home/info
+```
 
 ### Response
 
@@ -83,33 +85,44 @@ otherwise an `error` field is returned and will always contain a string with the
 
 ## Server Status
 
-The `server-info` object is providing build time, git ref, service and version of the binary that is running.
+The **server status routes** serve status-related information.
+
+It is commonly used for health checks, CI/CD diagnostics, or runtime introspection. This route uses
+a `server-info` object containing metadata about the currently running binary, such as build time,
+Git reference, service name, and version.
+
+**`server-info`** object
 
 ```json
 {
-   "BuildTime":  "string",
-   "GitRef":     "string",
-   "Service":    "string",
-   "Version":    "string"
+  "BuildTime": "string",
+  "GitRef": "string",
+  "Service": "string",
+  "Version": "string"
 }
 ```
 
-In production builds the
+| Field      | Description                                                                 |
+|------------|-----------------------------------------------------------------------------|
+| `BuildTime` | Timestamp of the binary build. Format: `Sun Apr 13 13:55:44 UTC 2025`       |
+| `GitRef`    | Git reference used for the build. Format: `refs/tags/v2.2.0` [🔗 Git Docs](https://git-scm.com/book/en/v2/Git-Internals-Git-References) |
+| `Service`   | Service identifier. Matches a defined [Service type](https://github.com/Festivals-App/festivals-server-tools/blob/main/heartbeattools.go) |
+| `Version`   | Version tag of the deployed binary. Format: `v2.2.0`                        |
 
-* `BuildTime` field will have the format `Sun Apr 13 13:55:44 UTC 2025`.
-* `GitRef` field will have the format `refs/tags/v2.2.0`, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation.
-* `Service` field will reference a [Service](https://github.com/Festivals-App/festivals-server-tools/blob/main/heartbeattools.go) type.
-* `Version` field will have the format `v2.2.0`.
+> In production builds, these values are injected at build time and reflect the deployment source and context.
 
 #### GET `/info`
 
-This path will return a `server-info` object or an error.
+Returns the `server-info`.
 
->Authorization: `JWT` with user role set to `ADMIN`
+Example:  
+  `GET https://identity-0.festivalsapp.home/info`
 
-Returns
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
 
-* Returns the info object
+**Response**
+
 * Codes `200`/`40x`/`50x`
 * `data` or `error` field
 
@@ -117,88 +130,138 @@ Returns
 
 #### GET `/version`
 
-Returns the release version of the server running. In production builds this will have the format `v1.0.2` but
+Returns the release version of the server.
+
+> In production builds this will have the format `v2.2.0` but
 for manual builds this will may be `development`.
 
->Authorization: `JWT` with user role set to `ADMIN`
+Example:  
+  `GET https://identity-0.festivalsapp.dev/version`
 
-Returns:
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
 
-* The version of the server application.
+**Response**
+
+* Server version as a string `text/plain`.
 * Codes `200`/`40x`/`50x`
-* server version as a string `text/plain`
 
 ------------------------------------------------------------------------------------
 
 #### POST `/update`
 
-Tries to update to the newest release on github and then restart the service.
+Updates to the newest release on github and restarts the service.
 
->Authorization: `JWT` with user role set to `ADMIN`
+Example:  
+  `POST https://identity-0.festivalsapp.home/update`
 
-Returns:
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
 
-* The version of the server application.
+**Response**
+
+* The current version and the version the server is updated to as a string `text/plain`. Format: `v2.1.3 => v2.2.0`
 * Codes `202`/`40x`/`50x`
-* server version as a string `text/plain`
 
 ------------------------------------------------------------------------------------
 
 #### GET `/health`
 
->Authorization: `JWT` with user role set to `ADMIN`
+A simple health check endpoint that returns a `200 OK` status if the service is running and able to respond.
 
-Returns:
+Example:  
+  `GET https://identity-0.festivalsapp.home/health`
 
-* Always returns HTTP status code 200
-* Code `200`
-* empty `text/plain`
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
+
+**Response**
+
+* Always returns HTTP status code 200 and an empty response body.
 
 ------------------------------------------------------------------------------------
 
 #### GET `/log`
 
-Returns the info log as a string. The log format is defined [here](https://github.com/Festivals-App/festivals-server-tools/blob/main/DOCUMENTATION.md#loggertools).
+Returns the info log file as a string, containing all log messages except trace log entries.
+See [loggertools](https://github.com/Festivals-App/festivals-server-tools/blob/main/DOCUMENTATION.md#loggertools) for log format.
 
->Authorization: `JWT` with user role set to `ADMIN`
+Example:  
+  `GET https://identity-0.festivalsapp.home/log`
 
-Returns:
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
 
-* Returns a string
+**Response**
+
+* Returns a string as `text/plain`
 * Codes `200`/`40x`/`50x`
-* empty or `text/plain`
 
 ------------------------------------------------------------------------------------
 
 #### GET `/log/trace`
 
-Returns the trace log as a string. The log format is defined [here](https://github.com/Festivals-App/festivals-server-tools/blob/main/DOCUMENTATION.md#loggertools).
+Returns the trace log file as a string, containing all remote calls to the server.
+See [loggertools](https://github.com/Festivals-App/festivals-server-tools/blob/main/DOCUMENTATION.md#loggertools) for log format.
 
->Authorization: `JWT` with user role set to `ADMIN`
+Example:  
+  `GET https://identity-0.festivalsapp.home/log/trace`
 
-Returns:
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
 
-* Returns a `string`
+**Response**
+
+* Returns a string as `text/plain`
 * Codes `200`/`40x`/`50x`
-* empty or `text/plain`
+
+------------------------------------------------------------------------------------
 
 ## Users
 
+The **user routes** serve user related endpoints including signup, login and user resources.
+
+This route uses a `user` object containing metadata about a user.
+
+**`user`** object
+
+```json
+{
+  "user_id": "string",
+  "user_email": "string",
+  "user_password": "string",
+  "user_createdat": "string",
+  "user_updatedat": "string",
+  "user_role": "int"
+}
+```
+
+| Field            | Description                                                           |
+|------------------|-----------------------------------------------------------------------|
+| `user_id`        | The users ID.                                                         |
+| `user_email`     | The users email address                                               |
+| `user_password`  | The users hashed password                                             |
+| `user_createdat` | The date the user was created. Format: `2024-03-27T01:49:32Z`         |
+| `user_updatedat` | The date the user was updated. Format: `2024-03-27T01:49:32Z`         |
+| `user_role`      | One of the [user role](./auth/user.go) values.                        |
+
+------------------------------------------------------------------------------------
+
 ### POST `/users/signup`
 
-Signup to the festivalsapp backend.
-
->Authorization: `API Token`
+Signup to the festivalsapp backend as a creator.
 
 Example:  
-      `POST https://localhost:22580/users/signup`  
-      `BODY: { "email": "your email", "password": "<your password>" }`
+  `POST https://identity-0.festivalsapp.home:22580/users/signup`  
+  `BODY: { "email": "your email", "password": "<your password>" }`
 
-Returns:
+**Authorization**
+Requires a valid `API-Key`.
 
-* Returns nothing but a 201 status code.
+**Response**
+
+* Returns nothing but a 201 status code on success or `error` field on failure.
 * Codes `201`/`40x`/`50x`
-* Nothing or `error` field
 
 ------------------------------------------------------------------------------------
 
@@ -206,33 +269,33 @@ Returns:
 
 Login to the festivalsapp backend.
 
->Authorization: `API Token` & `Basic Auth`
-
 Examples:  
     `GET https://localhost:22580/users/login`
 
-Returns:
+**Authorization**
+Requires a valid `API-Key` and correct `Basic Auth` credentials.
 
-* Returns the JWT on success.
+**Response**
+
+* Returns the raw`JWT` on success or `error` field on failure.
 * Codes `200`/`40x`/`50x`
-* The raw JWT or `error` field
 
 ------------------------------------------------------------------------------------
 
 ### GET `/users/refresh`
 
-Refresh the JWT to the festivalsapp backend. This will only refresh the users claims but not the expiration date. 
-
->Authorization: `JWT` with any user role
+Refreshes the `JWT`. This will only refresh the users claims but not the expiration date of the token.
 
 Examples:  
     `GET https://localhost:22580/users/refresh`
 
-Returns:
+**Authorization**
+Requires a valid `JWT` token with any user role.
 
-* Returns the JWT on success.
+**Response**
+
+* Returns the refreshed `JWT` on success or `error` field on failure.
 * Codes `200`/`40x`/`50x`
-* The raw JWT or `error` field
 
 ------------------------------------------------------------------------------------
 
@@ -240,12 +303,13 @@ Returns:
 
 Retruns all registered users.
 
->Authorization: `JWT` with user role set to `ADMIN`
-
 Examples:  
     `GET https://localhost:22580/users`
 
-Returns:
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
+
+**Response**
 
 * Returns the users on success.
 * Codes `200`/`40x`/`50x`
