@@ -53,6 +53,11 @@ func userScan(rs *sql.Rows) (token.User, error) {
 	return u, rs.Scan(&u.ID, &u.Email, &u.PasswordHash, &u.CreateDate, &u.UpdateDate, &u.Role)
 }
 
+func userSummaryScan(rs *sql.Rows) (token.UserSummary, error) {
+	var u token.UserSummary
+	return u, rs.Scan(&u.ID, &u.Email, &u.CreateDate, &u.UpdateDate, &u.Role)
+}
+
 func apiKeyScan(rs *sql.Rows) (token.APIKey, error) {
 	var u token.APIKey
 	return u, rs.Scan(&u.ID, &u.Key, &u.Comment)

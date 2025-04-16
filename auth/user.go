@@ -21,6 +21,14 @@ type User struct {
 	Role         int       `json:"user_role" sql:"user_role"`
 }
 
+type UserSummary struct {
+	ID         int       `json:"user_id" sql:"user_id"`
+	Email      string    `json:"user_email" sql:"user_email"`
+	CreateDate time.Time `json:"user_createdat" sql:"user_createdat"`
+	UpdateDate time.Time `json:"user_updatedat" sql:"user_updatedat"`
+	Role       int       `json:"user_role" sql:"user_role"`
+}
+
 type UserClaims struct {
 	UserID        string
 	UserRole      int

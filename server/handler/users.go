@@ -118,14 +118,14 @@ func Refresh(auth *token.AuthService, claims *token.UserClaims, db *sql.DB, w ht
 func GetUsers(auth *token.AuthService, claims *token.UserClaims, db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	if claims.UserRole != token.ADMIN {
-		log.Error().Msg("User is not authorized to get users.")
+		log.Error().Msg("User is not authorized to get user summaries.")
 		servertools.UnauthorizedResponse(w)
 		return
 	}
 
-	users, err := database.GetAllUsers(db)
+	users, err := database.GetAllUserSummaries(db)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to fetch all users.")
+		log.Error().Err(err).Msg("Failed to fetch all user summaries.")
 		servertools.UnauthorizedResponse(w)
 		return
 	}

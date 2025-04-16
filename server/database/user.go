@@ -6,19 +6,19 @@ import (
 	token "github.com/Festivals-App/festivals-identity-server/auth"
 )
 
-func GetAllUsers(db *sql.DB) ([]*token.User, error) {
+func GetAllUserSummaries(db *sql.DB) ([]*token.UserSummary, error) {
 
-	query := "SELECT * FROM users;"
-	vars := []interface{}{}
+	query := "SELECT user_id, user_email, user_createdat, user_updatedat, user_role FROM users;"
+	vars := []any{}
 
 	rows, err := executeRowQuery(db, query, vars)
 	if err != nil {
 		return nil, err
 	}
 
-	keys := []*token.User{}
+	keys := []*token.UserSummary{}
 	for rows.Next() {
-		key, err := userScan(rows)
+		key, err := userSummaryScan(rows)
 		if err != nil {
 			return nil, err
 		}
