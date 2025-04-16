@@ -136,7 +136,7 @@ Returns the release version of the server.
 for manual builds this will may be `development`.
 
 Example:  
-  `GET https://identity-0.festivalsapp.dev/version`
+  `GET https://identity-0.festivalsapp.home:22580/version`
 
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
@@ -153,7 +153,7 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 Updates to the newest release on github and restarts the service.
 
 Example:  
-  `POST https://identity-0.festivalsapp.home/update`
+  `POST https://identity-0.festivalsapp.home:22580/update`
 
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
@@ -170,7 +170,7 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 A simple health check endpoint that returns a `200 OK` status if the service is running and able to respond.
 
 Example:  
-  `GET https://identity-0.festivalsapp.home/health`
+  `GET https://identity-0.festivalsapp.home:22580/health`
 
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
@@ -187,7 +187,7 @@ Returns the info log file as a string, containing all log messages except trace 
 See [loggertools](https://github.com/Festivals-App/festivals-server-tools/blob/main/DOCUMENTATION.md#loggertools) for log format.
 
 Example:  
-  `GET https://identity-0.festivalsapp.home/log`
+  `GET https://identity-0.festivalsapp.home:22580/log`
 
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
@@ -205,7 +205,7 @@ Returns the trace log file as a string, containing all remote calls to the serve
 See [loggertools](https://github.com/Festivals-App/festivals-server-tools/blob/main/DOCUMENTATION.md#loggertools) for log format.
 
 Example:  
-  `GET https://identity-0.festivalsapp.home/log/trace`
+  `GET https://identity-0.festivalsapp.home:22580/log/trace`
 
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
@@ -220,7 +220,6 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 ## Users
 
 The **user routes** serve user related endpoints including signup, login and user resources.
-
 This route uses a `user` object containing metadata about a user.
 
 **`user`** object
@@ -229,7 +228,6 @@ This route uses a `user` object containing metadata about a user.
 {
   "user_id": "string",
   "user_email": "string",
-  "user_password": "string",
   "user_createdat": "string",
   "user_updatedat": "string",
   "user_role": "int"
@@ -240,7 +238,6 @@ This route uses a `user` object containing metadata about a user.
 |------------------|-----------------------------------------------------------------------|
 | `user_id`        | The users ID.                                                         |
 | `user_email`     | The users email address                                               |
-| `user_password`  | The users hashed password                                             |
 | `user_createdat` | The date the user was created. Format: `2024-03-27T01:49:32Z`         |
 | `user_updatedat` | The date the user was updated. Format: `2024-03-27T01:49:32Z`         |
 | `user_role`      | One of the [user role](./auth/user.go) values.                        |
@@ -270,7 +267,7 @@ Requires a valid `API-Key`.
 Login to the festivalsapp backend.
 
 Examples:  
-    `GET https://localhost:22580/users/login`
+    `GET https://identity-0.festivalsapp.home:22580/users/login`
 
 **Authorization**
 Requires a valid `API-Key` and correct `Basic Auth` credentials.
@@ -287,7 +284,7 @@ Requires a valid `API-Key` and correct `Basic Auth` credentials.
 Refreshes the `JWT`. This will only refresh the users claims but not the expiration date of the token.
 
 Examples:  
-    `GET https://localhost:22580/users/refresh`
+    `GET https://identity-0.festivalsapp.home:22580/users/refresh`
 
 **Authorization**
 Requires a valid `JWT` token with any user role.
@@ -304,7 +301,7 @@ Requires a valid `JWT` token with any user role.
 Retruns all registered users.
 
 Examples:  
-    `GET https://localhost:22580/users`
+    `GET https://identity-0.festivalsapp.home:22580/users`
 
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
@@ -321,11 +318,12 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 Change the password of the given user.
 
->Authorization: `JWT` with any user role
-
 Examples:  
-   `POST https://localhost:22580/users/3/change-password`
+   `POST https://identity-0.festivalsapp.home:22580/users/3/change-password`
    `BODY: { "old-password": "<your old password>", "new-password": "<your new-password>" }`
+
+**Authorization**
+Requires a valid `JWT` token with any user role.
 
 Returns:
 
@@ -339,10 +337,11 @@ Returns:
 
 Suspends the given user.
 
->Authorization: `JWT` with user role set to `ADMIN`
-
 Examples:  
-    `POST https://localhost:22580/users/3/suspend`
+    `POST https://identity-0.festivalsapp.home:22580/users/3/suspend`
+
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 Returns:
 
@@ -356,10 +355,11 @@ Returns:
 
 Sets the given user role for the given user. See [here](jwt/user.go) for possible values.
 
->Authorization: `JWT` with user role set to `ADMIN`
-
 Examples:  
-    `POST https://localhost:22580/users/3/role/42`
+    `POST https://identity-0.festivalsapp.home:22580/users/3/role/42`
+
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 Returns:
 
@@ -373,10 +373,11 @@ Returns:
 
 Associates the given user with the specified festival, artist or location.
 
->Authorization: `JWT` with user role set to `ADMIN` or `service key`
-
 Examples:  
-    `POST https://localhost:22580/users/3/artist/134`
+    `POST https://identity-0.festivalsapp.home:22580/users/3/artist/134`
+
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN` or valid `service key`.
 
 Returns:
 
@@ -390,10 +391,11 @@ Returns:
 
 Removes the association between the given user and the specified festival, artist or location.
 
->Authorization: `JWT` with user role set to `ADMIN` or `service key`
-
 Examples:  
-    `DELETE https://localhost:22580/users/3/festival/26`
+    `DELETE https://identity-0.festivalsapp.home:22580/users/3/festival/26`
+
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN` or valid `service key`.
 
 Returns:
 
@@ -411,10 +413,11 @@ Returns:
 
 Returns the public key used to sign the jwt's issued by this identity service.
 
->Authorization: `JWT` with user role set to `ADMIN` or `service key`
-
 Examples:  
-    `GET https://localhost:22580/validation-keys`
+    `GET https://identity-0.festivalsapp.home:22580/validation-keys`
+
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN` or valid `service key`.
 
 Returns:
 
@@ -432,10 +435,11 @@ Returns:
 
 Returns all registered service keys.
 
->Authorization: `JWT` with user role set to `ADMIN` or `service key`
-
 Examples:  
-    `GET https://localhost:22580/service-keys`
+    `GET https://identity-0.festivalsapp.home:22580/service-keys`
+
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN` or valid `service key`.
 
 Returns:
 
@@ -449,11 +453,12 @@ Returns:
 
 Registers a new service key.
 
->Authorization: `JWT` with user role set to `ADMIN` or `service key`
-  
 Examples:  
-    `POST https://localhost:22580/service-keys`
+    `POST https://identity-0.festivalsapp.home:22580/service-keys`
     `BODY: { "service_key": "<service key>", "service_key_comment": "<Comment for the service key>" }`
+
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 Returns:
 
@@ -466,12 +471,13 @@ Returns:
 ### PATCH `/service-keys/{objectID}`
 
 Updates the given service key.
-
->Authorization: `JWT` with user role set to `ADMIN`
   
 Examples:  
-    `POST https://localhost:22580/service-keys/23`
+    `POST https://identity-0.festivalsapp.home:22580/service-keys/23`
     `BODY: { "service_key": "<service key>", "service_key_comment": "<Comment for the service key>" }`
+
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 Returns:
 
@@ -485,10 +491,11 @@ Returns:
 
 Deletes the given service key.
 
->Authorization: `JWT` with user role set to `ADMIN`
-
 Examples:  
-    `DELETE https://localhost:22580/service-keys/23`
+    `DELETE https://identity-0.festivalsapp.home:22580/service-keys/23`
+
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 Returns:
 
@@ -506,28 +513,30 @@ Returns:
 
 Returns all registered API keys.
 
->Authorization: `JWT` with user role set to `ADMIN` or `service key`
-
 Examples:  
-    `GET https://localhost:22580/api-keys`
+    `GET https://identity-0.festivalsapp.home:22580/api-keys`
+
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN` or valid `service key`.
 
 Returns:
 
 * Returns the API keys on success.
 * Codes `200`/`40x`/`50x`
 * `data` or `error` field
- 
+
 ------------------------------------------------------------------------------------
 
 ### POST `/api-keys`
 
 Registers a new API key.
 
->Authorization: `JWT` with user role set to `ADMIN`
-  
 Examples:  
-    `POST https://localhost:22580/api-keys`
+    `POST https://identity-0.festivalsapp.home:22580/api-keys`
     `BODY: { "api_key": "<api key>", "api_key_comment": "<Comment for the api key>" }`
+
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 Returns:
 
@@ -541,11 +550,12 @@ Returns:
 
 Updates the given API key.
 
->Authorization: `JWT` with user role set to `ADMIN`
-  
 Examples:  
-    `POST https://localhost:22580/api-keys/23`
+    `POST https://identity-0.festivalsapp.home:22580/api-keys/23`
     `BODY: { "api_key": "<api key>", "api_key_comment": "<Comment for the API key>" }`
+
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 Returns:
 
@@ -559,9 +569,11 @@ Returns:
 
 Deletes the given api key.
 
->Authorization: `JWT` with user role set to `ADMIN`
 Examples:  
-    `DELETE https://localhost:22580/api-keys/23`
+    `DELETE https://identity-0.festivalsapp.home:22580/api-keys/23`
+
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 Returns:
 
