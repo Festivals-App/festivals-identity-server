@@ -31,4 +31,4 @@ jobs:
         asset_name: festivals-identity-server-${{ matrix.goos }}-${{ matrix.goarch }}
         build_flags: -v
         ldflags: -X 'github.com/Festivals-App/festivals-identity-server/server/status.ServerVersion=${{ env.APP_VERSION }}' -X 'github.com/Festivals-App/festivals-identity-server/server/status.BuildTime=${{ env.BUILD_TIME }}' -X 'github.com/Festivals-App/festivals-identity-server/server/status.GitRef=${{ github.ref }}'
-        extra_files: LICENSE README.md operation/update.sh operation/backup.sh operation/secure-mysql.sh database/create_database.sql config_template.toml operation/service_template.service operation/ufw_app_profile
+        extra_files: LICENSE README.md config_template.toml operation/update.sh operation/backup.sh operation/secure-mysql.sh operation/ufw_app_profile operation/service_template.service database/create_database.sql
